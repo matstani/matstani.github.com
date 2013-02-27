@@ -3,7 +3,7 @@ layout: post
 title: "Clojureインストール、Compojureプロジェクト作成"
 date: 2013-02-27 19:28
 comments: true
-categories: 
+categories: Clojure
 ---
 [Clojure](http://clojure.org/)には、[Leiningen](http://leiningen.org/)という管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。
 
