@@ -21,20 +21,7 @@ $ sqlite3 db/helloworld.sqlite3 "INSERT INTO items (title) VALUES ('2つ目の�
 
 #### 依存ライブラリインストール
 project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの[Hiccup](https://github.com/weavejester/hiccup)を追記します。
-``` clojure
-(defproject helloworld "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :dependencies [[org.clojure/clojure "1.4.0"]
-                 [compojure "1.1.5"]
-                 [org.xerial/sqlite-jdbc "3.7.2"]
-                 [korma "0.3.0-RC2"]
-                 [hiccup "1.0.2"]]
-  :plugins [[lein-ring "0.8.2"]]
-  :ring {:handler helloworld.handler/app}
-  :profiles
-  {:dev {:dependencies [[ring-mock "0.1.3"]]}})
-```
+{% gist 5048794 project.clj %}
 
 :dependenciesに追記後、以下のコマンドでライブラリをインストールします。
 ```
@@ -42,4 +29,4 @@ $ lein deps
 ```
 
 #### Kormaを使ってデータベースから読み出し
-{% gist 5048794 %}
+{% gist 5048794 handler.clj %}
