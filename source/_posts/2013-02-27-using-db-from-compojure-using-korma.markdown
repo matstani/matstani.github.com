@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "KormaでDBアクセス"
-date: 2013-02-27 23:34
+date: 2013-01-23 19:41
 comments: true
 categories: Clojure
 ---
