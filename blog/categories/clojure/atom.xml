@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[/home/matstani/weblog]]></title>
-  <link href="http://matstani.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
+  <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
   <updated>2013-02-28T10:29:06+09:00</updated>
   <id>http://matstani.github.com/</id>
@@ -12,31 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Octopressのスタイルシートを変更]]></title>
-    <link href="http://matstani.github.com/blog/2013/02/28/fix-gist-width/"/>
-    <updated>2013-02-28T10:03:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/02/28/fix-gist-width</id>
-    <content type="html"><![CDATA[<p><a href="http://octopress.org/docs/blogging/code/">ドキュメント</a>にあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
-<a href="https://gist.github.com/">gist</a>のコードを埋め込むには以下のように記述します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{% gist gist_id [filename] %}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、テーブルの枠幅がでこぼこになって見た目が悪かったので、スタイルシートを微調整しました。
-sassディレクトリ以下のscssファイルを修正すると、サイトに反映されるようです。</p>
-
-<p>今回はsass/custom/_styles.scssに以下を追記しました。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.gist .line-data { width: 100% }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>近いうちに本体でも修正されると思います。</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[KormaでDBアクセス]]></title>
@@ -51,20 +26,16 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 <h4>データベース準備</h4>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir db
-</span><span class='line'>$ sqlite3 db/helloworld.sqlite3 "CREATE TABLE items (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT);"
-</span><span class='line'>$ sqlite3 db/helloworld.sqlite3 "INSERT INTO items (title) VALUES ('最初のアイテム');"
-</span><span class='line'>$ sqlite3 db/helloworld.sqlite3 "INSERT INTO items (title) VALUES ('2つ目のアイテム');"</span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+$ mkdir db
+$ sqlite3 db/helloworld.sqlite3 "CREATE TABLE items (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT);"
+$ sqlite3 db/helloworld.sqlite3 "INSERT INTO items (title) VALUES ('最初のアイテム');"
+$ sqlite3 db/helloworld.sqlite3 "INSERT INTO items (title) VALUES ('2つ目のアイテム');"
+</code></p>
 
 <h4>依存ライブラリインストール</h4>
 
-<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。</p>
-
+<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。
 <div><script src='https://gist.github.com/5048794.js?file=project.clj'></script>
 <noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
   :description &quot;FIXME: write description&quot;
@@ -78,17 +49,16 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   :ring {:handler helloworld.handler/app}
   :profiles
   {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
+</p>
 
-
-<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
-
+<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。
+<code>
+$ lein deps
+</code></p>
 
 <h4>Kormaを使ってデータベースから読み出し</h4>
 
-<div><script src='https://gist.github.com/5048794.js?file=handler.clj'></script>
+<p><div><script src='https://gist.github.com/5048794.js?file=handler.clj'></script>
 <noscript><pre><code>(ns helloworld.handler
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
@@ -124,7 +94,7 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 (def app
   (handler/site app-routes))
 </code></pre></noscript></div>
-
+</p>
 ]]></content>
   </entry>
   
@@ -139,39 +109,37 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 <h4>Javaがインストールされていることを確認</h4>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ java -version</span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+$ java -version
+</code></p>
 
 <h4>Leiningenインストール</h4>
 
 <h5>leinスクリプトをダウンロード</h5>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein</span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein
+</code></p>
 
 <h5>ダウンロードしたスクリプトをPATHの通った場所に置き、実行権を付与</h5>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mv lein ~/bin
-</span><span class='line'>$ chmod 755 ~/bin/lein </span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+$ mv lein ~/bin
+$ chmod 755 ~/bin/lein
+</code></p>
 
 <h4>compojureプロジェクトの作成（初回は時間かかる）</h4>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure helloworld </span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+$ lein new compojure helloworld
+</code></p>
 
 <h4>開発用HTTPサーバ起動（初回は時間かかる）</h4>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd helloworld
-</span><span class='line'>$ lein ring server-headless </span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+$ cd helloworld
+$ lein ring server-headless
+</code></p>
 
 <p>Port3000でHTTPサーバが起動されるので、ブラウザで確認します。</p>
 ]]></content>

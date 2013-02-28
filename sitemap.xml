@@ -2,15 +2,23 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://matstani.github.com/blog/2013/02/27/create-compojure-project/</loc>
-        <lastmod>2013-02-27T20:54:07+09:00</lastmod>
+        <lastmod>2013-02-28T09:58:55+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://matstani.github.com/blog/2013/02/27/using-db-from-compojure-using-korma/</loc>
+        <lastmod>2013-02-28T10:20:20+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://matstani.github.com/blog/2013/02/28/fix-gist-width/</loc>
+        <lastmod>2013-02-28T10:27:36+09:00</lastmod>
     </url>
     <url>
         <loc>http://matstani.github.com/blog/archives/</loc>
-        <lastmod>2013-02-27T20:54:07+09:00</lastmod>
+        <lastmod>2013-02-28T10:27:36+09:00</lastmod>
     </url>
     <url>
         <loc>http://matstani.github.com/</loc>
-        <lastmod>2013-02-27T20:54:07+09:00</lastmod>
+        <lastmod>2013-02-28T10:27:36+09:00</lastmod>
     </url>
     <url>
         <loc>http://matstani.github.com/robots.txt</loc>

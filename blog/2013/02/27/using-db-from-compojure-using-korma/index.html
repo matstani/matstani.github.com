@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>/home/matstani/weblog</title>
+  <title>KormaでDBアクセス - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="ドキュメントにあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
-gistのコードを埋め込むには以下のように記述します。 1
-{% gist gist_id [filename] %} このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、 &hellip;">
+  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、データベースから読みだした値を表示してみます。 ClojureのJDBCラッパーも十分に高機能なのですが、より柔軟にSQLを構築できるKormaというライブラリを使う手順を紹介します。なお、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ gistのコードを埋め込むには以下のように記述します。 1
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/">
+  <link rel="canonical" href="http://matstani.github.com/blog/2013/02/27/using-db-from-compojure-using-korma/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -64,67 +62,12 @@ gistのコードを埋め込むには以下のように記述します。 1
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/02/28/fix-gist-width/">Octopressのスタイルシートを変更</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-28T10:03:00+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://octopress.org/docs/blogging/code/">ドキュメント</a>にあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
-<a href="https://gist.github.com/">gist</a>のコードを埋め込むには以下のように記述します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{% gist gist_id [filename] %}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、テーブルの枠幅がでこぼこになって見た目が悪かったので、スタイルシートを微調整しました。
-sassディレクトリ以下のscssファイルを修正すると、サイトに反映されるようです。</p>
-
-<p>今回はsass/custom/_styles.scssに以下を追記しました。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.gist .line-data { width: 100% }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>近いうちに本体でも修正されると思います。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/27/using-db-from-compojure-using-korma/">KormaでDBアクセス</a></h1>
+      <h1 class="entry-title">KormaでDBアクセス</h1>
     
     
       <p class="meta">
@@ -147,7 +90,7 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   </header>
 
 
-  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="http://matstani.github.com/blog/2013/02/27/create-compojure-project/">こちら</a></p>
+<div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="http://matstani.github.com/blog/2013/02/27/create-compojure-project/">こちら</a></p>
 
 <p>Compojureベースのウェブアプリケーションで、データベースから読みだした値を表示してみます。</p>
 
@@ -230,22 +173,16 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 </code></pre></noscript></div>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/27/create-compojure-project/">Clojureインストール、Compojureプロジェクト作成</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Shunsaku MATSUTANI</span></span>
+
+      
 
 
 
@@ -257,67 +194,40 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   
 
 
-<time datetime="2013-02-27T19:28:00+09:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
-        
-      </p>
+<time datetime="2013-02-27T23:34:00+09:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://clojure.org/">Clojure</a>には、<a href="http://leiningen.org/">Leiningen</a>という管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。</p>
-
-<p>Clojureがインストールされていない状態から、ウェブアプリケーションフレームワーク<a href="https://github.com/weavejester/compojure">Compojure</a>を利用したウェブアプリケーションの開発用プロジェクトを作成するまでの手順は以下のとおりです。</p>
-
-<h4>Javaがインストールされていることを確認</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ java -version</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Leiningenインストール</h4>
-
-<h5>leinスクリプトをダウンロード</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>ダウンロードしたスクリプトをPATHの通った場所に置き、実行権を付与</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mv lein ~/bin
-</span><span class='line'>$ chmod 755 ~/bin/lein </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>compojureプロジェクトの作成（初回は時間かかる）</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure helloworld </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>開発用HTTPサーバ起動（初回は時間かかる）</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd helloworld
-</span><span class='line'>$ lein ring server-headless </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Port3000でHTTPサーバが起動されるので、ブラウザで確認します。</p>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/02/27/using-db-from-compojure-using-korma/" data-via="" data-counturl="http://matstani.github.com/blog/2013/02/27/using-db-from-compojure-using-korma/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/02/27/create-compojure-project/" title="Previous Post: Clojureインストール、Compojureプロジェクト作成">&laquo; Clojureインストール、Compojureプロジェクト作成</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/02/28/fix-gist-width/" title="Next Post: Octopressのスタイルシートを変更">Octopressのスタイルシートを変更 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -346,6 +256,7 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
   
 </aside>
+
 
     </div>
   </div>

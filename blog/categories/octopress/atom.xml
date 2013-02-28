@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Octopress | /home/matstani/weblog]]></title>
+  <link href="http://matstani.github.com/blog/categories/octopress/atom.xml" rel="self"/>
+  <link href="http://matstani.github.com/"/>
+  <updated>2013-02-28T10:29:06+09:00</updated>
+  <id>http://matstani.github.com/</id>
+  <author>
+    <name><![CDATA[Shunsaku MATSUTANI]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopressのスタイルシートを変更]]></title>
+    <link href="http://matstani.github.com/blog/2013/02/28/fix-gist-width/"/>
+    <updated>2013-02-28T10:03:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/02/28/fix-gist-width</id>
+    <content type="html"><![CDATA[<p><a href="http://octopress.org/docs/blogging/code/">ドキュメント</a>にあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
+<a href="https://gist.github.com/">gist</a>のコードを埋め込むには以下のように記述します。
+<code>
+{% gist gist_id [filename] %}
+</code>
+このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、テーブルの枠幅がでこぼこになって見た目が悪かったので、スタイルシートを微調整しました。
+sassディレクトリ以下のscssファイルを修正すると、サイトに反映されるようです。</p>
+
+<p>今回はsass/custom/_styles.scssに以下を追記しました。
+<code>
+.gist .line-data { width: 100% }
+</code></p>
+
+<p>近いうちに本体でも修正されると思います。</p>
+]]></content>
+  </entry>
+  
+</feed>
