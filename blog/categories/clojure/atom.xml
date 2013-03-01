@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-02-28T20:05:19+09:00</updated>
+  <updated>2013-03-01T22:09:00+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -18,7 +18,7 @@
     <link href="http://matstani.github.com/blog/2013/02/28/validation-with-lib-noir/"/>
     <updated>2013-02-28T13:02:00+09:00</updated>
     <id>http://matstani.github.com/blog/2013/02/28/validation-with-lib-noir</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="http://matstani.github.com/blog/2013/02/27/create-compojure-project/">こちら</a></p>
+    <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
 
 <p>Compojureベースのウェブアプリケーションで、フォームバリデーションを行います。</p>
 
@@ -138,7 +138,7 @@ $ lein deps
     <link href="http://matstani.github.com/blog/2013/01/23/using-db-from-compojure-using-korma/"/>
     <updated>2013-01-23T19:41:00+09:00</updated>
     <id>http://matstani.github.com/blog/2013/01/23/using-db-from-compojure-using-korma</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="http://matstani.github.com/blog/2013/02/27/create-compojure-project/">こちら</a></p>
+    <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
 
 <p>Compojureベースのウェブアプリケーションで、データベースから読みだした値を表示してみます。</p>
 
