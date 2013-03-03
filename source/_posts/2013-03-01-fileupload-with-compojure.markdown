@@ -10,7 +10,7 @@ categories:
 Compojureベースのウェブアプリケーションで、ファイルアップロードを行います。
 
 #### 依存ライブラリのインストール
-HTML生成ライブラリの[Hiccup](https://github.com/weavejester/hiccup)を追記します。
+HTML生成ライブラリとして[Hiccup](https://github.com/weavejester/hiccup)を利用するので、以下のように追記します。
 {% gist 5064493 project.clj %}
 
 :dependenciesに追記後、以下のコマンドでライブラリをインストールします。
