@@ -5,7 +5,7 @@ date: 2013-02-28 13:02
 comments: true
 categories: Clojure
 ---
-[Compojure](https://github.com/weavejester/compojure)プロジェクトの作成手順は[こちら](http://matstani.github.com/blog/2013/02/27/create-compojure-project/)
+[Compojure](https://github.com/weavejester/compojure)プロジェクトの作成手順は[こちら](/blog/2013/01/23/create-compojure-project/)
 
 Compojureベースのウェブアプリケーションで、フォームバリデーションを行います。
 
