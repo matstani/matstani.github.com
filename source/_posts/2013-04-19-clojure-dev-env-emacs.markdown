@@ -19,9 +19,6 @@ Ubuntuの場合
 $ sudo apt-get install openjdk-7-jdk
 ```
 CentOSの場合
-```
-$ sudo yum install java-1.7.0-openjdk
-```
 
 ### leiningenインストール
 ```
@@ -42,3 +39,17 @@ Emacs24以降のバージョンを利用すると、パッケージ管理シス�
 M-x eval-buffer
 ```
 
+### Clojureプロジェクト作成
+```
+$ lein new demo
+```
+
+### Emacs上でnREPL起動
+```
+$ cd demo
+$ emacs src/demo/core.clj
+```
+Emacs上で
+```
+M-x nrepl-jack-in
+```
