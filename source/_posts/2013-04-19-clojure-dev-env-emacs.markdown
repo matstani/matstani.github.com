@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Clojure開発環境インストールまとめ(Emacs)"
+title: "Clojure開発環境インストール手順(Emacs)"
 date: 2013-04-19 18:29
 comments: true
 categories: Clojure
@@ -19,6 +19,9 @@ Ubuntuの場合
 $ sudo apt-get install openjdk-7-jdk
 ```
 CentOSの場合
+```
+$ sudo yum install java-1.7.0-openjdk
+```
 
 ### leiningenインストール
 ```
