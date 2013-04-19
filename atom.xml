@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-04-19T19:34:28+09:00</updated>
+  <updated>2013-04-19T20:05:48+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -38,10 +38,6 @@
 
 <p>CentOSの場合</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install java-1.7.0-openjdk</span></code></pre></td></tr></table></div></figure>
-
-
 <h3>leiningenインストール</h3>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -74,6 +70,24 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-buffer</span></code></pre></td></tr></table></div></figure>
 
 
+<h3>Clojureプロジェクト作成</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new demo</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Emacs上でnREPL起動</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd demo
+</span><span class='line'>$ emacs src/demo/core.clj</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Emacs上で</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl-jack-in</span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
   </entry>

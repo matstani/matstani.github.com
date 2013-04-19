@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-04-19T19:34:28+09:00</updated>
+  <updated>2013-04-19T20:05:48+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -34,10 +34,7 @@
 <code>
 $ sudo apt-get install openjdk-7-jdk
 </code>
-CentOSの場合
-<code>
-$ sudo yum install java-1.7.0-openjdk
-</code></p>
+CentOSの場合</p>
 
 <h3>leiningenインストール</h3>
 
@@ -65,6 +62,23 @@ $ chmod 755 ~/bin/lein
 追記後、Emacs上で以下のコマンドを実行すると、直ちに有効になる。
 <code>
 M-x eval-buffer
+</code></p>
+
+<h3>Clojureプロジェクト作成</h3>
+
+<p><code>
+$ lein new demo
+</code></p>
+
+<h3>Emacs上でnREPL起動</h3>
+
+<p><code>
+$ cd demo
+$ emacs src/demo/core.clj
+</code>
+Emacs上で
+<code>
+M-x nrepl-jack-in
 </code></p>
 ]]></content>
   </entry>
