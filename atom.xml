@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-03-03T15:24:07+09:00</updated>
+  <updated>2013-04-19T18:35:02+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Clojure開発環境インストールまとめ(Emacs24)]]></title>
+    <link href="http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/"/>
+    <updated>2013-04-19T18:29:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[lib-noirを利用したフォームバリデーション]]></title>
