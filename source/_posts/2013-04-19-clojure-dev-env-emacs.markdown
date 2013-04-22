@@ -42,6 +42,19 @@ Emacs24以降のバージョンを利用すると、パッケージ管理シス�
 M-x eval-buffer
 ```
 
+ここでインストールされるパッケージは以下のとおり。
+
+* [clojure-mode.el](https://github.com/technomancy/clojure-mode)  
+Clojure編集の基本機能を追加するモード。インデントやシンタックスハイライトなど。
+* [paredit.el](http://emacswiki.org/emacs/ParEdit)  
+括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。  
+動作が直感的でないところもあるので、[チュートリアル](http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html)で勉強。
+* [nrepl.el](https://github.com/kingtim/nrepl.el)  
+Emacsから、[nREPL](https://github.com/clojure/tools.nrepl)(ネットワーク経由で利用できるREPL)にアクセスするための機能。  
+nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。
+* [rainbow-delimiters.el](http://www.emacswiki.org/emacs/RainbowDelimiters)  
+Lispにありがちな多重括弧を、キレイに色付けしてくれるモード。
+
 ### Clojureプロジェクト作成
 ```
 $ lein new demo
