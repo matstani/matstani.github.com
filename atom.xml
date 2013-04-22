@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-04-19T20:05:48+09:00</updated>
+  <updated>2013-04-22T17:21:00+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Clojure開発環境インストールまとめ(Emacs)]]></title>
+    <title type="html"><![CDATA[Clojure開発環境インストール手順(Emacs)]]></title>
     <link href="http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/"/>
     <updated>2013-04-19T18:29:00+09:00</updated>
     <id>http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs</id>
@@ -37,6 +37,10 @@
 
 
 <p>CentOSの場合</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install java-1.7.0-openjdk</span></code></pre></td></tr></table></div></figure>
+
 
 <h3>leiningenインストール</h3>
 
@@ -68,6 +72,22 @@
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-buffer</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここでインストールされるパッケージは以下のとおり。</p>
+
+<ul>
+<li><a href="https://github.com/technomancy/clojure-mode">clojure-mode.el</a><br/>
+Clojure編集の基本機能を追加するモード。インデントやシンタックスハイライトなど。</li>
+<li><a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a><br/>
+括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。<br/>
+動作が直感的でないところもあるので、<a href="http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html">チュートリアル</a>で勉強。</li>
+<li><a href="https://github.com/kingtim/nrepl.el">nrepl.el</a><br/>
+Emacsから、<a href="https://github.com/clojure/tools.nrepl">nREPL</a>(ネットワーク経由で利用できるREPL)にアクセスするための機能。<br/>
+nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。</li>
+<li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">rainbow-delimiters.el</a><br/>
+Lispにありがちな多重括弧を、キレイに色付けしてくれるモード。</li>
+</ul>
 
 
 <h3>Clojureプロジェクト作成</h3>
