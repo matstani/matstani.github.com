@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-04-22T17:21:00+09:00</updated>
+  <updated>2013-05-10T20:01:50+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Clojureのuseをrequireで置き換える]]></title>
+    <link href="http://matstani.github.com/blog/2013/05/10/clojure-require-use/"/>
+    <updated>2013-05-10T18:41:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/05/10/clojure-require-use</id>
+    <content type="html"><![CDATA[<p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
+
+<p>requireにまとめることで、コードが若干すっきりするかもしれません。</p>
+
+<div><script src='https://gist.github.com/5553626.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Clojure開発環境インストール手順(Emacs)]]></title>

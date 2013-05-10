@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-04-22T17:21:00+09:00</updated>
+  <updated>2013-05-10T20:01:50+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Clojureのuseをrequireで置き換える]]></title>
+    <link href="http://matstani.github.com/blog/2013/05/10/clojure-require-use/"/>
+    <updated>2013-05-10T18:41:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/05/10/clojure-require-use</id>
+    <content type="html"><![CDATA[<p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
+
+<p>requireにまとめることで、コードが若干すっきりするかもしれません。</p>
+
+<p><div><script src='https://gist.github.com/5553626.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Clojure開発環境インストール手順(Emacs)]]></title>
@@ -435,53 +450,6 @@ $ lein deps
   (handler/site app-routes))
 </code></pre></noscript></div>
 </p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Clojureインストール、Compojureプロジェクト作成]]></title>
-    <link href="http://matstani.github.com/blog/2013/01/23/create-compojure-project/"/>
-    <updated>2013-01-23T18:05:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/01/23/create-compojure-project</id>
-    <content type="html"><![CDATA[<p><a href="http://clojure.org/">Clojure</a>には、<a href="http://leiningen.org/">Leiningen</a>という管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。</p>
-
-<p>Clojureがインストールされていない状態から、ウェブアプリケーションフレームワーク<a href="https://github.com/weavejester/compojure">Compojure</a>を利用したウェブアプリケーションの開発用プロジェクトを作成するまでの手順は以下のとおりです。</p>
-
-<h4>Javaがインストールされていることを確認</h4>
-
-<p><code>
-$ java -version
-</code></p>
-
-<h4>Leiningenインストール</h4>
-
-<h5>leinスクリプトをダウンロード</h5>
-
-<p><code>
-$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein
-</code></p>
-
-<h5>ダウンロードしたスクリプトをPATHの通った場所に置き、実行権を付与</h5>
-
-<p><code>
-$ mv lein ~/bin
-$ chmod 755 ~/bin/lein
-</code></p>
-
-<h4>compojureプロジェクトの作成（初回は時間かかる）</h4>
-
-<p><code>
-$ lein new compojure helloworld
-</code></p>
-
-<h4>開発用HTTPサーバ起動（初回は時間かかる）</h4>
-
-<p><code>
-$ cd helloworld
-$ lein ring server-headless
-</code></p>
-
-<p>Port3000でHTTPサーバが起動されるので、ブラウザで確認します。</p>
 ]]></content>
   </entry>
   
