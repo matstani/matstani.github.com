@@ -9,7 +9,7 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。 requireにまとめることで、コードが若干すっきりするかもしれません。 ">
+  <meta name="description" content="Clojureなど、Lisp系言語の編集に便利なparedit.elですが、GNU screen内で起動したEmacsで利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/15/paredit-with-screen-emacs/">screen内のEmacsでparedit.elを使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-15T15:23:00+09:00" pubdate data-updated="true">May 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Clojureなど、Lisp系言語の編集に便利な<a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a>ですが、<a href="http://www.gnu.org/software/screen/">GNU screen</a>内で起動した<a href="http://www.gnu.org/software/emacs/">Emacs</a>で利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。</p>
+
+<p>emacs起動時のコマンドでTERM変数を指定しておくと、とりあえず解決するようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>TERM=xterm emacs -nw somefile</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考にしたURL
+<a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -933,6 +978,10 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/15/paredit-with-screen-emacs/">screen内のEmacsでparedit.elを使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/05/10/clojure-require-use/">Clojureのuseをrequireで置き換える</a>
       </li>
     
@@ -946,10 +995,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2013/02/28/fix-gist-width/">Octopressのスタイルシートを変更</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/05/form-authentication-using-friend/">Friendを利用したフォーム認証</a>
       </li>
     
   </ul>

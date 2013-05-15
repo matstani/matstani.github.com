@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - /home/matstani/weblog</title>
+  <title>screen内のEmacsでparedit.elを使う - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Blog Archive 2013 screen内のEmacsでparedit.elを使う
-May 15 2013 posted in Clojure Clojureのuseをrequireで置き換える
-May 10 2013 posted in Clojure &hellip;">
+  <meta name="description" content="Clojureなど、Lisp系言語の編集に便利なparedit.elですが、GNU screen内で起動したEmacsで利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ May 10 2013 posted in Clojure &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/archives/">
+  <link rel="canonical" href="http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,144 +75,100 @@ May 10 2013 posted in Clojure &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">screen内のEmacsでparedit.elを使う</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-15T15:23:00+09:00" pubdate data-updated="true">May 15<span>th</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><p>Clojureなど、Lisp系言語の編集に便利な<a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a>ですが、<a href="http://www.gnu.org/software/screen/">GNU screen</a>内で起動した<a href="http://www.gnu.org/software/emacs/">Emacs</a>で利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。</p>
 
-  
-  <h2>2013</h2>
+<p>emacs起動時のコマンドでTERM変数を指定しておくと、とりあえず解決するようです。</p>
 
-<article>
-  
-<h1><a href="/blog/2013/05/15/paredit-with-screen-emacs/">screen内のEmacsでparedit.elを使う</a></h1>
-<time datetime="2013-05-15T15:23:00+09:00" pubdate><span class='month'>May</span> <span class='day'>15</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>TERM=xterm emacs -nw somefile</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/05/10/clojure-require-use/">Clojureのuseをrequireで置き換える</a></h1>
-<time datetime="2013-05-10T18:41:00+09:00" pubdate><span class='month'>May</span> <span class='day'>10</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/04/19/clojure-dev-env-emacs/">Clojure開発環境インストール手順(Emacs)</a></h1>
-<time datetime="2013-04-19T18:29:00+09:00" pubdate><span class='month'>Apr</span> <span class='day'>19</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/02/28/validation-with-lib-noir/">lib-noirを利用したフォームバリデーション</a></h1>
-<time datetime="2013-02-28T13:02:00+09:00" pubdate><span class='month'>Feb</span> <span class='day'>28</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/02/28/fix-gist-width/">Octopressのスタイルシートを変更</a></h1>
-<time datetime="2013-02-28T10:03:00+09:00" pubdate><span class='month'>Feb</span> <span class='day'>28</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>Octopress</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/02/05/form-authentication-using-friend/">Friendを利用したフォーム認証</a></h1>
-<time datetime="2013-02-05T20:01:00+09:00" pubdate><span class='month'>Feb</span> <span class='day'>05</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/01/31/fileupload-with-compojure/">Compojureでファイルアップロード</a></h1>
-<time datetime="2013-01-31T21:50:00+09:00" pubdate><span class='month'>Jan</span> <span class='day'>31</span> <span class='year'>2013</span></time>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/01/23/using-db-from-compojure-using-korma/">KormaでDBアクセス</a></h1>
-<time datetime="2013-01-23T19:41:00+09:00" pubdate><span class='month'>Jan</span> <span class='day'>23</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/01/23/create-compojure-project/">Clojureインストール、Compojureプロジェクト作成</a></h1>
-<time datetime="2013-01-23T18:05:00+09:00" pubdate><span class='month'>Jan</span> <span class='day'>23</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
+<p>参考にしたURL
+<a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Shunsaku MATSUTANI</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-15T15:23:00+09:00" pubdate data-updated="true">May 15<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/" data-via="" data-counturl="http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/10/clojure-require-use/" title="Previous Post: Clojureのuseをrequireで置き換える">&laquo; Clojureのuseをrequireで置き換える</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -270,7 +224,10 @@ May 10 2013 posted in Clojure &hellip;">
       var disqus_shortname = 'matstani-weblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/';
+        var disqus_url = 'http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

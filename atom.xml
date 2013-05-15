@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-05-10T20:01:50+09:00</updated>
+  <updated>2013-05-15T16:08:13+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,24 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[screen内のEmacsでparedit.elを使う]]></title>
+    <link href="http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/"/>
+    <updated>2013-05-15T15:23:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs</id>
+    <content type="html"><![CDATA[<p>Clojureなど、Lisp系言語の編集に便利な<a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a>ですが、<a href="http://www.gnu.org/software/screen/">GNU screen</a>内で起動した<a href="http://www.gnu.org/software/emacs/">Emacs</a>で利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。</p>
+
+<p>emacs起動時のコマンドでTERM変数を指定しておくと、とりあえず解決するようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>TERM=xterm emacs -nw somefile</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考にしたURL
+<a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Clojureのuseをrequireで置き換える]]></title>
