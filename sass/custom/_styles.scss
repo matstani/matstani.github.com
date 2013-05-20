@@ -1,3 +1,30 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
-.gist .line-data { width: 100% }
+
+.serif, body, #content .blog-index a[rel=full-article] {
+    font-family: Helvetica, “ヒラギノ角ゴ Pro W3″,”Hiragino Kaku Gothic Pro W3″,メイリオ,Meiryo,”ＭＳ Ｐゴシック”,sans-serif;
+}
+
+h1, #content .blog-index article h1 {
+    font-size: 160%;
+}
+
+div.highlight .gutter {
+    background-color: #ececec;
+    color: #aaa;
+    border-right: 1px solid #ddd;
+    text-align: right;
+    padding: .5em;
+}
+
+div.highlight .code {
+    padding: 0.5em !important;
+}
+
+div.highlight {
+    overflow-x: auto;
+    border: 1px solid #dedede;
+    background-color: #f8f8ff;
+    font-family: Consolas,"Liberation Mono",Courier,monospace;
+    margin-bottom: 1em;
+}
