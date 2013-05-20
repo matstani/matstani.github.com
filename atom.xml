@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-05-15T16:08:13+09:00</updated>
+  <updated>2013-05-20T18:55:29+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,137 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Clojureアプリケーションを動的に書き換える]]></title>
+    <link href="http://matstani.github.com/blog/2013/05/20/embed-nrepl/"/>
+    <updated>2013-05-20T12:45:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/05/20/embed-nrepl</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/clojure/tools.nrepl">nREPL</a>サーバをClojureアプリケーションに組み込んでおくと、動作中のClojureアプリケーションに接続して、デバッグを行ったり、動作を書き換えたりすることができます。</p>
+
+<p>試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。<br/>
+Clojureからは、JavaのSwingを直接利用できますが、せっかくなので、よりClojureっぽく書ける<a href="https://github.com/daveray/seesaw">Seesaw</a>を使ってみます。</p>
+
+<p>project.cljは以下のとおり。</p>
+
+<div><script src='https://gist.github.com/5610271.js?file=project.clj'></script>
+<noscript><pre><code>(defproject nrepl-test &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :license {:name &quot;Eclipse Public License&quot;
+            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
+                 [seesaw &quot;1.4.2&quot;]
+                 [org.clojure/tools.nrepl &quot;0.2.3&quot;]]
+  :main nrepl-test.core)
+</code></pre></noscript></div>
+
+
+<p>アプリケーションのコードは以下のとおり。</p>
+
+<div><script src='https://gist.github.com/5610271.js?file=core.clj'></script>
+<noscript><pre><code>(ns nrepl-test.core
+  (:require [seesaw.core :refer :all]
+            [clojure.tools.nrepl.server :refer [start-server]])
+  (:gen-class))
+
+(defonce server (start-server :port 7888))
+
+(def msg &quot;Hello, Seesaw.&quot;)
+
+(def lbl-msg
+  (label &quot;&quot;))
+
+(defn set-msg!
+  [msg]
+  (config! lbl-msg :text msg))
+
+(def btn-show-msg
+  (button :text &quot;Show Message&quot;))
+
+(def content (vertical-panel
+              :items [lbl-msg
+                      btn-show-msg]))
+
+(defn -main
+  [&amp; args]
+  (invoke-later
+   (listen btn-show-msg
+           :action
+           (fn [e]
+             (set-msg! msg)
+             (-&gt; e .getSource to-root pack!)))
+   (-&gt; (frame :title &quot;Hello&quot;,
+              :content content,
+              :on-close :exit)
+       pack!
+       show!)))
+</code></pre></noscript></div>
+
+
+<p>6行目でnREPLサーバを起動しています。</p>
+
+<p>アプリケーションを起動</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein run</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のようなウィンドウが表示されます。</p>
+
+<p><img src="http://matstani.github.com/images/blog/2013-05-20_123249.png" alt="ウィンドウ" /></p>
+
+<p>「Show Message」ボタンを押すとメッセージが表示されます。</p>
+
+<p><img src="http://matstani.github.com/images/blog/2013-05-20_123337.png" alt="ウィンドウ" /></p>
+
+<p>このアプリケーションにnREPLクライアントで接続し、動作を書き換えてみます。<br/>
+nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>を利用する場合、Emacs内で以下のコマンドを実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl
+</span><span class='line'>Host: 127.0.0.1
+</span><span class='line'>Port: 7888</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Portで指定するのは、アプリケーション中のstart-serverで指定したポート番号です。
+以下のようにnREPLプロンプトが表示されます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>; nREPL 0.1.7
+</span><span class='line'>user&gt; </span></code></pre></td></tr></table></div></figure>
+
+
+<p>表示されるメッセージを変化させてみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user&gt; (in-ns 'nrepl-test.core) ;namespaceセット
+</span><span class='line'>nrepl-test.core&gt; (def msg "Changed Message.") ;msgを再定義</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ボタンを押すと、メッセージが変化します。</p>
+
+<p><img src="http://matstani.github.com/images/blog/2013-05-20_162336.png" alt="ウィンドウ" /></p>
+
+<p>ログ機能を付けてみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nrepl-test.core&gt; (let [old show-msg-actn]
+</span><span class='line'>    (defn show-msg-actn
+</span><span class='line'>        [e]
+</span><span class='line'>        (println "LOG: show-msg-actn") (old e))) ;show-msg-actnを再定義</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ボタンを押すと、コンソールにログが表示されるようになりました。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[screen内のEmacsでparedit.elを使う]]></title>

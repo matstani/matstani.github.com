@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-05-15T16:08:13+09:00</updated>
+  <updated>2013-05-20T18:55:29+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,125 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Clojureアプリケーションを動的に書き換える]]></title>
+    <link href="http://matstani.github.com/blog/2013/05/20/embed-nrepl/"/>
+    <updated>2013-05-20T12:45:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/05/20/embed-nrepl</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/clojure/tools.nrepl">nREPL</a>サーバをClojureアプリケーションに組み込んでおくと、動作中のClojureアプリケーションに接続して、デバッグを行ったり、動作を書き換えたりすることができます。</p>
+
+<p>試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。<br/>
+Clojureからは、JavaのSwingを直接利用できますが、せっかくなので、よりClojureっぽく書ける<a href="https://github.com/daveray/seesaw">Seesaw</a>を使ってみます。</p>
+
+<p>project.cljは以下のとおり。</p>
+
+<p><div><script src='https://gist.github.com/5610271.js?file=project.clj'></script>
+<noscript><pre><code>(defproject nrepl-test &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :license {:name &quot;Eclipse Public License&quot;
+            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
+                 [seesaw &quot;1.4.2&quot;]
+                 [org.clojure/tools.nrepl &quot;0.2.3&quot;]]
+  :main nrepl-test.core)
+</code></pre></noscript></div>
+</p>
+
+<p>アプリケーションのコードは以下のとおり。</p>
+
+<p><div><script src='https://gist.github.com/5610271.js?file=core.clj'></script>
+<noscript><pre><code>(ns nrepl-test.core
+  (:require [seesaw.core :refer :all]
+            [clojure.tools.nrepl.server :refer [start-server]])
+  (:gen-class))
+
+(defonce server (start-server :port 7888))
+
+(def msg &quot;Hello, Seesaw.&quot;)
+
+(def lbl-msg
+  (label &quot;&quot;))
+
+(defn set-msg!
+  [msg]
+  (config! lbl-msg :text msg))
+
+(def btn-show-msg
+  (button :text &quot;Show Message&quot;))
+
+(def content (vertical-panel
+              :items [lbl-msg
+                      btn-show-msg]))
+
+(defn -main
+  [&amp; args]
+  (invoke-later
+   (listen btn-show-msg
+           :action
+           (fn [e]
+             (set-msg! msg)
+             (-&gt; e .getSource to-root pack!)))
+   (-&gt; (frame :title &quot;Hello&quot;,
+              :content content,
+              :on-close :exit)
+       pack!
+       show!)))
+</code></pre></noscript></div>
+</p>
+
+<p>6行目でnREPLサーバを起動しています。</p>
+
+<p>アプリケーションを起動
+<code>
+$ lein run
+</code></p>
+
+<p>以下のようなウィンドウが表示されます。</p>
+
+<p><img src="/images/blog/2013-05-20_123249.png" alt="ウィンドウ" /></p>
+
+<p>「Show Message」ボタンを押すとメッセージが表示されます。</p>
+
+<p><img src="/images/blog/2013-05-20_123337.png" alt="ウィンドウ" /></p>
+
+<p>このアプリケーションにnREPLクライアントで接続し、動作を書き換えてみます。<br/>
+nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>を利用する場合、Emacs内で以下のコマンドを実行します。
+<code>
+M-x nrepl
+Host: 127.0.0.1
+Port: 7888
+</code>
+Portで指定するのは、アプリケーション中のstart-serverで指定したポート番号です。
+以下のようにnREPLプロンプトが表示されます。
+<code>
+; nREPL 0.1.7
+user&gt;
+</code>
+表示されるメッセージを変化させてみます。
+<code>
+user&gt; (in-ns 'nrepl-test.core) ;namespaceセット
+nrepl-test.core&gt; (def msg "Changed Message.") ;msgを再定義
+</code>
+ボタンを押すと、メッセージが変化します。</p>
+
+<p><img src="/images/blog/2013-05-20_162336.png" alt="ウィンドウ" /></p>
+
+<p>ログ機能を付けてみます。
+```
+nrepl-test.core> (let [old show-msg-actn]</p>
+
+<pre><code>(defn show-msg-actn
+    [e]
+    (println "LOG: show-msg-actn") (old e))) ;show-msg-actnを再定義
+</code></pre>
+
+<p>```</p>
+
+<p>ボタンを押すと、コンソールにログが表示されるようになりました。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[screen内のEmacsでparedit.elを使う]]></title>
@@ -248,137 +367,6 @@ $ lein deps
   (-&gt; app-routes
       ;;バリデーション用ミドルウェア                                                                                                                              
       vali/wrap-noir-validation
-      handler/site))
-</code></pre></noscript></div>
-</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Friendを利用したフォーム認証]]></title>
-    <link href="http://matstani.github.com/blog/2013/02/05/form-authentication-using-friend/"/>
-    <updated>2013-02-05T20:01:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/02/05/form-authentication-using-friend</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
-
-<p>Compojureベースのウェブアプリケーションで、フォーム認証を行なってみます。</p>
-
-<p><a href="https://github.com/cemerick/friend">Friend</a>という認証／認可用のライブラリを利用できます。</p>
-
-<h4>依存ライブラリインストール</h4>
-
-<p>project.cljの:dependenciesにFriend、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。
-<div><script src='https://gist.github.com/5046194.js?file=project.clj'></script>
-<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [compojure &quot;1.1.5&quot;]
-                 [hiccup &quot;1.0.2&quot;]
-                 [com.cemerick/friend &quot;0.1.3&quot;]]
-  :plugins [[lein-ring &quot;0.8.2&quot;]]
-  :ring {:handler helloworld.handler/app}
-  :profiles
-  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
-</p>
-
-<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。
-<code>
-$ lein deps
-</code></p>
-
-<h4>Friendを使ってフォーム認証</h4>
-
-<p>仮アカウントとしてadmin、userを用意し、それぞれ閲覧できるページが異なる設定にしています。
-認証に伴うリダイレクト処理はFriendが行ってくれます。
-<div><script src='https://gist.github.com/5046194.js?file=handler.clj'></script>
-<noscript><pre><code>(ns helloworld.handler
-  (:require [ring.util.response :as response]
-            [compojure.core :refer :all]
-            [compojure.handler :as handler]
-            [compojure.route :as route]
-            [hiccup.page :refer [html5]]
-            [hiccup.element :refer [link-to]]
-            [hiccup.form :as form]
-            [cemerick.friend :as friend]
-            (cemerick.friend [workflows :as workflows]
-                             [credentials :as creds])))
-
-;; 仮のアカウント定義
-(def users {&quot;admin&quot; {:username &quot;admin&quot;
-                    :password (creds/hash-bcrypt &quot;adminpassword&quot;)
-                    :roles #{::admin}}
-            &quot;user&quot; {:username &quot;user&quot;
-                    :password (creds/hash-bcrypt &quot;userpassword&quot;)
-                    :roles #{::user}}})
-
-;; ::admin ロールは ::user ロールを兼ねる
-(derive ::admin ::user)
-
-;; ページレイアウト
-(defn layout [&amp; content]
-  (html5
-   [:head [:title &quot;auth and authz using friend.&quot;]]
-   [:body
-    content]))
-
-;; 認証が必要なページの定義
-(defroutes secure-routes
-  ;; /admin以下は ::admin ロールが必要
-  (context &quot;/admin&quot; request
-           (friend/wrap-authorize
-            (routes
-             (GET &quot;/page1&quot; [] (layout &quot;admin page1.&quot;))
-             (GET &quot;/page2&quot; [] (layout &quot;admin page2.&quot;)))
-            #{::admin}))
-  ;; /user以下は ::user ロールが必要
-  (context &quot;/user&quot; request
-           (friend/wrap-authorize
-            (GET &quot;/private&quot; [] (layout &quot;private page.&quot;))
-            #{::user})))
-
-;; indexページ
-(def index
-  (layout
-   [:div
-    [:ul
-     [:li (link-to &quot;/admin/page1&quot; &quot;Admin page1&quot;)]
-     [:li (link-to &quot;/admin/page2&quot; &quot;Admin page2&quot;)]
-     [:li (link-to &quot;/user/private&quot; &quot;User's private page.&quot;)]]]
-   [:div (link-to &quot;/login&quot; &quot;Login&quot;)]
-   [:div (link-to &quot;/logout&quot; &quot;Logout&quot;)]))
-
-(def index-handler
-  (GET &quot;/&quot; [] index))
-
-;; ログインフォーム
-(def login-form
-  (layout
-    (form/form-to [:post &quot;/login&quot;]
-                  [:div
-                   [:div
-                    (form/label &quot;username&quot; &quot;user name:&quot;)
-                    (form/text-field &quot;username&quot;)]
-                   [:div (form/label &quot;password&quot; &quot;password:&quot;)
-                    (form/password-field &quot;password&quot;)]
-                   [:div (form/submit-button &quot;login!&quot;)]])))
-
-(def login-handler
-  (GET &quot;/login&quot; [] login-form))
-
-(defroutes app-routes
-  index-handler
-  login-handler
-  secure-routes
-  ;;ログアウトページ
-  (friend/logout (ANY &quot;/logout&quot; request (response/redirect &quot;/&quot;)))
-  (route/not-found &quot;Not Found&quot;))
-
-(def app
-  (-&gt; app-routes
-      ;;認証用ミドルウェア（依存ミドルウェアの内側に置く）
-      (friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn users)
-                            :workflows [(workflows/interactive-form)]})
       handler/site))
 </code></pre></noscript></div>
 </p>
