@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Clojure - /home/matstani/weblog</title>
+  <title>/home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Category: Clojure">
+  <meta name="description" content="Clojureには、Leiningenという管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。 Clojureがインストールされていない状態から、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.comblog/categories/clojure">
+  <link rel="canonical" href="http://matstani.github.com/blog/page/2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -75,138 +75,93 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
-    <h1 class="entry-title">Category: Clojure</h1>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/23/create-compojure-project/">Clojureインストール、Compojureプロジェクト作成</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-23T18:05:00+09:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+  <div class="entry-content"><p><a href="http://clojure.org/">Clojure</a>には、<a href="http://leiningen.org/">Leiningen</a>という管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。</p>
 
-  
-  <h2>2013</h2>
+<p>Clojureがインストールされていない状態から、ウェブアプリケーションフレームワーク<a href="https://github.com/weavejester/compojure">Compojure</a>を利用したウェブアプリケーションの開発用プロジェクトを作成するまでの手順は以下のとおりです。</p>
 
-<article>
-  
-<h1><a href="/blog/2013/05/20/embed-nrepl/">Clojureアプリケーションを動的に書き換える</a></h1>
-<time datetime="2013-05-20T12:45:00+09:00" pubdate><span class='month'>May</span> <span class='day'>20</span> <span class='year'>2013</span></time>
+<h4>Javaがインストールされていることを確認</h4>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ java -version</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<h4>Leiningenインストール</h4>
+
+<h5>leinスクリプトをダウンロード</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein</span></code></pre></td></tr></table></div></figure>
 
 
+<h5>ダウンロードしたスクリプトをPATHの通った場所に置き、実行権を付与</h5>
 
-<article>
-  
-<h1><a href="/blog/2013/05/15/paredit-with-screen-emacs/">screen内のEmacsでparedit.elを使う</a></h1>
-<time datetime="2013-05-15T15:23:00+09:00" pubdate><span class='month'>May</span> <span class='day'>15</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mv lein ~/bin
+</span><span class='line'>$ chmod 755 ~/bin/lein </span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<h4>compojureプロジェクトの作成（初回は時間かかる）</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure helloworld </span></code></pre></td></tr></table></div></figure>
 
 
+<h4>開発用HTTPサーバ起動（初回は時間かかる）</h4>
 
-<article>
-  
-<h1><a href="/blog/2013/05/10/clojure-require-use/">Clojureのuseをrequireで置き換える</a></h1>
-<time datetime="2013-05-10T18:41:00+09:00" pubdate><span class='month'>May</span> <span class='day'>10</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd helloworld
+</span><span class='line'>$ lein ring server-headless </span></code></pre></td></tr></table></div></figure>
 
 
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/04/19/clojure-dev-env-emacs/">Clojure開発環境インストール手順(Emacs)</a></h1>
-<time datetime="2013-04-19T18:29:00+09:00" pubdate><span class='month'>Apr</span> <span class='day'>19</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/02/28/validation-with-lib-noir/">lib-noirを利用したフォームバリデーション</a></h1>
-<time datetime="2013-02-28T13:02:00+09:00" pubdate><span class='month'>Feb</span> <span class='day'>28</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/02/05/form-authentication-using-friend/">Friendを利用したフォーム認証</a></h1>
-<time datetime="2013-02-05T20:01:00+09:00" pubdate><span class='month'>Feb</span> <span class='day'>05</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/01/23/using-db-from-compojure-using-korma/">KormaでDBアクセス</a></h1>
-<time datetime="2013-01-23T19:41:00+09:00" pubdate><span class='month'>Jan</span> <span class='day'>23</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/01/23/create-compojure-project/">Clojureインストール、Compojureプロジェクト作成</a></h1>
-<time datetime="2013-01-23T18:05:00+09:00" pubdate><span class='month'>Jan</span> <span class='day'>23</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/clojure/'>Clojure</a></span>
-</footer>
-
-
-</article>
-
+<p>Port3000でHTTPサーバが起動されるので、ブラウザで確認します。</p>
 </div>
-
   
-</article>
+  
 
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     <section>
@@ -243,7 +198,6 @@
 
   
 </aside>
-
 
     </div>
   </div>

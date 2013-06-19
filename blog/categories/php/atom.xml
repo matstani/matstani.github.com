@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: PHP | /home/matstani/weblog]]></title>
+  <link href="http://matstani.github.com/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://matstani.github.com/"/>
+  <updated>2013-06-19T17:04:17+09:00</updated>
+  <id>http://matstani.github.com/</id>
+  <author>
+    <name><![CDATA[Shunsaku MATSUTANI]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[[PHP]memory_get_usageのreal_usageオプションについて]]></title>
+    <link href="http://matstani.github.com/blog/2013/06/19/php-memory-usage/"/>
+    <updated>2013-06-19T16:27:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/06/19/php-memory-usage</id>
+    <content type="html"><![CDATA[<p>PHPで割り当てメモリ量を取得するには、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>関数を利用できます。</p>
+
+<p>この関数には、パラメータとして$real_usageを指定できるようになっており、</p>
+
+<blockquote><p>これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE を設定したりすると、 emalloc() が使用するメモリのみを報告します。</p></blockquote>
+
+<p>とあるのですが、「システムが割り当てた実際のメモリの大きさ」と、「emalloc()が使用するメモリ」の違いがよくわかりません。</p>
+
+<p>検索してみたところ、以下を見つけました。</p>
+
+<p><a href="http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php">http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php</a></p>
+
+<p>回答によると、PHPのメモリマネージャは、メモリを確保する際、アプリケーションが必要とするメモリをその都度mallocするのではなく、より大きな単位で確保しておいて内部で管理しているそうです。(デフォルトで256KB単位。環境変数ZEND_MM_SEG_SIZEで設定)</p>
+
+<p>ということで、割り当てメモリ量として以下2種類があることになります。</p>
+
+<ol>
+<li>PHPのメモリマネージャが確保しているメモリ量($real_usage=true)</li>
+<li>アプリケーションが実際に使用しているメモリ量($real_usage=false)</li>
+</ol>
+
+
+<p>php.ini等で指定するmemory_limitで制限しているのは1.になります。<br/>
+環境変数 USE_ZEND_ALLOC=0 を設定すると、上記の仕組みが無効になり、必要量をその都度mallocする動作になるとのことです。</p>
+
+<p>ちなみに、PHPの割り当てメモリ量を調べる関数としては、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>の他に、<a href="http://php.net/manual/ja/function.memory-get-peak-usage.php">memory_get_peak_usage</a>があり、こちらは呼び出し時点までに割り当てられた最大メモリ量を取得できます。</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -9,8 +9,7 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="nREPLサーバをClojureアプリケーションに組み込んでおくと、動作中のClojureアプリケーションに接続して、デバッグを行ったり、動作を書き換えたりすることができます。 試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。
-Clojureからは、 &hellip;">
+  <meta name="description" content="PHPで割り当てメモリ量を取得するには、memory_get_usage関数を利用できます。 この関数には、パラメータとして$real_usageを指定できるようになっており、 これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,67 @@ Clojureからは、 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/19/php-memory-usage/">[PHP]memory_get_usageのreal_usageオプションについて</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-19T16:27:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>PHPで割り当てメモリ量を取得するには、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>関数を利用できます。</p>
+
+<p>この関数には、パラメータとして$real_usageを指定できるようになっており、</p>
+
+<blockquote><p>これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE を設定したりすると、 emalloc() が使用するメモリのみを報告します。</p></blockquote>
+
+<p>とあるのですが、「システムが割り当てた実際のメモリの大きさ」と、「emalloc()が使用するメモリ」の違いがよくわかりません。</p>
+
+<p>検索してみたところ、以下を見つけました。</p>
+
+<p><a href="http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php">http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php</a></p>
+
+<p>回答によると、PHPのメモリマネージャは、メモリを確保する際、アプリケーションが必要とするメモリをその都度mallocするのではなく、より大きな単位で確保しておいて内部で管理しているそうです。(デフォルトで256KB単位。環境変数ZEND_MM_SEG_SIZEで設定)</p>
+
+<p>ということで、割り当てメモリ量として以下2種類があることになります。</p>
+
+<ol>
+<li>PHPのメモリマネージャが確保しているメモリ量($real_usage=true)</li>
+<li>アプリケーションが実際に使用しているメモリ量($real_usage=false)</li>
+</ol>
+
+
+<p>php.ini等で指定するmemory_limitで制限しているのは1.になります。<br/>
+環境変数 USE_ZEND_ALLOC=0 を設定すると、上記の仕組みが無効になり、必要量をその都度mallocする動作になるとのことです。</p>
+
+<p>ちなみに、PHPの割り当てメモリ量を調べる関数としては、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>の他に、<a href="http://php.net/manual/ja/function.memory-get-peak-usage.php">memory_get_peak_usage</a>があり、こちらは呼び出し時点までに割り当てられた最大メモリ量を取得できます。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1049,83 +1109,9 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/23/create-compojure-project/">Clojureインストール、Compojureプロジェクト作成</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-23T18:05:00+09:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://clojure.org/">Clojure</a>には、<a href="http://leiningen.org/">Leiningen</a>という管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。</p>
-
-<p>Clojureがインストールされていない状態から、ウェブアプリケーションフレームワーク<a href="https://github.com/weavejester/compojure">Compojure</a>を利用したウェブアプリケーションの開発用プロジェクトを作成するまでの手順は以下のとおりです。</p>
-
-<h4>Javaがインストールされていることを確認</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ java -version</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Leiningenインストール</h4>
-
-<h5>leinスクリプトをダウンロード</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>ダウンロードしたスクリプトをPATHの通った場所に置き、実行権を付与</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mv lein ~/bin
-</span><span class='line'>$ chmod 755 ~/bin/lein </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>compojureプロジェクトの作成（初回は時間かかる）</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure helloworld </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>開発用HTTPサーバ起動（初回は時間かかる）</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd helloworld
-</span><span class='line'>$ lein ring server-headless </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Port3000でHTTPサーバが起動されるので、ブラウザで確認します。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1136,6 +1122,10 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/19/php-memory-usage/">[PHP]memory_get_usageのreal_usageオプションについて</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/05/20/embed-nrepl/">Clojureアプリケーションを動的に書き換える</a>
@@ -1151,10 +1141,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2013/04/19/clojure-dev-env-emacs/">Clojure開発環境インストール手順(Emacs)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/28/validation-with-lib-noir/">Lib-noirを利用したフォームバリデーション</a>
       </li>
     
   </ul>
