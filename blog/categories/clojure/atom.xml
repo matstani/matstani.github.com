@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-06-27T18:26:19+09:00</updated>
+  <updated>2013-06-27T19:34:13+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -25,7 +25,7 @@
 ;([0 :a] [1 :b] [2 :c] [3 :d] [4 :e])
 ```</p></blockquote>
 
-<p>例)doseqに渡す。
+<p>例)doseqでループ処理。
 ```</p>
 
 <blockquote><p>(doseq [[idx item] (map-indexed vector [:a :b :c :d :e])]</p>
