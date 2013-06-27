@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-06-19T17:04:17+09:00</updated>
+  <updated>2013-06-27T17:48:32+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] インデックス付きシーケンス]]></title>
+    <link href="http://matstani.github.com/blog/2013/06/27/indexed-seq/"/>
+    <updated>2013-06-27T16:57:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/06/27/indexed-seq</id>
+    <content type="html"><![CDATA[<p>Clojure1.2以前の、<a href="http://clojuredocs.org/clojure_contrib/clojure.contrib.seq/indexed">clojure.contrib.seq/indexed</a>の代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。
+```</p>
+
+<blockquote><p>(map-indexed vector [:a :b :c :d :e])
+;([0 :a] [1 :b] [2 :c] [3 :d] [4 :e])
+```</p></blockquote>
+
+<p>例)doseqに渡す。
+```</p>
+
+<blockquote><p>(doseq [[idx item] (map-indexed vector [:a :b :c :d :e])]</p>
+
+<pre><code>    (println (str idx ":" item)))
+</code></pre>
+
+<p>;0:a
+;1:b
+;2:c
+;3:d
+```</p></blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Clojureアプリケーションを動的に書き換える]]></title>
@@ -250,126 +278,6 @@ Emacs上で
 <code>
 M-x nrepl-jack-in
 </code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[lib-noirを利用したフォームバリデーション]]></title>
-    <link href="http://matstani.github.com/blog/2013/02/28/validation-with-lib-noir/"/>
-    <updated>2013-02-28T13:02:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/02/28/validation-with-lib-noir</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
-
-<p>Compojureベースのウェブアプリケーションで、フォームバリデーションを行います。</p>
-
-<p>ウェブアプリケーション用ライブラリ<a href="https://github.com/noir-clojure/lib-noir">lib-noir</a>を利用するコードを紹介します。</p>
-
-<h4>依存ライブラリのインストール</h4>
-
-<p>lib-noirとHTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。
-<div><script src='https://gist.github.com/5055544.js?file=project.clj'></script>
-<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [compojure &quot;1.1.5&quot;]
-                 [lib-noir &quot;0.4.6&quot;]
-                 [hiccup &quot;1.0.2&quot;]]
-  :plugins [[lein-ring &quot;0.8.2&quot;]]
-  :ring {:handler helloworld.handler/app}
-  :profiles
-  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
-</p>
-
-<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。
-<code>
-$ lein deps
-</code></p>
-
-<h4>lib-noir/validationを使ってフォームバリデーション</h4>
-
-<p>フォームからPOSTされた日付データ、時刻データを、正規表現でチェックするコードです。バリデーションが失敗した場合は、エラーメッセージを表示しています。
-<div><script src='https://gist.github.com/5055544.js?file=handler.clj'></script>
-<noscript><pre><code>(ns helloworld.handler
-  (:use compojure.core)
-  (:require [compojure.handler :as handler]
-            [compojure.route :as route]
-            [hiccup.form :as form]
-            [hiccup.core :refer [html]]
-            [noir.validation :as vali]))
-
-;; レイアウト                                                                                                                                                     
-(defn layout [&amp; content]
-  (html
-   [:head [:title &quot;Form validation using lib-noir.&quot;]]
-   [:body
-    content]))
-
-;; エラーメッセージ                                                                                                                                               
-(defn error-message [[first-error]]
-  [:span.error first-error])
-
-;; 日付・時刻をPOSTするフォーム                                                                                                                                   
-(defn date-time-form [&amp; [{:keys [date time]}]]
-  (layout
-    (form/form-to
-     [:post &quot;.&quot;]
-     [:div
-      (form/label &quot;date&quot; &quot;日付&quot;)
-      (form/text-field &quot;date&quot; date)
-      ;; バリデーション失敗時はエラーメッセージ                                                                                                                   
-      (vali/on-error :date error-message)]
-     [:div
-      (form/label &quot;time&quot; &quot;時刻&quot;)
-      (form/text-field &quot;time&quot; time)
-      ;; バリデーション失敗時はエラーメッセージ                                                                                                                   
-      (vali/on-error :time error-message)]
-     [:div (form/submit-button &quot;送信&quot;)])))
-
-;;日付チェック用正規表現                                                                                                                                          
-(def regex-date-pattern
-  (re-pattern &quot;^\\d{4}/(1[0-2]|0?[1-9])/(0?[1-9]|[1-2][0-9]|3[01])$&quot;))
-
-;;時刻チェック用正規表現                                                                                                                                          
-(def regex-time-pattern
-  (re-pattern &quot;^([01]?[0-9]|2[0-3]):([0-5][0-9])$&quot;))
-
-;;POSTデータのバリデーションルール                                                                                                                                
-(defn valid-date-time? [{:keys [date time]}]
-  ;; dateをバリデート                                                                                                                                             
-  (vali/rule (re-matches regex-date-pattern date)
-             ;; 失敗したら :date にエラーメッセージ追加                                                                                                           
-             [:date &quot;日付を入力してください(yyyy/MM/dd)&quot;])
-  ;; timeをバリデート                                                                                                                                             
-  (vali/rule (re-matches regex-time-pattern time)
-             ;; 失敗したら :time にエラーメッセージ追加                                                                                                           
-             [:time &quot;時刻を入力してください(HH:mm)&quot;])
-  ;; バリデーション結果を返す                                                                                                                                     
-  (not (vali/errors? :date :time)))
-
-;; POSTされた値を表示                                                                                                                                             
-(defn show-date-time [{:keys [date time]}]
-  (layout
-   [:p (str &quot;日付は「&quot; date &quot;」です。&quot;)]
-   [:p (str &quot;時刻は「&quot; time &quot;」です。&quot;)]))
-
-(defroutes app-routes
-  (GET &quot;/&quot; [] (date-time-form))
-  (POST &quot;/&quot; {param :params}
-        (if (valid-date-time? param)
-          ;; バリデーション成功                                                                                                                                   
-          (show-date-time param)
-          ;; バリデーション失敗                                                                                                                                   
-          (date-time-form param)))
-  (route/not-found &quot;Not Found&quot;))
-
-(def app
-  (-&gt; app-routes
-      ;;バリデーション用ミドルウェア                                                                                                                              
-      vali/wrap-noir-validation
-      handler/site))
-</code></pre></noscript></div>
-</p>
 ]]></content>
   </entry>
   

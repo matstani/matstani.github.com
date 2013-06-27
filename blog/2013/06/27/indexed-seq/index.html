@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>[PHP]memory_get_usageのreal_usageオプションについて - /home/matstani/weblog</title>
+  <title>[Clojure] インデックス付きシーケンス - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="PHPで割り当てメモリ量を取得するには、memory_get_usage関数を利用できます。 この関数には、パラメータとして$real_usageを指定できるようになっており、 これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE &hellip;">
+  <meta name="description" content="Clojure1.2以前の、clojure.contrib.seq/indexedの代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。 1
+2
+&gt; (map-indexed vector [:a :b :c :d :e])
+;([0 :a] [1 :b] [2 : &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/2013/06/19/php-memory-usage">
+  <link rel="canonical" href="http://matstani.github.com/blog/2013/06/27/indexed-seq">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -80,7 +83,7 @@
   
   <header>
     
-      <h1 class="entry-title">[PHP]memory_get_usageのreal_usageオプションについて</h1>
+      <h1 class="entry-title">[Clojure] インデックス付きシーケンス</h1>
     
     
       <p class="meta">
@@ -96,39 +99,36 @@
   
 
 
-<time datetime="2013-06-19T16:27:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
+<time datetime="2013-06-27T16:57:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>PHPで割り当てメモリ量を取得するには、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>関数を利用できます。</p>
+<div class="entry-content"><p>Clojure1.2以前の、<a href="http://clojuredocs.org/clojure_contrib/clojure.contrib.seq/indexed">clojure.contrib.seq/indexed</a>の代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。</p>
 
-<p>この関数には、パラメータとして$real_usageを指定できるようになっており、</p>
-
-<blockquote><p>これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE を設定したりすると、 emalloc() が使用するメモリのみを報告します。</p></blockquote>
-
-<p>とあるのですが、「システムが割り当てた実際のメモリの大きさ」と、「emalloc()が使用するメモリ」の違いがよくわかりません。</p>
-
-<p>検索してみたところ、以下を見つけました。</p>
-
-<p><a href="http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php">http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php</a></p>
-
-<p>回答によると、PHPのメモリマネージャは、メモリを確保する際、アプリケーションが必要とするメモリをその都度mallocするのではなく、より大きな単位で確保しておいて内部で管理しているそうです。(デフォルトで256KB単位。環境変数ZEND_MM_SEG_SIZEで設定)</p>
-
-<p>ということで、割り当てメモリ量として以下2種類があることになります。</p>
-
-<ol>
-<li>PHPのメモリマネージャが確保しているメモリ量($real_usage=true)</li>
-<li>アプリケーションが実際に使用しているメモリ量($real_usage=false)</li>
-</ol>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (map-indexed vector [:a :b :c :d :e])
+</span><span class='line'>;([0 :a] [1 :b] [2 :c] [3 :d] [4 :e])</span></code></pre></td></tr></table></div></figure>
 
 
-<p>php.ini等で指定するmemory_limitで制限しているのは1.になります。<br/>
-環境変数 USE_ZEND_ALLOC=0 を設定すると、上記の仕組みが無効になり、必要量をその都度mallocする動作になるとのことです。</p>
+<p>例)doseqに渡す。</p>
 
-<p>ちなみに、PHPの割り当てメモリ量を調べる関数としては、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>の他に、<a href="http://php.net/manual/ja/function.memory-get-peak-usage.php">memory_get_peak_usage</a>があり、こちらは呼び出し時点までに割り当てられた最大メモリ量を取得できます。</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (doseq [[idx item] (map-indexed vector [:a :b :c :d :e])]
+</span><span class='line'>        (println (str idx ":" item)))
+</span><span class='line'>;0:a
+</span><span class='line'>;1:b
+</span><span class='line'>;2:c
+</span><span class='line'>;3:d</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
@@ -151,12 +151,12 @@
   
 
 
-<time datetime="2013-06-19T16:27:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
+<time datetime="2013-06-27T16:57:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/php/'>PHP</a>
+    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
   
 </span>
 
@@ -165,7 +165,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/06/19/php-memory-usage/" data-via="" data-counturl="http://matstani.github.com/blog/2013/06/19/php-memory-usage/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/06/27/indexed-seq/" data-via="" data-counturl="http://matstani.github.com/blog/2013/06/27/indexed-seq/" >Tweet</a>
   
   
   
@@ -176,10 +176,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/05/20/embed-nrepl/" title="Previous Post: Clojureアプリケーションを動的に書き換える">&laquo; Clojureアプリケーションを動的に書き換える</a>
+        <a class="basic-alignment left" href="/blog/2013/06/19/php-memory-usage/" title="Previous Post: [PHP]memory_get_usageのreal_usageオプションについて">&laquo; [PHP]memory_get_usageのreal_usageオプションについて</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/06/27/indexed-seq/" title="Next Post: [Clojure] インデックス付きシーケンス">[Clojure] インデックス付きシーケンス &raquo;</a>
       
     </p>
   </footer>
@@ -246,8 +244,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.com/blog/2013/06/19/php-memory-usage/';
-        var disqus_url = 'http://matstani.github.com/blog/2013/06/19/php-memory-usage/';
+        var disqus_identifier = 'http://matstani.github.com/blog/2013/06/27/indexed-seq/';
+        var disqus_url = 'http://matstani.github.com/blog/2013/06/27/indexed-seq/';
         var disqus_script = 'embed.js';
       
     (function () {

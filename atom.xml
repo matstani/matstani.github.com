@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-06-19T17:04:17+09:00</updated>
+  <updated>2013-06-27T17:48:32+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] インデックス付きシーケンス]]></title>
+    <link href="http://matstani.github.com/blog/2013/06/27/indexed-seq/"/>
+    <updated>2013-06-27T16:57:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/06/27/indexed-seq</id>
+    <content type="html"><![CDATA[<p>Clojure1.2以前の、<a href="http://clojuredocs.org/clojure_contrib/clojure.contrib.seq/indexed">clojure.contrib.seq/indexed</a>の代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (map-indexed vector [:a :b :c :d :e])
+</span><span class='line'>;([0 :a] [1 :b] [2 :c] [3 :d] [4 :e])</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例)doseqに渡す。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (doseq [[idx item] (map-indexed vector [:a :b :c :d :e])]
+</span><span class='line'>        (println (str idx ":" item)))
+</span><span class='line'>;0:a
+</span><span class='line'>;1:b
+</span><span class='line'>;2:c
+</span><span class='line'>;3:d</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[PHP]memory_get_usageのreal_usageオプションについて]]></title>
