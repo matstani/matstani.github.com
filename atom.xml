@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-06-27T19:34:13+09:00</updated>
+  <updated>2013-07-18T16:10:59+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Clojureで引数のデフォルト値を指定する]]></title>
+    <link href="http://matstani.github.com/blog/2013/07/18/clojure-default-value/"/>
+    <updated>2013-07-18T15:09:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/07/18/clojure-default-value</id>
+    <content type="html"><![CDATA[<div><script src='https://gist.github.com/6027226.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+<p>参考URL: <a href="http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure">http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] インデックス付きシーケンス]]></title>

@@ -9,10 +9,8 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Clojure1.2以前の、clojure.contrib.seq/indexedの代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。 1
-2
-&gt; (map-indexed vector [:a :b :c :d :e])
-;([0 :a] [1 :b] [2 : &hellip;">
+  <meta name="description" content=" 参考URL: http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +78,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/18/clojure-default-value/">Clojureで引数のデフォルト値を指定する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-18T15:09:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><script src='https://gist.github.com/6027226.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+<p>参考URL: <a href="http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure">http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -578,7 +616,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/02/28/validation-with-lib-noir/">Lib-noirを利用したフォームバリデーション</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/02/28/validation-with-lib-noir/">lib-noirを利用したフォームバリデーション</a></h1>
     
     
       <p class="meta">
@@ -938,121 +976,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/31/fileupload-with-compojure/">Compojureでファイルアップロード</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-31T21:50:00+09:00" pubdate data-updated="true">Jan 31<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
-
-<p>Compojureベースのウェブアプリケーションで、ファイルアップロードを行います。</p>
-
-<h4>依存ライブラリのインストール</h4>
-
-<p>HTML生成ライブラリとして<a href="https://github.com/weavejester/hiccup">Hiccup</a>を利用するので、以下のように追記します。</p>
-
-<div><script src='https://gist.github.com/5064493.js?file=project.clj'></script>
-<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [compojure &quot;1.1.5&quot;]
-                 [hiccup &quot;1.0.2&quot;]]
-  :plugins [[lein-ring &quot;0.8.2&quot;]]
-  :ring {:handler helloworld.handler/app}
-  :profiles
-  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})
-</code></pre></noscript></div>
-
-
-<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>ファイルアップロード</h4>
-
-<p>アップロードされたファイルを、プロジェクトのルートディレクトリに保存するコードです。</p>
-
-<div><script src='https://gist.github.com/5064493.js?file=handler.clj'></script>
-<noscript><pre><code>(ns helloworld.handler
-  (:use compojure.core)
-  (:require [clojure.java.io :as io]
-            [ring.util.response :as response]
-            [compojure.handler :as handler]
-            [compojure.route :as route]
-            [hiccup.form :as form]
-            [hiccup.core :refer [html]]))
-
-;; ページレイアウト                                                                                                                                               
-(defn layout [&amp; content]
-  (html
-   [:head [:title &quot;file upload with compojure.&quot;]]
-   [:body
-    content]))
-
-;; ファイルアップロード用フォーム                                                                                                                                 
-(def upload-form
-  (layout
-   (form/form-to
-    {:enctype &quot;multipart/form-data&quot;}
-    [:post &quot;/file&quot;]
-    (form/file-upload &quot;file&quot;)
-    (form/submit-button &quot;submit&quot;))))
-
-;; アップロード成功                                                                                                                                               
-(def success
-  (layout
-   [:h1 &quot;File uploaded successfully!&quot;]))
-
-;; アップロードされたファイルを保存する                                                                                                                           
-(defn save-file [filename tempfile]
-  (io/copy tempfile (io/file filename))
-  (io/delete-file tempfile))
-
-(defroutes app-routes
-  (GET &quot;/&quot; [] upload-form)
-  (GET &quot;/success&quot; [] success)
-  (POST &quot;/file&quot; {{{:keys [filename tempfile]} :file} :params}
-          (save-file filename tempfile)
-          (response/redirect &quot;/success&quot;))
-  (route/not-found &quot;Not Found&quot;))
-
-(def app
-    (handler/site app-routes))
-</code></pre></noscript></div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1068,6 +991,10 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/18/clojure-default-value/">Clojureで引数のデフォルト値を指定する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/27/indexed-seq/">[Clojure] インデックス付きシーケンス</a>
       </li>
     
@@ -1081,10 +1008,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2013/05/15/paredit-with-screen-emacs/">screen内のEmacsでparedit.elを使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/10/clojure-require-use/">Clojureのuseをrequireで置き換える</a>
       </li>
     
   </ul>
