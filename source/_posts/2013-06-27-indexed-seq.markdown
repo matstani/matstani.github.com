@@ -11,7 +11,7 @@ Clojure1.2以前の、[clojure.contrib.seq/indexed](http://clojuredocs.org/cloju
 ;([0 :a] [1 :b] [2 :c] [3 :d] [4 :e])
 ```
 
-例)doseqに渡す。
+例)doseqでループ処理。
 ```
 > (doseq [[idx item] (map-indexed vector [:a :b :c :d :e])]
         (println (str idx ":" item)))
