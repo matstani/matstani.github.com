@@ -3,7 +3,7 @@ layout: post
 title: "lein-tryでClojureのライブラリを手軽にお試し"
 date: 2013-07-30 16:41
 comments: true
-categories: 
+categories: Clojure
 ---
 
 [Leiningen](https://github.com/technomancy/leiningen)のプラグインである[lein-try](https://github.com/rkneufeld/lein-try)を利用すると、わざわざテスト用のプロジェクトを作らなくても、手軽にライブラリをREPL上で試すことができます。  
