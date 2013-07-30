@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-07-18T16:10:59+09:00</updated>
+  <updated>2013-07-30T17:39:48+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[lein-tryでClojureのライブラリを手軽にお試し]]></title>
+    <link href="http://matstani.github.com/blog/2013/07/30/lein-try/"/>
+    <updated>2013-07-30T16:41:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/07/30/lein-try</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/technomancy/leiningen">Leiningen</a>のプラグインである<a href="https://github.com/rkneufeld/lein-try">lein-try</a>を利用すると、わざわざテスト用のプロジェクトを作らなくても、手軽にライブラリをREPL上で試すことができます。</p>
+
+<h2>lein-tryのインストール</h2>
+
+<p><code>~/.lein/profiles.clj</code>の<code>:user</code> <code>:plugins</code>に<code>[lein-try "0.3.0"]</code>を追記します。(ファイルが存在しない場合は新規作成)<br/>
+例)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{:user {:plugins [[lein-try "0.3.0"]]}}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>lein-tryでライブラリを試す</h2>
+
+<p><a href="https://github.com/clj-time/clj-time">clj-time</a>を試してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein try clj-time
+</span><span class='line'>user=&gt; (require '[clj-time.core :refer [date-time]])
+</span><span class='line'>nil
+</span><span class='line'>user=&gt; (date-time 2013 07 30 18 00 00)
+</span><span class='line'>#&lt;DateTime 2013-07-30T18:00:00.000Z&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ちなみに、Leiningenのバージョンが2.1.3より古い場合エラーになることがあります。Leiningenを最新の安定版にアップデートするには、以下のコマンドを実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein upgrade</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考にした記事<br/>
+<a href="http://dev.xscheme.de/2013/07/try-clojure-libraries-with-ease-using-lein-try/">Try Clojure libraries with ease using lein-try</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Clojureで引数のデフォルト値を指定する]]></title>

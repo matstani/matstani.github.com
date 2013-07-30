@@ -9,7 +9,7 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、ファイルアップロードを行います。 依存ライブラリのインストール HTML生成ライブラリとしてHiccupを利用するので、以下のように追記します。 (defproject helloworld & &hellip;">
+  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、フォーム認証を行なってみます。 Friendという認証／認可用のライブラリを利用できます。 依存ライブラリインストール project.cljの:dependenciesにFriend、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,167 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/05/form-authentication-using-friend/">Friendを利用したフォーム認証</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-05T20:01:00+09:00" pubdate data-updated="true">Feb 5<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
+
+<p>Compojureベースのウェブアプリケーションで、フォーム認証を行なってみます。</p>
+
+<p><a href="https://github.com/cemerick/friend">Friend</a>という認証／認可用のライブラリを利用できます。</p>
+
+<h4>依存ライブラリインストール</h4>
+
+<p>project.cljの:dependenciesにFriend、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。</p>
+
+<div><script src='https://gist.github.com/5046194.js?file=project.clj'></script>
+<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
+                 [compojure &quot;1.1.5&quot;]
+                 [hiccup &quot;1.0.2&quot;]
+                 [com.cemerick/friend &quot;0.1.3&quot;]]
+  :plugins [[lein-ring &quot;0.8.2&quot;]]
+  :ring {:handler helloworld.handler/app}
+  :profiles
+  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
+
+
+<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Friendを使ってフォーム認証</h4>
+
+<p>仮アカウントとしてadmin、userを用意し、それぞれ閲覧できるページが異なる設定にしています。
+認証に伴うリダイレクト処理はFriendが行ってくれます。</p>
+
+<div><script src='https://gist.github.com/5046194.js?file=handler.clj'></script>
+<noscript><pre><code>(ns helloworld.handler
+  (:require [ring.util.response :as response]
+            [compojure.core :refer :all]
+            [compojure.handler :as handler]
+            [compojure.route :as route]
+            [hiccup.page :refer [html5]]
+            [hiccup.element :refer [link-to]]
+            [hiccup.form :as form]
+            [cemerick.friend :as friend]
+            (cemerick.friend [workflows :as workflows]
+                             [credentials :as creds])))
+
+;; 仮のアカウント定義
+(def users {&quot;admin&quot; {:username &quot;admin&quot;
+                    :password (creds/hash-bcrypt &quot;adminpassword&quot;)
+                    :roles #{::admin}}
+            &quot;user&quot; {:username &quot;user&quot;
+                    :password (creds/hash-bcrypt &quot;userpassword&quot;)
+                    :roles #{::user}}})
+
+;; ::admin ロールは ::user ロールを兼ねる
+(derive ::admin ::user)
+
+;; ページレイアウト
+(defn layout [&amp; content]
+  (html5
+   [:head [:title &quot;auth and authz using friend.&quot;]]
+   [:body
+    content]))
+
+;; 認証が必要なページの定義
+(defroutes secure-routes
+  ;; /admin以下は ::admin ロールが必要
+  (context &quot;/admin&quot; request
+           (friend/wrap-authorize
+            (routes
+             (GET &quot;/page1&quot; [] (layout &quot;admin page1.&quot;))
+             (GET &quot;/page2&quot; [] (layout &quot;admin page2.&quot;)))
+            #{::admin}))
+  ;; /user以下は ::user ロールが必要
+  (context &quot;/user&quot; request
+           (friend/wrap-authorize
+            (GET &quot;/private&quot; [] (layout &quot;private page.&quot;))
+            #{::user})))
+
+;; indexページ
+(def index
+  (layout
+   [:div
+    [:ul
+     [:li (link-to &quot;/admin/page1&quot; &quot;Admin page1&quot;)]
+     [:li (link-to &quot;/admin/page2&quot; &quot;Admin page2&quot;)]
+     [:li (link-to &quot;/user/private&quot; &quot;User's private page.&quot;)]]]
+   [:div (link-to &quot;/login&quot; &quot;Login&quot;)]
+   [:div (link-to &quot;/logout&quot; &quot;Logout&quot;)]))
+
+(def index-handler
+  (GET &quot;/&quot; [] index))
+
+;; ログインフォーム
+(def login-form
+  (layout
+    (form/form-to [:post &quot;/login&quot;]
+                  [:div
+                   [:div
+                    (form/label &quot;username&quot; &quot;user name:&quot;)
+                    (form/text-field &quot;username&quot;)]
+                   [:div (form/label &quot;password&quot; &quot;password:&quot;)
+                    (form/password-field &quot;password&quot;)]
+                   [:div (form/submit-button &quot;login!&quot;)]])))
+
+(def login-handler
+  (GET &quot;/login&quot; [] login-form))
+
+(defroutes app-routes
+  index-handler
+  login-handler
+  secure-routes
+  ;;ログアウトページ
+  (friend/logout (ANY &quot;/logout&quot; request (response/redirect &quot;/&quot;)))
+  (route/not-found &quot;Not Found&quot;))
+
+(def app
+  (-&gt; app-routes
+      ;;認証用ミドルウェア（依存ミドルウェアの内側に置く）
+      (friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn users)
+                            :workflows [(workflows/interactive-form)]})
+      handler/site))
+</code></pre></noscript></div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -397,8 +558,19 @@
 <aside class="sidebar">
   
     <section>
+  <h1>About Me</h1>
+  <p>Shunsaku MATSUTANI<br />
+  青森のプログラマ<br />
+  <a href="http://www.pci-aios.jp/">PCIアイオス株式会社</a> 青森オフィス所属<br />
+  ※ブログの内容は所属組織とは無関係です。</p>
+</section>
+<section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/lein-try/">lein-tryでClojureのライブラリを手軽にお試し</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/18/clojure-default-value/">Clojureで引数のデフォルト値を指定する</a>
@@ -414,10 +586,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/20/embed-nrepl/">Clojureアプリケーションを動的に書き換える</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/15/paredit-with-screen-emacs/">screen内のEmacsでparedit.elを使う</a>
       </li>
     
   </ul>
