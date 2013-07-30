@@ -10,10 +10,10 @@ categories: Clojure
 
 試しに、[Go言語チュートリアルに掲載されている素数の篩(ふるい)](http://golang.jp/go_tutorial#index12)をClojureで実装してみました。  
 
-project.clj
+[project.clj](https://gist.github.com/matstani/6112340#file-project-clj)
 {% gist 6112340 project.clj %}
 
-core.clj
+[core.clj](https://gist.github.com/matstani/6112340#file-core-clj)
 {% gist 6112340 core.clj %}
 
 Go言語版をほぼそのままの形で実装できています。  
