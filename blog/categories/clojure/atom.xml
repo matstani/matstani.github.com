@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-07-30T21:47:21+09:00</updated>
+  <updated>2013-07-30T21:59:17+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -126,7 +126,8 @@ $ lein upgrade
     <link href="http://matstani.github.com/blog/2013/07/18/clojure-default-value/"/>
     <updated>2013-07-18T15:09:00+09:00</updated>
     <id>http://matstani.github.com/blog/2013/07/18/clojure-default-value</id>
-    <content type="html"><![CDATA[<p><div><script src='https://gist.github.com/6027226.js'></script>
+    <content type="html"><![CDATA[<p><a href="https://gist.github.com/matstani/6027226">サンプルコード</a>
+<div><script src='https://gist.github.com/6027226.js'></script>
 <noscript><pre><code></code></pre></noscript></div>
 </p>
 
@@ -172,7 +173,7 @@ $ lein upgrade
 <p>試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。<br/>
 Clojureからは、JavaのSwingを直接利用できますが、せっかくなので、よりClojureっぽく書ける<a href="https://github.com/daveray/seesaw">Seesaw</a>を使ってみます。</p>
 
-<p>project.cljは以下のとおり。</p>
+<p><a href="https://gist.github.com/matstani/5610271#file-project-clj">project.clj</a>は以下のとおり。</p>
 
 <p><div><script src='https://gist.github.com/5610271.js?file=project.clj'></script>
 <noscript><pre><code>(defproject nrepl-test &quot;0.1.0-SNAPSHOT&quot;
@@ -187,7 +188,7 @@ Clojureからは、JavaのSwingを直接利用できますが、せっかくな�
 </code></pre></noscript></div>
 </p>
 
-<p>アプリケーションのコードは以下のとおり。</p>
+<p><a href="https://gist.github.com/matstani/5610271#file-core-clj">アプリケーションのコード</a>は以下のとおり。</p>
 
 <p><div><script src='https://gist.github.com/5610271.js?file=core.clj'></script>
 <noscript><pre><code>(ns nrepl-test.core

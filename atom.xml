@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-07-30T21:47:21+09:00</updated>
+  <updated>2013-07-30T21:59:17+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -133,7 +133,9 @@
     <link href="http://matstani.github.com/blog/2013/07/18/clojure-default-value/"/>
     <updated>2013-07-18T15:09:00+09:00</updated>
     <id>http://matstani.github.com/blog/2013/07/18/clojure-default-value</id>
-    <content type="html"><![CDATA[<div><script src='https://gist.github.com/6027226.js'></script>
+    <content type="html"><![CDATA[<p><a href="https://gist.github.com/matstani/6027226">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/6027226.js'></script>
 <noscript><pre><code></code></pre></noscript></div>
 
 
@@ -216,7 +218,7 @@
 <p>試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。<br/>
 Clojureからは、JavaのSwingを直接利用できますが、せっかくなので、よりClojureっぽく書ける<a href="https://github.com/daveray/seesaw">Seesaw</a>を使ってみます。</p>
 
-<p>project.cljは以下のとおり。</p>
+<p><a href="https://gist.github.com/matstani/5610271#file-project-clj">project.clj</a>は以下のとおり。</p>
 
 <div><script src='https://gist.github.com/5610271.js?file=project.clj'></script>
 <noscript><pre><code>(defproject nrepl-test &quot;0.1.0-SNAPSHOT&quot;
@@ -231,7 +233,7 @@ Clojureからは、JavaのSwingを直接利用できますが、せっかくな�
 </code></pre></noscript></div>
 
 
-<p>アプリケーションのコードは以下のとおり。</p>
+<p><a href="https://gist.github.com/matstani/5610271#file-core-clj">アプリケーションのコード</a>は以下のとおり。</p>
 
 <div><script src='https://gist.github.com/5610271.js?file=core.clj'></script>
 <noscript><pre><code>(ns nrepl-test.core
@@ -362,7 +364,8 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
     <id>http://matstani.github.com/blog/2013/05/10/clojure-require-use</id>
     <content type="html"><![CDATA[<p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
 
-<p>requireにまとめることで、コードが若干すっきりするかもしれません。</p>
+<p>requireにまとめることで、コードが若干すっきりするかもしれません。<br/>
+<a href="https://gist.github.com/matstani/5553626">サンプルコード</a></p>
 
 <div><script src='https://gist.github.com/5553626.js'></script>
 <noscript><pre><code></code></pre></noscript></div>
@@ -421,7 +424,7 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
 </ul>
 
 
-<h3>.emacsに以下追記</h3>
+<h3><a href="https://gist.github.com/matstani/5419420">.emacs</a>に以下追記</h3>
 
 <div><script src='https://gist.github.com/5419420.js'></script>
 <noscript><pre><code></code></pre></noscript></div>
