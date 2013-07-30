@@ -11,11 +11,11 @@ categories: Clojure
 試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。  
 Clojureからは、JavaのSwingを直接利用できますが、せっかくなので、よりClojureっぽく書ける[Seesaw](https://github.com/daveray/seesaw)を使ってみます。
 
-project.cljは以下のとおり。
+[project.clj](https://gist.github.com/matstani/5610271#file-project-clj)は以下のとおり。
 
 {% gist 5610271 project.clj %}
 
-アプリケーションのコードは以下のとおり。
+[アプリケーションのコード](https://gist.github.com/matstani/5610271#file-core-clj)は以下のとおり。
 
 {% gist 5610271 core.clj %}
 

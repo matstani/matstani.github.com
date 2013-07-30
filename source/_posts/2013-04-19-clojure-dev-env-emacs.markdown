@@ -35,7 +35,7 @@ Emacs24以降のバージョンを利用すると、パッケージ管理シス�
 * [Ubuntuにインストール](http://gihyo.jp/admin/serial/01/ubuntu-recipe/0235)
 * [CentOSにインストール](http://dqn.sakusakutto.jp/2012/06/centos62emacs241install.html)
 
-### .emacsに以下追記
+### [.emacs](https://gist.github.com/matstani/5419420)に以下追記
 {% gist 5419420 %}
 追記後、Emacs上で以下のコマンドを実行すると、直ちに有効になる。
 ```
