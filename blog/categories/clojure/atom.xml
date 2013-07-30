@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-07-30T17:39:48+09:00</updated>
+  <updated>2013-07-30T21:37:41+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,114 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[clojure/core.asyncでGo]]></title>
+    <link href="http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/"/>
+    <updated>2013-07-30T21:01:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/clojure/core.async">clojure/core.async</a>ライブラリを利用すると、<a href="http://golang.org">Go言語</a>のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。</p>
+
+<p>試しに、<a href="http://golang.jp/go_tutorial#index12">Go言語チュートリアルに掲載されている素数の篩(ふるい)</a>をClojureで実装してみました。</p>
+
+<p>project.clj
+<div><script src='https://gist.github.com/6112340.js?file=project.clj'></script>
+<noscript><pre><code>(defproject async-test &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :license {:name &quot;Eclipse Public License&quot;
+            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+  :dependencies [[org.clojure/clojure &quot;1.5.1&quot;]
+                 [org.clojure/core.async &quot;0.1.0-SNAPSHOT&quot;]]
+  :repositories {&quot;sonatype-oss-public&quot; &quot;https://oss.sonatype.org/content/groups/public/&quot;}
+  :main async-test.core)
+</code></pre></noscript></div>
+</p>
+
+<p>core.clj
+<div><script src='https://gist.github.com/6112340.js?file=core.clj'></script>
+<noscript><pre><code>(ns async-test.core
+  (:require [clojure.core.async :as async :refer [&lt;! &gt;! &lt;!! chan go]]))
+
+(defn generate
+  []
+  (let [ch (chan)]
+    (go
+     (doseq [e (iterate inc 2)]
+       (&gt;! ch e)))
+    ch))
+
+(defn sieve-filter
+  [in prime]
+  (let [out (chan)]
+    (go
+     (while true
+       (let [i (&lt;! in)]
+         (when-not (= (mod i prime) 0)
+           (&gt;! out i)))))
+    out))
+
+(defn sieve
+  []
+  (let [out (chan)]
+    (go
+     (loop [ch (generate)]
+       (let [prime (&lt;! ch)]
+         (&gt;! out prime)
+         (recur (sieve-filter ch prime)))))
+    out))
+
+(defn -main
+  []
+  (let [primes (sieve)]
+    (doseq [_ (range 100)]
+      (println (&lt;!! primes)))))</code></pre></noscript></div>
+</p>
+
+<p>Go言語版をほぼそのままの形で実装できています。<br/>
+他言語の構文をライブラリとして提供できるのはLispならではです。</p>
+
+<p>ちなみに、<a href="https://github.com/clojure/clojurescript">ClojureScript</a>(Clojure-JavaScriptコンパイラ)でも利用可能とのことです。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[lein-tryでClojureのライブラリを手軽にお試し]]></title>
+    <link href="http://matstani.github.com/blog/2013/07/30/lein-try/"/>
+    <updated>2013-07-30T16:41:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/07/30/lein-try</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/technomancy/leiningen">Leiningen</a>のプラグインである<a href="https://github.com/rkneufeld/lein-try">lein-try</a>を利用すると、わざわざテスト用のプロジェクトを作らなくても、手軽にライブラリをREPL上で試すことができます。</p>
+
+<h2>lein-tryのインストール</h2>
+
+<p><code>~/.lein/profiles.clj</code>の<code>:user</code> <code>:plugins</code>に<code>[lein-try "0.3.0"]</code>を追記します。(ファイルが存在しない場合は新規作成)<br/>
+例)
+<code>
+{:user {:plugins [[lein-try "0.3.0"]]}}
+</code></p>
+
+<h2>lein-tryでライブラリを試す</h2>
+
+<p><a href="https://github.com/clj-time/clj-time">clj-time</a>を試してみます。
+```
+$ lein try clj-time
+user=> (require '[clj-time.core :refer [date-time]])
+nil
+user=> (date-time 2013 07 30 18 00 00)</p>
+
+<h1><DateTime 2013-07-30T18:00:00.000Z></h1>
+
+<p>```</p>
+
+<p>ちなみに、Leiningenのバージョンが2.1.3より古い場合エラーになることがあります。Leiningenを最新の安定版にアップデートするには、以下のコマンドを実行します。
+<code>
+$ lein upgrade
+</code></p>
+
+<p>参考にした記事<br/>
+<a href="http://dev.xscheme.de/2013/07/try-clojure-libraries-with-ease-using-lein-try/">Try Clojure libraries with ease using lein-try</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Clojureで引数のデフォルト値を指定する]]></title>
@@ -170,38 +278,6 @@ nrepl-test.core> (let [old show-msg-actn]</p>
 <p>```</p>
 
 <p>ボタンを押すと、コンソールにログが表示されるようになりました。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[screen内のEmacsでparedit.elを使う]]></title>
-    <link href="http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/"/>
-    <updated>2013-05-15T15:23:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs</id>
-    <content type="html"><![CDATA[<p>Clojureなど、Lisp系言語の編集に便利な<a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a>ですが、<a href="http://www.gnu.org/software/screen/">GNU screen</a>内で起動した<a href="http://www.gnu.org/software/emacs/">Emacs</a>で利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。</p>
-
-<p>emacs起動時のコマンドでTERM変数を指定しておくと、とりあえず解決するようです。
-<code>
-TERM=xterm emacs -nw somefile
-</code></p>
-
-<p>参考にしたURL
-<a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Clojureのuseをrequireで置き換える]]></title>
-    <link href="http://matstani.github.com/blog/2013/05/10/clojure-require-use/"/>
-    <updated>2013-05-10T18:41:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/05/10/clojure-require-use</id>
-    <content type="html"><![CDATA[<p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
-
-<p>requireにまとめることで、コードが若干すっきりするかもしれません。</p>
-
-<p><div><script src='https://gist.github.com/5553626.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-</p>
 ]]></content>
   </entry>
   

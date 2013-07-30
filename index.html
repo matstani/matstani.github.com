@@ -9,7 +9,7 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Leiningenのプラグインであるlein-tryを利用すると、わざわざテスト用のプロジェクトを作らなくても、手軽にライブラリをREPL上で試すことができます。 lein-tryのインストール ~/.lein/profiles.cljの:user :pluginsに[lein-try "0.3. &hellip;">
+  <meta name="description" content="clojure/core.asyncライブラリを利用すると、Go言語のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。 試しに、Go言語チュートリアルに掲載されている素数の篩(ふるい)をClojureで実装してみました。 project.clj ( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,105 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/30/prime-sieve-with-core-dot-async/">clojure/core.asyncでGo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-30T21:01:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/clojure/core.async">clojure/core.async</a>ライブラリを利用すると、<a href="http://golang.org">Go言語</a>のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。</p>
+
+<p>試しに、<a href="http://golang.jp/go_tutorial#index12">Go言語チュートリアルに掲載されている素数の篩(ふるい)</a>をClojureで実装してみました。</p>
+
+<p>project.clj</p>
+
+<div><script src='https://gist.github.com/6112340.js?file=project.clj'></script>
+<noscript><pre><code>(defproject async-test &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :license {:name &quot;Eclipse Public License&quot;
+            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+  :dependencies [[org.clojure/clojure &quot;1.5.1&quot;]
+                 [org.clojure/core.async &quot;0.1.0-SNAPSHOT&quot;]]
+  :repositories {&quot;sonatype-oss-public&quot; &quot;https://oss.sonatype.org/content/groups/public/&quot;}
+  :main async-test.core)
+</code></pre></noscript></div>
+
+
+<p>core.clj</p>
+
+<div><script src='https://gist.github.com/6112340.js?file=core.clj'></script>
+<noscript><pre><code>(ns async-test.core
+  (:require [clojure.core.async :as async :refer [&lt;! &gt;! &lt;!! chan go]]))
+
+(defn generate
+  []
+  (let [ch (chan)]
+    (go
+     (doseq [e (iterate inc 2)]
+       (&gt;! ch e)))
+    ch))
+
+(defn sieve-filter
+  [in prime]
+  (let [out (chan)]
+    (go
+     (while true
+       (let [i (&lt;! in)]
+         (when-not (= (mod i prime) 0)
+           (&gt;! out i)))))
+    out))
+
+(defn sieve
+  []
+  (let [out (chan)]
+    (go
+     (loop [ch (generate)]
+       (let [prime (&lt;! ch)]
+         (&gt;! out prime)
+         (recur (sieve-filter ch prime)))))
+    out))
+
+(defn -main
+  []
+  (let [primes (sieve)]
+    (doseq [_ (range 100)]
+      (println (&lt;!! primes)))))</code></pre></noscript></div>
+
+
+<p>Go言語版をほぼそのままの形で実装できています。<br/>
+他言語の構文をライブラリとして提供できるのはLispならではです。</p>
+
+<p>ちなみに、<a href="https://github.com/clojure/clojurescript">ClojureScript</a>(Clojure-JavaScriptコンパイラ)でも利用可能とのことです。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -832,58 +931,6 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/28/fix-gist-width/">Octopressのスタイルシートを変更</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-28T10:03:00+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://octopress.org/docs/blogging/code/">ドキュメント</a>にあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
-<a href="https://gist.github.com/">gist</a>のコードを埋め込むには以下のように記述します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{% gist gist_id [filename] %}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、テーブルの枠幅がでこぼこになって見た目が悪かったので、スタイルシートを微調整しました。
-sassディレクトリ以下のscssファイルを修正すると、サイトに反映されるようです。</p>
-
-<p>今回はsass/custom/_styles.scssに以下を追記しました。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.gist .line-data { width: 100% }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>近いうちに本体でも修正されるとは思いますが。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -898,12 +945,17 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   <h1>About Me</h1>
   <p>Shunsaku MATSUTANI<br />
   青森のプログラマ<br />
-  <a href="http://www.pci-aios.jp/">PCIアイオス株式会社</a> 青森オフィス所属<br />
+  <a href="http://www.pci-aios.jp/">PCIアイオス株式会社</a><br />
+  青森オフィス所属<br />
   ※ブログの内容は所属組織とは無関係です。</p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/prime-sieve-with-core-dot-async/">clojure/core.asyncでGo</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/30/lein-try/">lein-tryでClojureのライブラリを手軽にお試し</a>
@@ -919,10 +971,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2013/06/19/php-memory-usage/">[PHP]memory_get_usageのreal_usageオプションについて</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/20/embed-nrepl/">Clojureアプリケーションを動的に書き換える</a>
       </li>
     
   </ul>

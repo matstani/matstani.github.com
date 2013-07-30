@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>screen内のEmacsでparedit.elを使う - /home/matstani/weblog</title>
+  <title>clojure/core.asyncでGo - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Clojureなど、Lisp系言語の編集に便利なparedit.elですが、GNU screen内で起動したEmacsで利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。 &hellip;">
+  <meta name="description" content="clojure/core.asyncライブラリを利用すると、Go言語のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。 試しに、Go言語チュートリアルに掲載されている素数の篩(ふるい)をClojureで実装してみました。 project.clj ( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs">
+  <link rel="canonical" href="http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -80,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">screen内のEmacsでparedit.elを使う</h1>
+      <h1 class="entry-title">clojure/core.asyncでGo</h1>
     
     
       <p class="meta">
@@ -96,23 +96,77 @@
   
 
 
-<time datetime="2013-05-15T15:23:00+09:00" pubdate data-updated="true">May 15<span>th</span>, 2013</time>
+<time datetime="2013-07-30T21:01:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Clojureなど、Lisp系言語の編集に便利な<a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a>ですが、<a href="http://www.gnu.org/software/screen/">GNU screen</a>内で起動した<a href="http://www.gnu.org/software/emacs/">Emacs</a>で利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。</p>
+<div class="entry-content"><p><a href="https://github.com/clojure/core.async">clojure/core.async</a>ライブラリを利用すると、<a href="http://golang.org">Go言語</a>のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。</p>
 
-<p>emacs起動時のコマンドでTERM変数を指定しておくと、とりあえず解決するようです。</p>
+<p>試しに、<a href="http://golang.jp/go_tutorial#index12">Go言語チュートリアルに掲載されている素数の篩(ふるい)</a>をClojureで実装してみました。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>TERM=xterm emacs -nw somefile</span></code></pre></td></tr></table></div></figure>
+<p>project.clj</p>
+
+<div><script src='https://gist.github.com/6112340.js?file=project.clj'></script>
+<noscript><pre><code>(defproject async-test &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :license {:name &quot;Eclipse Public License&quot;
+            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+  :dependencies [[org.clojure/clojure &quot;1.5.1&quot;]
+                 [org.clojure/core.async &quot;0.1.0-SNAPSHOT&quot;]]
+  :repositories {&quot;sonatype-oss-public&quot; &quot;https://oss.sonatype.org/content/groups/public/&quot;}
+  :main async-test.core)
+</code></pre></noscript></div>
 
 
-<p>参考にしたURL
-<a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
+<p>core.clj</p>
+
+<div><script src='https://gist.github.com/6112340.js?file=core.clj'></script>
+<noscript><pre><code>(ns async-test.core
+  (:require [clojure.core.async :as async :refer [&lt;! &gt;! &lt;!! chan go]]))
+
+(defn generate
+  []
+  (let [ch (chan)]
+    (go
+     (doseq [e (iterate inc 2)]
+       (&gt;! ch e)))
+    ch))
+
+(defn sieve-filter
+  [in prime]
+  (let [out (chan)]
+    (go
+     (while true
+       (let [i (&lt;! in)]
+         (when-not (= (mod i prime) 0)
+           (&gt;! out i)))))
+    out))
+
+(defn sieve
+  []
+  (let [out (chan)]
+    (go
+     (loop [ch (generate)]
+       (let [prime (&lt;! ch)]
+         (&gt;! out prime)
+         (recur (sieve-filter ch prime)))))
+    out))
+
+(defn -main
+  []
+  (let [primes (sieve)]
+    (doseq [_ (range 100)]
+      (println (&lt;!! primes)))))</code></pre></noscript></div>
+
+
+<p>Go言語版をほぼそのままの形で実装できています。<br/>
+他言語の構文をライブラリとして提供できるのはLispならではです。</p>
+
+<p>ちなみに、<a href="https://github.com/clojure/clojurescript">ClojureScript</a>(Clojure-JavaScriptコンパイラ)でも利用可能とのことです。</p>
 </div>
 
 
@@ -135,7 +189,7 @@
   
 
 
-<time datetime="2013-05-15T15:23:00+09:00" pubdate data-updated="true">May 15<span>th</span>, 2013</time>
+<time datetime="2013-07-30T21:01:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
       
 
 <span class="categories">
@@ -149,7 +203,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/" data-via="" data-counturl="http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/" data-via="" data-counturl="http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/" >Tweet</a>
   
   
   
@@ -160,10 +214,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/05/10/clojure-require-use/" title="Previous Post: Clojureのuseをrequireで置き換える">&laquo; Clojureのuseをrequireで置き換える</a>
+        <a class="basic-alignment left" href="/blog/2013/07/30/lein-try/" title="Previous Post: lein-tryでClojureのライブラリを手軽にお試し">&laquo; lein-tryでClojureのライブラリを手軽にお試し</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/05/20/embed-nrepl/" title="Next Post: Clojureアプリケーションを動的に書き換える">Clojureアプリケーションを動的に書き換える &raquo;</a>
       
     </p>
   </footer>
@@ -238,8 +290,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/';
-        var disqus_url = 'http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/';
+        var disqus_identifier = 'http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/';
+        var disqus_url = 'http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/';
         var disqus_script = 'embed.js';
       
     (function () {
