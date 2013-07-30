@@ -168,7 +168,7 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 <h4>依存ライブラリインストール</h4>
 
-<p>project.cljの:dependenciesにFriend、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。</p>
+<p><a href="https://gist.github.com/matstani/5046194#file-project-clj">project.clj</a>の:dependenciesにFriend、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。</p>
 
 <div><script src='https://gist.github.com/5046194.js?file=project.clj'></script>
 <noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
@@ -193,7 +193,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 <h4>Friendを使ってフォーム認証</h4>
 
 <p>仮アカウントとしてadmin、userを用意し、それぞれ閲覧できるページが異なる設定にしています。
-認証に伴うリダイレクト処理はFriendが行ってくれます。</p>
+認証に伴うリダイレクト処理はFriendが行ってくれます。<br/>
+<a href="https://gist.github.com/matstani/5046194#file-handler-clj">サンプルコード</a></p>
 
 <div><script src='https://gist.github.com/5046194.js?file=handler.clj'></script>
 <noscript><pre><code>(ns helloworld.handler
@@ -286,6 +287,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
       handler/site))
 </code></pre></noscript></div>
 
+
+
 </div>
   
   
@@ -327,7 +330,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 <h4>依存ライブラリのインストール</h4>
 
-<p>HTML生成ライブラリとして<a href="https://github.com/weavejester/hiccup">Hiccup</a>を利用するので、以下のように追記します。</p>
+<p>HTML生成ライブラリとして<a href="https://github.com/weavejester/hiccup">Hiccup</a>を利用するので、以下のように追記します。<br/>
+<a href="https://gist.github.com/matstani/5064493#file-project-clj">project.clj</a></p>
 
 <div><script src='https://gist.github.com/5064493.js?file=project.clj'></script>
 <noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
@@ -351,7 +355,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 <h4>ファイルアップロード</h4>
 
-<p>アップロードされたファイルを、プロジェクトのルートディレクトリに保存するコードです。</p>
+<p>アップロードされたファイルを、プロジェクトのルートディレクトリに保存するコードです。<br/>
+<a href="https://gist.github.com/matstani/5064493#file-handler-clj">handler.clj</a></p>
 
 <div><script src='https://gist.github.com/5064493.js?file=handler.clj'></script>
 <noscript><pre><code>(ns helloworld.handler
@@ -400,6 +405,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 (def app
     (handler/site app-routes))
 </code></pre></noscript></div>
+
+
 
 </div>
   

@@ -9,7 +9,8 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、ファイルアップロードを行います。 依存ライブラリのインストール HTML生成ライブラリとしてHiccupを利用するので、以下のように追記します。 (defproject helloworld & &hellip;">
+  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、ファイルアップロードを行います。 依存ライブラリのインストール HTML生成ライブラリとしてHiccupを利用するので、以下のように追記します。
+project.clj (defproject &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -109,7 +110,8 @@
 
 <h4>依存ライブラリのインストール</h4>
 
-<p>HTML生成ライブラリとして<a href="https://github.com/weavejester/hiccup">Hiccup</a>を利用するので、以下のように追記します。</p>
+<p>HTML生成ライブラリとして<a href="https://github.com/weavejester/hiccup">Hiccup</a>を利用するので、以下のように追記します。<br/>
+<a href="https://gist.github.com/matstani/5064493#file-project-clj">project.clj</a></p>
 
 <div><script src='https://gist.github.com/5064493.js?file=project.clj'></script>
 <noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
@@ -133,7 +135,8 @@
 
 <h4>ファイルアップロード</h4>
 
-<p>アップロードされたファイルを、プロジェクトのルートディレクトリに保存するコードです。</p>
+<p>アップロードされたファイルを、プロジェクトのルートディレクトリに保存するコードです。<br/>
+<a href="https://gist.github.com/matstani/5064493#file-handler-clj">handler.clj</a></p>
 
 <div><script src='https://gist.github.com/5064493.js?file=handler.clj'></script>
 <noscript><pre><code>(ns helloworld.handler
@@ -182,6 +185,8 @@
 (def app
     (handler/site app-routes))
 </code></pre></noscript></div>
+
+
 
 </div>
 
