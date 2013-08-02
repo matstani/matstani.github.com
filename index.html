@@ -9,7 +9,7 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="clojure/core.asyncライブラリを利用すると、Go言語のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。 試しに、Go言語チュートリアルに掲載されている素数の篩(ふるい)をClojureで実装してみました。 project.clj ( &hellip;">
+  <meta name="description" content="Sequence Abstractions in Clojure 上記のリンクはClojureのシーケンスに関する記事なのですが、&#8221;Difficult Sequences&#8221;のところが面白かったのでメモします。 Clojureでは、map、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,106 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-02T18:06:00+09:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blog.safaribooksonline.com/2013/07/24/sequence-abstractions-in-clojure/">Sequence Abstractions in Clojure</a></p>
+
+<p>上記のリンクはClojureのシーケンスに関する記事なのですが、&#8221;Difficult Sequences&#8221;のところが面白かったのでメモします。</p>
+
+<p>Clojureでは、<code>map</code>、<code>filter</code>を始めとした豊富なシーケンス用関数がありますが、例えば「1つ前の要素を参照する」処理はどう書くのでしょうか。<br/>
+手続き型言語では、以下のように記述できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>v = [1 2 3 4 5];
+</span><span class='line'>for (i=1; i&lt;v.length; i++)
+</span><span class='line'>    print v[i] + v[i-1];
+</span><span class='line'>-&gt; 3 5 7 9</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この「1つ前の要素を参照する」処理をシーケンスで実現するために、まず「1つずらしたシーケンス」を考えてみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  [1 2 3 4 5]
+</span><span class='line'>[1 2 3 4 5]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>すると、上下が重なっている部分が、「1つ前の要素」と「現在の要素」の組み合わせになっています。<br/>
+Clojureのmap関数では、復数のシーケンスを同時に扱うことができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(map + [1 3] [2 4])
+</span><span class='line'>-&gt; (3 7)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>渡したシーケンスの最初の要素同士、2番目の要素同士、がそれぞれ&#8221;+&#8221;されています。<br/>
+「元のシーケンス」、「1つずらしたシーケンス」、を用意してmap関数に渡してやれば、目的の処理が実現できそうです。<br/>
+「1つずらしたシーケンス」を得るには、<code>rest</code>関数が利用できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(def v [1 2 3 4 5])
+</span><span class='line'>(rest v)
+</span><span class='line'>-&gt; (2 3 4 5)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>rest関数が返すのは、シーケンスの先頭以外を含むシーケンスです。<br/>
+これらを組み合わせると目的の処理を実現できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(map + v (rest v))
+</span><span class='line'>-&gt; (3 5 7 9)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここでは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>v        -&gt; (1 2 3 4 5)
+</span><span class='line'>(rest v) -&gt; (2 3 4 5)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記2つのシーケンスの重なっている要素同士の足し算&#8221;+&#8221;が行われ、目的が実現できています。<br/>
+<code>map</code>関数に長さの異なるシーケンスを渡された場合、長いシーケンスの余り部分は無視されます。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -782,160 +882,6 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/28/validation-with-lib-noir/">lib-noirを利用したフォームバリデーション</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-28T13:02:00+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
-
-<p>Compojureベースのウェブアプリケーションで、フォームバリデーションを行います。</p>
-
-<p>ウェブアプリケーション用ライブラリ<a href="https://github.com/noir-clojure/lib-noir">lib-noir</a>を利用するコードを紹介します。</p>
-
-<h4>依存ライブラリのインストール</h4>
-
-<p>lib-noirとHTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。<br/>
-<a href="https://gist.github.com/matstani/5055544#file-project-clj">project.clj</a></p>
-
-<div><script src='https://gist.github.com/5055544.js?file=project.clj'></script>
-<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [compojure &quot;1.1.5&quot;]
-                 [lib-noir &quot;0.4.6&quot;]
-                 [hiccup &quot;1.0.2&quot;]]
-  :plugins [[lein-ring &quot;0.8.2&quot;]]
-  :ring {:handler helloworld.handler/app}
-  :profiles
-  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
-
-
-<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>lib-noir/validationを使ってフォームバリデーション</h4>
-
-<p>フォームからPOSTされた日付データ、時刻データを、正規表現でチェックするコードです。バリデーションが失敗した場合は、エラーメッセージを表示しています。<br/>
-<a href="https://gist.github.com/matstani/5055544#file-handler-clj">handler.clj</a></p>
-
-<div><script src='https://gist.github.com/5055544.js?file=handler.clj'></script>
-<noscript><pre><code>(ns helloworld.handler
-  (:use compojure.core)
-  (:require [compojure.handler :as handler]
-            [compojure.route :as route]
-            [hiccup.form :as form]
-            [hiccup.core :refer [html]]
-            [noir.validation :as vali]))
-
-;; レイアウト                                                                                                                                                     
-(defn layout [&amp; content]
-  (html
-   [:head [:title &quot;Form validation using lib-noir.&quot;]]
-   [:body
-    content]))
-
-;; エラーメッセージ                                                                                                                                               
-(defn error-message [[first-error]]
-  [:span.error first-error])
-
-;; 日付・時刻をPOSTするフォーム                                                                                                                                   
-(defn date-time-form [&amp; [{:keys [date time]}]]
-  (layout
-    (form/form-to
-     [:post &quot;.&quot;]
-     [:div
-      (form/label &quot;date&quot; &quot;日付&quot;)
-      (form/text-field &quot;date&quot; date)
-      ;; バリデーション失敗時はエラーメッセージ                                                                                                                   
-      (vali/on-error :date error-message)]
-     [:div
-      (form/label &quot;time&quot; &quot;時刻&quot;)
-      (form/text-field &quot;time&quot; time)
-      ;; バリデーション失敗時はエラーメッセージ                                                                                                                   
-      (vali/on-error :time error-message)]
-     [:div (form/submit-button &quot;送信&quot;)])))
-
-;;日付チェック用正規表現                                                                                                                                          
-(def regex-date-pattern
-  (re-pattern &quot;^\\d{4}/(1[0-2]|0?[1-9])/(0?[1-9]|[1-2][0-9]|3[01])$&quot;))
-
-;;時刻チェック用正規表現                                                                                                                                          
-(def regex-time-pattern
-  (re-pattern &quot;^([01]?[0-9]|2[0-3]):([0-5][0-9])$&quot;))
-
-;;POSTデータのバリデーションルール                                                                                                                                
-(defn valid-date-time? [{:keys [date time]}]
-  ;; dateをバリデート                                                                                                                                             
-  (vali/rule (re-matches regex-date-pattern date)
-             ;; 失敗したら :date にエラーメッセージ追加                                                                                                           
-             [:date &quot;日付を入力してください(yyyy/MM/dd)&quot;])
-  ;; timeをバリデート                                                                                                                                             
-  (vali/rule (re-matches regex-time-pattern time)
-             ;; 失敗したら :time にエラーメッセージ追加                                                                                                           
-             [:time &quot;時刻を入力してください(HH:mm)&quot;])
-  ;; バリデーション結果を返す                                                                                                                                     
-  (not (vali/errors? :date :time)))
-
-;; POSTされた値を表示                                                                                                                                             
-(defn show-date-time [{:keys [date time]}]
-  (layout
-   [:p (str &quot;日付は「&quot; date &quot;」です。&quot;)]
-   [:p (str &quot;時刻は「&quot; time &quot;」です。&quot;)]))
-
-(defroutes app-routes
-  (GET &quot;/&quot; [] (date-time-form))
-  (POST &quot;/&quot; {param :params}
-        (if (valid-date-time? param)
-          ;; バリデーション成功                                                                                                                                   
-          (show-date-time param)
-          ;; バリデーション失敗                                                                                                                                   
-          (date-time-form param)))
-  (route/not-found &quot;Not Found&quot;))
-
-(def app
-  (-&gt; app-routes
-      ;;バリデーション用ミドルウェア                                                                                                                              
-      vali/wrap-noir-validation
-      handler/site))
-</code></pre></noscript></div>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -959,6 +905,10 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/30/prime-sieve-with-core-dot-async/">clojure/core.asyncでGo</a>
       </li>
     
@@ -972,10 +922,6 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
     
       <li class="post">
         <a href="/blog/2013/06/27/indexed-seq/">[Clojure] インデックス付きシーケンス</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/19/php-memory-usage/">[PHP]memory_get_usageのreal_usageオプションについて</a>
       </li>
     
   </ul>

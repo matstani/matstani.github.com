@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-07-30T22:21:04+09:00</updated>
+  <updated>2013-08-02T18:57:29+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,79 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] ちょっと難しいシーケンス処理]]></title>
+    <link href="http://matstani.github.com/blog/2013/08/02/difficult-sequences/"/>
+    <updated>2013-08-02T18:06:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/08/02/difficult-sequences</id>
+    <content type="html"><![CDATA[<p><a href="http://blog.safaribooksonline.com/2013/07/24/sequence-abstractions-in-clojure/">Sequence Abstractions in Clojure</a></p>
+
+<p>上記のリンクはClojureのシーケンスに関する記事なのですが、&#8221;Difficult Sequences&#8221;のところが面白かったのでメモします。</p>
+
+<p>Clojureでは、<code>map</code>、<code>filter</code>を始めとした豊富なシーケンス用関数がありますが、例えば「1つ前の要素を参照する」処理はどう書くのでしょうか。<br/>
+手続き型言語では、以下のように記述できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>v = [1 2 3 4 5];
+</span><span class='line'>for (i=1; i&lt;v.length; i++)
+</span><span class='line'>    print v[i] + v[i-1];
+</span><span class='line'>-&gt; 3 5 7 9</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この「1つ前の要素を参照する」処理をシーケンスで実現するために、まず「1つずらしたシーケンス」を考えてみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  [1 2 3 4 5]
+</span><span class='line'>[1 2 3 4 5]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>すると、上下が重なっている部分が、「1つ前の要素」と「現在の要素」の組み合わせになっています。<br/>
+Clojureのmap関数では、復数のシーケンスを同時に扱うことができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(map + [1 3] [2 4])
+</span><span class='line'>-&gt; (3 7)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>渡したシーケンスの最初の要素同士、2番目の要素同士、がそれぞれ&#8221;+&#8221;されています。<br/>
+「元のシーケンス」、「1つずらしたシーケンス」、を用意してmap関数に渡してやれば、目的の処理が実現できそうです。<br/>
+「1つずらしたシーケンス」を得るには、<code>rest</code>関数が利用できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(def v [1 2 3 4 5])
+</span><span class='line'>(rest v)
+</span><span class='line'>-&gt; (2 3 4 5)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>rest関数が返すのは、シーケンスの先頭以外を含むシーケンスです。<br/>
+これらを組み合わせると目的の処理を実現できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(map + v (rest v))
+</span><span class='line'>-&gt; (3 5 7 9)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここでは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>v        -&gt; (1 2 3 4 5)
+</span><span class='line'>(rest v) -&gt; (2 3 4 5)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記2つのシーケンスの重なっている要素同士の足し算&#8221;+&#8221;が行われ、目的が実現できています。<br/>
+<code>map</code>関数に長さの異なるシーケンスを渡された場合、長いシーケンスの余り部分は無視されます。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[clojure/core.asyncでGo]]></title>
@@ -880,7 +953,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 <h4>依存ライブラリインストール</h4>
 
-<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。</p>
+<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。<br/>
+<a href="https://gist.github.com/matstani/5048794#file-project-clj">project.clj</a></p>
 
 <div><script src='https://gist.github.com/5048794.js?file=project.clj'></script>
 <noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
@@ -904,6 +978,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 
 <h4>Kormaを使ってデータベースから読み出し</h4>
+
+<p><a href="https://gist.github.com/matstani/5048794#file-handler-clj">handler.clj</a></p>
 
 <div><script src='https://gist.github.com/5048794.js?file=handler.clj'></script>
 <noscript><pre><code>(ns helloworld.handler
@@ -941,6 +1017,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 (def app
   (handler/site app-routes))
 </code></pre></noscript></div>
+
+
 
 ]]></content>
   </entry>

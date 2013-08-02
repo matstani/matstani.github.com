@@ -9,9 +9,7 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="ドキュメントにあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
-gistのコードを埋め込むには以下のように記述します。 1
-{% gist gist_id [filename] %} このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、 &hellip;">
+  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、フォームバリデーションを行います。 ウェブアプリケーション用ライブラリlib-noirを利用するコードを紹介します。 依存ライブラリのインストール lib- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +77,160 @@ gistのコードを埋め込むには以下のように記述します。 1
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/28/validation-with-lib-noir/">lib-noirを利用したフォームバリデーション</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-28T13:02:00+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
+
+<p>Compojureベースのウェブアプリケーションで、フォームバリデーションを行います。</p>
+
+<p>ウェブアプリケーション用ライブラリ<a href="https://github.com/noir-clojure/lib-noir">lib-noir</a>を利用するコードを紹介します。</p>
+
+<h4>依存ライブラリのインストール</h4>
+
+<p>lib-noirとHTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。<br/>
+<a href="https://gist.github.com/matstani/5055544#file-project-clj">project.clj</a></p>
+
+<div><script src='https://gist.github.com/5055544.js?file=project.clj'></script>
+<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
+                 [compojure &quot;1.1.5&quot;]
+                 [lib-noir &quot;0.4.6&quot;]
+                 [hiccup &quot;1.0.2&quot;]]
+  :plugins [[lein-ring &quot;0.8.2&quot;]]
+  :ring {:handler helloworld.handler/app}
+  :profiles
+  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
+
+
+<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>lib-noir/validationを使ってフォームバリデーション</h4>
+
+<p>フォームからPOSTされた日付データ、時刻データを、正規表現でチェックするコードです。バリデーションが失敗した場合は、エラーメッセージを表示しています。<br/>
+<a href="https://gist.github.com/matstani/5055544#file-handler-clj">handler.clj</a></p>
+
+<div><script src='https://gist.github.com/5055544.js?file=handler.clj'></script>
+<noscript><pre><code>(ns helloworld.handler
+  (:use compojure.core)
+  (:require [compojure.handler :as handler]
+            [compojure.route :as route]
+            [hiccup.form :as form]
+            [hiccup.core :refer [html]]
+            [noir.validation :as vali]))
+
+;; レイアウト                                                                                                                                                     
+(defn layout [&amp; content]
+  (html
+   [:head [:title &quot;Form validation using lib-noir.&quot;]]
+   [:body
+    content]))
+
+;; エラーメッセージ                                                                                                                                               
+(defn error-message [[first-error]]
+  [:span.error first-error])
+
+;; 日付・時刻をPOSTするフォーム                                                                                                                                   
+(defn date-time-form [&amp; [{:keys [date time]}]]
+  (layout
+    (form/form-to
+     [:post &quot;.&quot;]
+     [:div
+      (form/label &quot;date&quot; &quot;日付&quot;)
+      (form/text-field &quot;date&quot; date)
+      ;; バリデーション失敗時はエラーメッセージ                                                                                                                   
+      (vali/on-error :date error-message)]
+     [:div
+      (form/label &quot;time&quot; &quot;時刻&quot;)
+      (form/text-field &quot;time&quot; time)
+      ;; バリデーション失敗時はエラーメッセージ                                                                                                                   
+      (vali/on-error :time error-message)]
+     [:div (form/submit-button &quot;送信&quot;)])))
+
+;;日付チェック用正規表現                                                                                                                                          
+(def regex-date-pattern
+  (re-pattern &quot;^\\d{4}/(1[0-2]|0?[1-9])/(0?[1-9]|[1-2][0-9]|3[01])$&quot;))
+
+;;時刻チェック用正規表現                                                                                                                                          
+(def regex-time-pattern
+  (re-pattern &quot;^([01]?[0-9]|2[0-3]):([0-5][0-9])$&quot;))
+
+;;POSTデータのバリデーションルール                                                                                                                                
+(defn valid-date-time? [{:keys [date time]}]
+  ;; dateをバリデート                                                                                                                                             
+  (vali/rule (re-matches regex-date-pattern date)
+             ;; 失敗したら :date にエラーメッセージ追加                                                                                                           
+             [:date &quot;日付を入力してください(yyyy/MM/dd)&quot;])
+  ;; timeをバリデート                                                                                                                                             
+  (vali/rule (re-matches regex-time-pattern time)
+             ;; 失敗したら :time にエラーメッセージ追加                                                                                                           
+             [:time &quot;時刻を入力してください(HH:mm)&quot;])
+  ;; バリデーション結果を返す                                                                                                                                     
+  (not (vali/errors? :date :time)))
+
+;; POSTされた値を表示                                                                                                                                             
+(defn show-date-time [{:keys [date time]}]
+  (layout
+   [:p (str &quot;日付は「&quot; date &quot;」です。&quot;)]
+   [:p (str &quot;時刻は「&quot; time &quot;」です。&quot;)]))
+
+(defroutes app-routes
+  (GET &quot;/&quot; [] (date-time-form))
+  (POST &quot;/&quot; {param :params}
+        (if (valid-date-time? param)
+          ;; バリデーション成功                                                                                                                                   
+          (show-date-time param)
+          ;; バリデーション失敗                                                                                                                                   
+          (date-time-form param)))
+  (route/not-found &quot;Not Found&quot;))
+
+(def app
+  (-&gt; app-routes
+      ;;バリデーション用ミドルウェア                                                                                                                              
+      vali/wrap-noir-validation
+      handler/site))
+</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -463,7 +615,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 <h4>依存ライブラリインストール</h4>
 
-<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。</p>
+<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。<br/>
+<a href="https://gist.github.com/matstani/5048794#file-project-clj">project.clj</a></p>
 
 <div><script src='https://gist.github.com/5048794.js?file=project.clj'></script>
 <noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
@@ -487,6 +640,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 
 <h4>Kormaを使ってデータベースから読み出し</h4>
+
+<p><a href="https://gist.github.com/matstani/5048794#file-handler-clj">handler.clj</a></p>
 
 <div><script src='https://gist.github.com/5048794.js?file=handler.clj'></script>
 <noscript><pre><code>(ns helloworld.handler
@@ -524,6 +679,8 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 (def app
   (handler/site app-routes))
 </code></pre></noscript></div>
+
+
 
 </div>
   
@@ -631,6 +788,10 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/30/prime-sieve-with-core-dot-async/">clojure/core.asyncでGo</a>
       </li>
     
@@ -644,10 +805,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2013/06/27/indexed-seq/">[Clojure] インデックス付きシーケンス</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/19/php-memory-usage/">[PHP]memory_get_usageのreal_usageオプションについて</a>
       </li>
     
   </ul>

@@ -123,7 +123,8 @@
 
 <h4>依存ライブラリインストール</h4>
 
-<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。</p>
+<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。<br/>
+<a href="https://gist.github.com/matstani/5048794#file-project-clj">project.clj</a></p>
 
 <div><script src='https://gist.github.com/5048794.js?file=project.clj'></script>
 <noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
@@ -147,6 +148,8 @@
 
 
 <h4>Kormaを使ってデータベースから読み出し</h4>
+
+<p><a href="https://gist.github.com/matstani/5048794#file-handler-clj">handler.clj</a></p>
 
 <div><script src='https://gist.github.com/5048794.js?file=handler.clj'></script>
 <noscript><pre><code>(ns helloworld.handler
@@ -184,6 +187,8 @@
 (def app
   (handler/site app-routes))
 </code></pre></noscript></div>
+
+
 
 </div>
 
@@ -264,6 +269,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/30/prime-sieve-with-core-dot-async/">clojure/core.asyncでGo</a>
       </li>
     
@@ -277,10 +286,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/27/indexed-seq/">[Clojure] インデックス付きシーケンス</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/19/php-memory-usage/">[PHP]memory_get_usageのreal_usageオプションについて</a>
       </li>
     
   </ul>
