@@ -17,6 +17,14 @@ div.highlight .code {
     padding: 0.5em !important;
 }
 
+p code {
+margin: 0 2px;
+padding: 0px 5px;
+border: 1px solid #ddd;
+background-color: #f8f8f8;
+border-radius: 3px;
+}
+
 div.highlight {
     overflow-x: auto;
     border: 1px solid #dedede;

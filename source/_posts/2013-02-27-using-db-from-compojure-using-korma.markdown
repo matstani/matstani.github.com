@@ -20,7 +20,8 @@ $ sqlite3 db/helloworld.sqlite3 "INSERT INTO items (title) VALUES ('2つ目の�
 ```
 
 #### 依存ライブラリインストール
-project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの[Hiccup](https://github.com/weavejester/hiccup)を追記します。
+project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの[Hiccup](https://github.com/weavejester/hiccup)を追記します。  
+[project.clj](https://gist.github.com/matstani/5048794#file-project-clj)
 {% gist 5048794 project.clj %}
 
 :dependenciesに追記後、以下のコマンドでライブラリをインストールします。
@@ -29,4 +30,5 @@ $ lein deps
 ```
 
 #### Kormaを使ってデータベースから読み出し
+[handler.clj](https://gist.github.com/matstani/5048794#file-handler-clj)
 {% gist 5048794 handler.clj %}

@@ -10,7 +10,8 @@ categories:
 Compojureベースのウェブアプリケーションで、ファイルアップロードを行います。
 
 #### 依存ライブラリのインストール
-HTML生成ライブラリとして[Hiccup](https://github.com/weavejester/hiccup)を利用するので、以下のように追記します。
+HTML生成ライブラリとして[Hiccup](https://github.com/weavejester/hiccup)を利用するので、以下のように追記します。  
+[project.clj](https://gist.github.com/matstani/5064493#file-project-clj)
 {% gist 5064493 project.clj %}
 
 :dependenciesに追記後、以下のコマンドでライブラリをインストールします。
@@ -19,5 +20,6 @@ $ lein deps
 ```
 
 #### ファイルアップロード
-アップロードされたファイルを、プロジェクトのルートディレクトリに保存するコードです。
+アップロードされたファイルを、プロジェクトのルートディレクトリに保存するコードです。  
+[handler.clj](https://gist.github.com/matstani/5064493#file-handler-clj)
 {% gist 5064493 handler.clj %}
