@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>/home/matstani/weblog</title>
+  <title>[Clojure] core.typedで静的型チェック - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
@@ -22,7 +22,7 @@ $ lein &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com">
+  <link rel="canonical" href="http://matstani.github.com/blog/2013/09/03/try-core-typed">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -79,15 +79,12 @@ $ lein &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/09/03/try-core-typed/">[Clojure] core.typedで静的型チェック</a></h1>
+      <h1 class="entry-title">[Clojure] core.typedで静的型チェック</h1>
     
     
       <p class="meta">
@@ -110,7 +107,7 @@ $ lein &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>Clojureは動的型付けの言語ですが、<a href="https://github.com/clojure/core.typed">core.typed</a>ライブラリを利用すると、静的型チェックを行うことができます。<br/>
+<div class="entry-content"><p>Clojureは動的型付けの言語ですが、<a href="https://github.com/clojure/core.typed">core.typed</a>ライブラリを利用すると、静的型チェックを行うことができます。<br/>
 <a href="https://groups.google.com/forum/#!msg/clojure-core-typed/U_aA_Ce3qWg/gJWpdflBe4AJ">バージョン0.2.0リリースで、Production Readyとアナウンスされました。</a><br/>
 単純な例を試してみたのでメモします。</p>
 
@@ -1159,122 +1156,16 @@ Please, don't. https://github.com/styleguide/templates/2.0
 
 <p>Clojureには標準で型ヒント(<a href="http://clojure.org/java_interop#Java%20Interop-Type%20Hints">type hinting</a>)と呼ばれる機能がありますが、Javaを呼び出す際のリフレクションを防ぐためのもので、<code>core.typed</code>のような、静的型チェックの機能ではありません。</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Shunsaku MATSUTANI</span></span>
 
-<time datetime="2013-08-02T18:06:00+09:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://blog.safaribooksonline.com/2013/07/24/sequence-abstractions-in-clojure/">Sequence Abstractions in Clojure</a></p>
-
-<p>上記のリンクはClojureのシーケンスに関する記事なのですが、&#8221;Difficult Sequences&#8221;のところが面白かったのでメモします。</p>
-
-<p>Clojureでは、<code>map</code>、<code>filter</code>を始めとした豊富なシーケンス用関数がありますが、例えば「1つ前の要素を参照する」処理はどう書くのでしょうか。<br/>
-手続き型言語では、以下のように記述できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>v = [1 2 3 4 5];
-</span><span class='line'>for (i=1; i&lt;v.length; i++)
-</span><span class='line'>    print v[i] + v[i-1];
-</span><span class='line'>-&gt; 3 5 7 9</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この「1つ前の要素を参照する」処理をシーケンスで実現するために、まず「1つずらしたシーケンス」を考えてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>  [1 2 3 4 5]
-</span><span class='line'>[1 2 3 4 5]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>すると、上下が重なっている部分が、「1つ前の要素」と「現在の要素」の組み合わせになっています。<br/>
-Clojureのmap関数では、復数のシーケンスを同時に扱うことができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(map + [1 3] [2 4])
-</span><span class='line'>-&gt; (3 7)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>渡したシーケンスの最初の要素同士、2番目の要素同士、がそれぞれ&#8221;+&#8221;されています。<br/>
-「元のシーケンス」、「1つずらしたシーケンス」、を用意してmap関数に渡してやれば、目的の処理が実現できそうです。<br/>
-「1つずらしたシーケンス」を得るには、<code>rest</code>関数が利用できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(def v [1 2 3 4 5])
-</span><span class='line'>(rest v)
-</span><span class='line'>-&gt; (2 3 4 5)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>rest関数が返すのは、シーケンスの先頭以外を含むシーケンスです。<br/>
-これらを組み合わせると目的の処理を実現できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(map + v (rest v))
-</span><span class='line'>-&gt; (3 5 7 9)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ここでは</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>v        -&gt; (1 2 3 4 5)
-</span><span class='line'>(rest v) -&gt; (2 3 4 5)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記2つのシーケンスの重なっている要素同士の足し算&#8221;+&#8221;が行われ、目的が実現できています。<br/>
-<code>map</code>関数に長さの異なるシーケンスを渡された場合、長いシーケンスの余り部分は無視されます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/30/prime-sieve-with-core-dot-async/">clojure/core.asyncでGo</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -1286,571 +1177,46 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
   
 
 
-<time datetime="2013-07-30T21:01:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/clojure/core.async">clojure/core.async</a>ライブラリを利用すると、<a href="http://golang.org">Go言語</a>のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。</p>
-
-<p>試しに、<a href="http://golang.jp/go_tutorial#index12">Go言語チュートリアルに掲載されている素数の篩(ふるい)</a>をClojureで実装してみました。</p>
-
-<p><a href="https://gist.github.com/matstani/6112340#file-project-clj">project.clj</a></p>
-
-<div><script src='https://gist.github.com/6112340.js?file=project.clj'></script>
-<noscript><pre><code>(defproject async-test &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
-  :dependencies [[org.clojure/clojure &quot;1.5.1&quot;]
-                 [org.clojure/core.async &quot;0.1.0-SNAPSHOT&quot;]]
-  :repositories {&quot;sonatype-oss-public&quot; &quot;https://oss.sonatype.org/content/groups/public/&quot;}
-  :main async-test.core)
-</code></pre></noscript></div>
-
-
-<p><a href="https://gist.github.com/matstani/6112340#file-core-clj">core.clj</a></p>
-
-<div><script src='https://gist.github.com/6112340.js?file=core.clj'></script>
-<noscript><pre><code>(ns async-test.core
-  (:require [clojure.core.async :as async :refer [&lt;! &gt;! &lt;!! chan go]]))
-
-(defn generate
-  []
-  (let [ch (chan)]
-    (go
-     (doseq [e (iterate inc 2)]
-       (&gt;! ch e)))
-    ch))
-
-(defn sieve-filter
-  [in prime]
-  (let [out (chan)]
-    (go
-     (while true
-       (let [i (&lt;! in)]
-         (when-not (= (mod i prime) 0)
-           (&gt;! out i)))))
-    out))
-
-(defn sieve
-  []
-  (let [out (chan)]
-    (go
-     (loop [ch (generate)]
-       (let [prime (&lt;! ch)]
-         (&gt;! out prime)
-         (recur (sieve-filter ch prime)))))
-    out))
-
-(defn -main
-  []
-  (let [primes (sieve)]
-    (doseq [_ (range 100)]
-      (println (&lt;!! primes)))))</code></pre></noscript></div>
-
-
-<p>Go言語版をほぼそのままの形で実装できています。<br/>
-他言語の構文をライブラリとして提供できるのはLispならではです。</p>
-
-<p>ちなみに、<a href="https://github.com/clojure/clojurescript">ClojureScript</a>(Clojure-JavaScriptコンパイラ)でも利用可能とのことです。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2013-09-03T13:25:00+09:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2013</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/30/lein-try/">lein-tryでClojureのライブラリを手軽にお試し</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
+  
+</span>
 
 
-<time datetime="2013-07-30T16:41:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/technomancy/leiningen">Leiningen</a>のプラグインである<a href="https://github.com/rkneufeld/lein-try">lein-try</a>を利用すると、わざわざテスト用のプロジェクトを作らなくても、手軽にライブラリをREPL上で試すことができます。</p>
-
-<h2>lein-tryのインストール</h2>
-
-<p><code>~/.lein/profiles.clj</code>の<code>:user</code> <code>:plugins</code>に<code>[lein-try "0.3.0"]</code>を追記します。(ファイルが存在しない場合は新規作成)<br/>
-例)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{:user {:plugins [[lein-try "0.3.0"]]}}</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>lein-tryでライブラリを試す</h2>
-
-<p><a href="https://github.com/clj-time/clj-time">clj-time</a>を試してみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein try clj-time
-</span><span class='line'>user=&gt; (require '[clj-time.core :refer [date-time]])
-</span><span class='line'>nil
-</span><span class='line'>user=&gt; (date-time 2013 07 30 18 00 00)
-</span><span class='line'>#&lt;DateTime 2013-07-30T18:00:00.000Z&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ちなみに、Leiningenのバージョンが2.1.3より古い場合エラーになることがあります。Leiningenを最新の安定版にアップデートするには、以下のコマンドを実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein upgrade</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考にした記事<br/>
-<a href="http://dev.xscheme.de/2013/07/try-clojure-libraries-with-ease-using-lein-try/">Try Clojure libraries with ease using lein-try</a></p>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/09/03/try-core-typed/" data-via="" data-counturl="http://matstani.github.com/blog/2013/09/03/try-core-typed/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
-  
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/18/clojure-default-value/">Clojureで引数のデフォルト値を指定する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-18T15:09:00+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://gist.github.com/matstani/6027226">サンプルコード</a></p>
-
-<div><script src='https://gist.github.com/6027226.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-
-
-<p>参考URL: <a href="http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure">http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+        <a class="basic-alignment left" href="/blog/2013/08/02/difficult-sequences/" title="Previous Post: [Clojure] ちょっと難しいシーケンス処理">&laquo; [Clojure] ちょっと難しいシーケンス処理</a>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/27/indexed-seq/">[Clojure] インデックス付きシーケンス</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-27T16:57:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Clojure1.2以前の、<a href="http://clojuredocs.org/clojure_contrib/clojure.contrib.seq/indexed">clojure.contrib.seq/indexed</a>の代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (map-indexed vector [:a :b :c :d :e])
-</span><span class='line'>;([0 :a] [1 :b] [2 :c] [3 :d] [4 :e])</span></code></pre></td></tr></table></div></figure>
-
-
-<p>例)doseqでループ処理。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (doseq [[idx item] (map-indexed vector [:a :b :c :d :e])]
-</span><span class='line'>        (println (str idx ":" item)))
-</span><span class='line'>;0:a
-</span><span class='line'>;1:b
-</span><span class='line'>;2:c
-</span><span class='line'>;3:d</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/19/php-memory-usage/">[PHP]memory_get_usageのreal_usageオプションについて</a></h1>
-    
-    
-      <p class="meta">
-        
+    </p>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-19T16:27:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>PHPで割り当てメモリ量を取得するには、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>関数を利用できます。</p>
-
-<p>この関数には、パラメータとして$real_usageを指定できるようになっており、</p>
-
-<blockquote><p>これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE を設定したりすると、 emalloc() が使用するメモリのみを報告します。</p></blockquote>
-
-<p>とあるのですが、「システムが割り当てた実際のメモリの大きさ」と、「emalloc()が使用するメモリ」の違いがよくわかりません。</p>
-
-<p>検索してみたところ、以下を見つけました。</p>
-
-<p><a href="http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php">http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php</a></p>
-
-<p>回答によると、PHPのメモリマネージャは、メモリを確保する際、アプリケーションが必要とするメモリをその都度mallocするのではなく、より大きな単位で確保しておいて内部で管理しているそうです。(デフォルトで256KB単位。環境変数ZEND_MM_SEG_SIZEで設定)</p>
-
-<p>ということで、割り当てメモリ量として以下2種類があることになります。</p>
-
-<ol>
-<li>PHPのメモリマネージャが確保しているメモリ量($real_usage=true)</li>
-<li>アプリケーションが実際に使用しているメモリ量($real_usage=false)</li>
-</ol>
-
-
-<p>php.ini等で指定するmemory_limitで制限しているのは1.になります。<br/>
-環境変数 USE_ZEND_ALLOC=0 を設定すると、上記の仕組みが無効になり、必要量をその都度mallocする動作になるとのことです。</p>
-
-<p>ちなみに、PHPの割り当てメモリ量を調べる関数としては、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>の他に、<a href="http://php.net/manual/ja/function.memory-get-peak-usage.php">memory_get_peak_usage</a>があり、こちらは呼び出し時点までに割り当てられた最大メモリ量を取得できます。</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/20/embed-nrepl/">Clojureアプリケーションを動的に書き換える</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-20T12:45:00+09:00" pubdate data-updated="true">May 20<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/clojure/tools.nrepl">nREPL</a>サーバをClojureアプリケーションに組み込んでおくと、動作中のClojureアプリケーションに接続して、デバッグを行ったり、動作を書き換えたりすることができます。</p>
-
-<p>試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。<br/>
-Clojureからは、JavaのSwingを直接利用できますが、せっかくなので、よりClojureっぽく書ける<a href="https://github.com/daveray/seesaw">Seesaw</a>を使ってみます。</p>
-
-<p><a href="https://gist.github.com/matstani/5610271#file-project-clj">project.clj</a>は以下のとおり。</p>
-
-<div><script src='https://gist.github.com/5610271.js?file=project.clj'></script>
-<noscript><pre><code>(defproject nrepl-test &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [seesaw &quot;1.4.2&quot;]
-                 [org.clojure/tools.nrepl &quot;0.2.3&quot;]]
-  :main nrepl-test.core)
-</code></pre></noscript></div>
-
-
-<p><a href="https://gist.github.com/matstani/5610271#file-core-clj">アプリケーションのコード</a>は以下のとおり。</p>
-
-<div><script src='https://gist.github.com/5610271.js?file=core.clj'></script>
-<noscript><pre><code>(ns nrepl-test.core
-  (:require [seesaw.core :refer :all]
-            [clojure.tools.nrepl.server :refer [start-server]])
-  (:gen-class))
-
-(defonce server (start-server :port 7888))
-
-(def msg &quot;Hello, Seesaw.&quot;)
-
-(def lbl-msg
-  (label &quot;&quot;))
-
-(defn set-msg!
-  [msg]
-  (config! lbl-msg :text msg))
-
-(def btn-show-msg
-  (button :text &quot;Show Message&quot;))
-
-(def content (vertical-panel
-              :items [lbl-msg
-                      btn-show-msg]))
-
-(defn -main
-  [&amp; args]
-  (invoke-later
-   (listen btn-show-msg
-           :action
-           (fn [e]
-             (set-msg! msg)
-             (-&gt; e .getSource to-root pack!)))
-   (-&gt; (frame :title &quot;Hello&quot;,
-              :content content,
-              :on-close :exit)
-       pack!
-       show!)))
-</code></pre></noscript></div>
-
-
-<p>6行目でnREPLサーバを起動しています。</p>
-
-<p>アプリケーションを起動</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein run</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下のようなウィンドウが表示されます。</p>
-
-<p><img src="/images/blog/2013-05-20_123249.png" alt="ウィンドウ" /></p>
-
-<p>「Show Message」ボタンを押すとメッセージが表示されます。</p>
-
-<p><img src="/images/blog/2013-05-20_123337.png" alt="ウィンドウ" /></p>
-
-<p>このアプリケーションにnREPLクライアントで接続し、動作を書き換えてみます。<br/>
-nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>を利用する場合、Emacs内で以下のコマンドを実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl
-</span><span class='line'>Host: 127.0.0.1
-</span><span class='line'>Port: 7888</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Portで指定するのは、アプリケーション中のstart-serverで指定したポート番号です。
-以下のようにnREPLプロンプトが表示されます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>; nREPL 0.1.7
-</span><span class='line'>user&gt; </span></code></pre></td></tr></table></div></figure>
-
-
-<p>表示されるメッセージを変化させてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user&gt; (in-ns 'nrepl-test.core) ;namespaceセット
-</span><span class='line'>nrepl-test.core&gt; (def msg "Changed Message.") ;msgを再定義</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ボタンを押すと、メッセージが変化します。</p>
-
-<p><img src="/images/blog/2013-05-20_162336.png" alt="ウィンドウ" /></p>
-
-<p>ログ機能を付けてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>nrepl-test.core&gt; (let [old show-msg-actn]
-</span><span class='line'>    (defn show-msg-actn
-</span><span class='line'>        [e]
-</span><span class='line'>        (println "LOG: show-msg-actn") (old e))) ;show-msg-actnを再定義</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ボタンを押すと、コンソールにログが表示されるようになりました。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/15/paredit-with-screen-emacs/">screen内のEmacsでparedit.elを使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-15T15:23:00+09:00" pubdate data-updated="true">May 15<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Clojureなど、Lisp系言語の編集に便利な<a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a>ですが、<a href="http://www.gnu.org/software/screen/">GNU screen</a>内で起動した<a href="http://www.gnu.org/software/emacs/">Emacs</a>で利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。</p>
-
-<p>emacs起動時のコマンドでTERM変数を指定しておくと、とりあえず解決するようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>TERM=xterm emacs -nw somefile</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考にしたURL
-<a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/10/clojure-require-use/">Clojureのuseをrequireで置き換える</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-10T18:41:00+09:00" pubdate data-updated="true">May 10<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
-
-<p>requireにまとめることで、コードが若干すっきりするかもしれません。<br/>
-<a href="https://gist.github.com/matstani/5553626">サンプルコード</a></p>
-
-<div><script src='https://gist.github.com/5553626.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-
-
+  </section>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -1896,6 +1262,7 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -1910,7 +1277,10 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
       var disqus_shortname = 'matstani-weblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://matstani.github.com/blog/2013/09/03/try-core-typed/';
+        var disqus_url = 'http://matstani.github.com/blog/2013/09/03/try-core-typed/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

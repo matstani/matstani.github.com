@@ -9,7 +9,9 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、フォームバリデーションを行います。 ウェブアプリケーション用ライブラリlib-noirを利用するコードを紹介します。 依存ライブラリのインストール lib- &hellip;">
+  <meta name="description" content="推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。
+利用するのは、Emacs+nrepl.el。
+ちなみに、Clojure Programmingで紹介されているSLIME, swankの利用はdeprecatedとのこと。 Javaのインストール オラクルのサイト &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +79,132 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/19/clojure-dev-env-emacs/">Clojure開発環境インストール手順(Emacs)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-19T18:29:00+09:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。<br/>
+利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>。<br/>
+ちなみに、<a href="http://shop.oreilly.com/product/0636920013754.do">Clojure Programming</a>で紹介されているSLIME, swankの利用はdeprecatedとのこと。</p>
+
+<h3>Javaのインストール</h3>
+
+<ul>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">オラクルのサイト</a></li>
+<li>OpenJDKをインストールする場合</li>
+</ul>
+
+
+<p>Ubuntuの場合</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt-get install openjdk-7-jdk</span></code></pre></td></tr></table></div></figure>
+
+
+<p>CentOSの場合</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install java-1.7.0-openjdk</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>leiningenインストール</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein  
+</span><span class='line'>$ mv lein ~/bin  
+</span><span class='line'>$ chmod 755 ~/bin/lein  </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Emacsのインストール</h3>
+
+<p>Emacs24以降のバージョンを利用すると、パッケージ管理システムが標準で同梱されているので、以降の手順が簡単。</p>
+
+<ul>
+<li><a href="http://gihyo.jp/admin/serial/01/ubuntu-recipe/0235">Ubuntuにインストール</a></li>
+<li><a href="http://dqn.sakusakutto.jp/2012/06/centos62emacs241install.html">CentOSにインストール</a></li>
+</ul>
+
+
+<h3><a href="https://gist.github.com/matstani/5419420">.emacs</a>に以下追記</h3>
+
+<div><script src='https://gist.github.com/5419420.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+<p>追記後、Emacs上で以下のコマンドを実行すると、直ちに有効になる。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-buffer</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここでインストールされるパッケージは以下のとおり。</p>
+
+<ul>
+<li><a href="https://github.com/technomancy/clojure-mode">clojure-mode.el</a><br/>
+Clojure編集の基本機能を追加するモード。インデントやシンタックスハイライトなど。</li>
+<li><a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a><br/>
+括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。<br/>
+動作が直感的でないところもあるので、<a href="http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html">チュートリアル</a>で勉強。</li>
+<li><a href="https://github.com/kingtim/nrepl.el">nrepl.el</a><br/>
+Emacsから、<a href="https://github.com/clojure/tools.nrepl">nREPL</a>(ネットワーク経由で利用できるREPL)にアクセスするための機能。<br/>
+nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。</li>
+<li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">rainbow-delimiters.el</a><br/>
+Lispにありがちな多重括弧を、キレイに色付けしてくれるモード。</li>
+</ul>
+
+
+<h3>Clojureプロジェクト作成</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new demo</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Emacs上でnREPL起動</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd demo
+</span><span class='line'>$ emacs src/demo/core.clj</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Emacs上で</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl-jack-in</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -788,6 +916,10 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/03/try-core-typed/">[Clojure] core.typedで静的型チェック</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a>
       </li>
     
@@ -801,10 +933,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2013/07/18/clojure-default-value/">Clojureで引数のデフォルト値を指定する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/27/indexed-seq/">[Clojure] インデックス付きシーケンス</a>
       </li>
     
   </ul>
