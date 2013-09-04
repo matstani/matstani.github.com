@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Clojure開発環境インストール手順(Emacs) - /home/matstani/weblog</title>
+  <title>[Clojure] lein-typed - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。
-利用するのは、Emacs+nrepl.el。
-ちなみに、Clojure Programmingで紹介されているSLIME, swankの利用はdeprecatedとのこと。 Javaのインストール オラクルのサイト &hellip;">
+  <meta name="description" content="lein-typedを利用すると、core.typedライブラリを利用したClojureプログラムの静的型チェックをLeiningenタスクとして実行できます。 インストール 全てのプロジェクトで利用する場合 ~/.lein/profiles.cljの:user :pluginsに[lein- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs">
+  <link rel="canonical" href="http://matstani.github.com/blog/2013/09/04/lein-typed">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -82,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">Clojure開発環境インストール手順(Emacs)</h1>
+      <h1 class="entry-title">[Clojure] lein-typed</h1>
     
     
       <p class="meta">
@@ -98,103 +96,103 @@
   
 
 
-<time datetime="2013-04-19T18:29:00+09:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
+<time datetime="2013-09-04T17:57:00+09:00" pubdate data-updated="true">Sep 4<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。<br/>
-利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>。<br/>
-ちなみに、<a href="http://shop.oreilly.com/product/0636920013754.do">Clojure Programming</a>で紹介されているSLIME, swankの利用はdeprecatedとのこと。</p>
+<div class="entry-content"><p><a href="https://github.com/frenchy64/lein-typed">lein-typed</a>を利用すると、<a href="https://github.com/clojure/core.typed">core.typed</a>ライブラリを利用したClojureプログラムの静的型チェックを<a href="https://github.com/technomancy/leiningen">Leiningen</a>タスクとして実行できます。</p>
 
-<h3>Javaのインストール</h3>
+<h2>インストール</h2>
 
-<ul>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">オラクルのサイト</a></li>
-<li>OpenJDKをインストールする場合</li>
-</ul>
+<h3>全てのプロジェクトで利用する場合</h3>
 
-
-<p>Ubuntuの場合</p>
+<p><code>~/.lein/profiles.clj</code>の<code>:user</code> <code>:plugins</code>に<code>[lein-typed "0.3.0"]</code>を追記します。(ファイルが存在しない場合は新規作成)<br/>
+例)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt-get install openjdk-7-jdk</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{:user {:plugins [[lein-typed "0.3.0"]]}}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>CentOSの場合</p>
+<h3>特定のプロジェクトで利用する場合</h3>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install java-1.7.0-openjdk</span></code></pre></td></tr></table></div></figure>
+<p><code>project.clj</code>の<code>:plugins</code>に<code>[lein-typed "0.3.0"]</code>を追記します。</p>
 
+<h2>型チェックの実行</h2>
 
-<h3>leiningenインストール</h3>
+<p><code>project.clj</code>にチェック対象となるnamespaceを記述します。<br/>
+例)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein  
-</span><span class='line'>$ mv lein ~/bin  
-</span><span class='line'>$ chmod 755 ~/bin/lein  </span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(defproject try-typed "0.1.0-SNAPSHOT"
+</span><span class='line'>  :description "FIXME: write description"
+</span><span class='line'>  :url "http://example.com/FIXME"
+</span><span class='line'>  :license {:name "Eclipse Public License"
+</span><span class='line'>  :url "http://www.eclipse.org/legal/epl-v10.html"}
+</span><span class='line'>  :dependencies [[org.clojure/clojure "1.5.1"]
+</span><span class='line'>                 [org.clojure/core.typed "0.2.3"]]
+</span><span class='line'>  :plugins [[lein-typed "0.3.0"]] 
+</span><span class='line'>  ; 対象namespaceを指定
+</span><span class='line'>  :core.typed {:check [try-typed.core]})</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Emacsのインストール</h3>
-
-<p>Emacs24以降のバージョンを利用すると、パッケージ管理システムが標準で同梱されているので、以降の手順が簡単。</p>
-
-<ul>
-<li><a href="http://gihyo.jp/admin/serial/01/ubuntu-recipe/0235">Ubuntuにインストール</a></li>
-<li><a href="http://dqn.sakusakutto.jp/2012/06/centos62emacs241install.html">CentOSにインストール</a></li>
-</ul>
-
-
-<h3><a href="https://gist.github.com/matstani/5419420">.emacs</a>に以下追記</h3>
-
-<div><script src='https://gist.github.com/5419420.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-
-
-<p>追記後、Emacs上で以下のコマンドを実行すると、直ちに有効になる。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-buffer</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ここでインストールされるパッケージは以下のとおり。</p>
-
-<ul>
-<li><a href="https://github.com/technomancy/clojure-mode">clojure-mode.el</a><br/>
-Clojure編集の基本機能を追加するモード。インデントやシンタックスハイライトなど。</li>
-<li><a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a><br/>
-括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。<br/>
-動作が直感的でないところもあるので、<a href="http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html">チュートリアル</a>で勉強。</li>
-<li><a href="https://github.com/kingtim/nrepl.el">nrepl.el</a><br/>
-Emacsから、<a href="https://github.com/clojure/tools.nrepl">nREPL</a>(ネットワーク経由で利用できるREPL)にアクセスするための機能。<br/>
-nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。</li>
-<li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">rainbow-delimiters.el</a><br/>
-Lispにありがちな多重括弧を、キレイに色付けしてくれるモード。</li>
-</ul>
-
-
-<h3>Clojureプロジェクト作成</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new demo</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Emacs上でnREPL起動</h3>
+<p>静的型チェックを実行します。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd demo
-</span><span class='line'>$ emacs src/demo/core.clj</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein typed check
+</span><span class='line'>Initializing core.typed ...
+</span><span class='line'>"Elapsed time: 11563.779405 msecs"
+</span><span class='line'>core.typed initialized.
+</span><span class='line'>Start collecting try-typed.core
+</span><span class='line'>Finished collecting try-typed.core
+</span><span class='line'>Collected 1 namespaces in 11658.922614 msecs
+</span><span class='line'>Start checking try-typed.core
+</span><span class='line'>Checked try-typed.core in 423.743596 msecs
+</span><span class='line'>Checked 1 namespaces (approx. 33 lines) in 12087.276047 msecs</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Emacs上で</p>
+<p><code>check</code>の替わりに<code>coverage</code>を指定すると、型指定annotationの網羅率を表示します。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl-jack-in</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>lein typed coverage
+</span><span class='line'>Initializing core.typed ...
+</span><span class='line'>"Elapsed time: 3286.597969 msecs"
+</span><span class='line'>core.typed initialized.
+</span><span class='line'>Start collecting try-typed.core
+</span><span class='line'>Finished collecting try-typed.core
+</span><span class='line'>Collected 1 namespaces in 3383.256821 msecs
+</span><span class='line'>Checked 0 namespaces (approx. 0 lines) in 3385.801947 msecs
+</span><span class='line'>Found 4 annotated vars out of 4 vars
+</span><span class='line'>100% var annotation coverage</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -218,7 +216,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
   
 
 
-<time datetime="2013-04-19T18:29:00+09:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
+<time datetime="2013-09-04T17:57:00+09:00" pubdate data-updated="true">Sep 4<span>th</span>, 2013</time>
       
 
 <span class="categories">
@@ -232,7 +230,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/" data-via="" data-counturl="http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/09/04/lein-typed/" data-via="" data-counturl="http://matstani.github.com/blog/2013/09/04/lein-typed/" >Tweet</a>
   
   
   
@@ -243,10 +241,8 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/02/28/validation-with-lib-noir/" title="Previous Post: lib-noirを利用したフォームバリデーション">&laquo; lib-noirを利用したフォームバリデーション</a>
+        <a class="basic-alignment left" href="/blog/2013/09/03/try-core-typed/" title="Previous Post: [Clojure] core.typedで静的型チェック">&laquo; [Clojure] core.typedで静的型チェック</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/05/10/clojure-require-use/" title="Next Post: Clojureのuseをrequireで置き換える">Clojureのuseをrequireで置き換える &raquo;</a>
       
     </p>
   </footer>
@@ -321,8 +317,8 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/';
-        var disqus_url = 'http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/';
+        var disqus_identifier = 'http://matstani.github.com/blog/2013/09/04/lein-typed/';
+        var disqus_url = 'http://matstani.github.com/blog/2013/09/04/lein-typed/';
         var disqus_script = 'embed.js';
       
     (function () {

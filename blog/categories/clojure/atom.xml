@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-09-03T19:26:14+09:00</updated>
+  <updated>2013-09-04T18:27:32+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] lein-typed]]></title>
+    <link href="http://matstani.github.com/blog/2013/09/04/lein-typed/"/>
+    <updated>2013-09-04T17:57:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/09/04/lein-typed</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/frenchy64/lein-typed">lein-typed</a>を利用すると、<a href="https://github.com/clojure/core.typed">core.typed</a>ライブラリを利用したClojureプログラムの静的型チェックを<a href="https://github.com/technomancy/leiningen">Leiningen</a>タスクとして実行できます。</p>
+
+<h2>インストール</h2>
+
+<h3>全てのプロジェクトで利用する場合</h3>
+
+<p><code>~/.lein/profiles.clj</code>の<code>:user</code> <code>:plugins</code>に<code>[lein-typed "0.3.0"]</code>を追記します。(ファイルが存在しない場合は新規作成)<br/>
+例)
+<code>
+{:user {:plugins [[lein-typed "0.3.0"]]}}
+</code></p>
+
+<h3>特定のプロジェクトで利用する場合</h3>
+
+<p><code>project.clj</code>の<code>:plugins</code>に<code>[lein-typed "0.3.0"]</code>を追記します。</p>
+
+<h2>型チェックの実行</h2>
+
+<p><code>project.clj</code>にチェック対象となるnamespaceを記述します。<br/>
+例)
+```
+(defproject try-typed "0.1.0-SNAPSHOT"
+  :description "FIXME: write description"
+  :url "http://example.com/FIXME"
+  :license {:name "Eclipse Public License"
+  :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :dependencies [[org.clojure/clojure "1.5.1"]</p>
+
+<pre><code>             [org.clojure/core.typed "0.2.3"]]
+</code></pre>
+
+<p>  :plugins [[lein-typed "0.3.0"]]
+  ; 対象namespaceを指定
+  :core.typed {:check [try-typed.core]})
+<code>
+静的型チェックを実行します。
+</code>
+$ lein typed check
+Initializing core.typed ...
+"Elapsed time: 11563.779405 msecs"
+core.typed initialized.
+Start collecting try-typed.core
+Finished collecting try-typed.core
+Collected 1 namespaces in 11658.922614 msecs
+Start checking try-typed.core
+Checked try-typed.core in 423.743596 msecs
+Checked 1 namespaces (approx. 33 lines) in 12087.276047 msecs
+<code>
+`check`の替わりに`coverage`を指定すると、型指定annotationの網羅率を表示します。
+</code>
+lein typed coverage
+Initializing core.typed ...
+"Elapsed time: 3286.597969 msecs"
+core.typed initialized.
+Start collecting try-typed.core
+Finished collecting try-typed.core
+Collected 1 namespaces in 3383.256821 msecs
+Checked 0 namespaces (approx. 0 lines) in 3385.801947 msecs
+Found 4 annotated vars out of 4 vars
+100% var annotation coverage
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] core.typedで静的型チェック]]></title>
@@ -28,7 +97,7 @@
 $ lein new try-typed
 $ cd try-typed
 </code>
-<code>project.clj</code>に<code>[org.clojure/core.typed "0.2.1"]</code>を追記します。
+<code>project.clj</code>に<code>[org.clojure/core.typed "0.2.3"]</code>を追記します。
 <code>
 $ lein deps
 </code></p>
@@ -1138,20 +1207,6 @@ $ lein upgrade
 
 <p>参考にした記事<br/>
 <a href="http://dev.xscheme.de/2013/07/try-clojure-libraries-with-ease-using-lein-try/">Try Clojure libraries with ease using lein-try</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Clojureで引数のデフォルト値を指定する]]></title>
-    <link href="http://matstani.github.com/blog/2013/07/18/clojure-default-value/"/>
-    <updated>2013-07-18T15:09:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/07/18/clojure-default-value</id>
-    <content type="html"><![CDATA[<p><a href="https://gist.github.com/matstani/6027226">サンプルコード</a>
-<div><script src='https://gist.github.com/6027226.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-</p>
-
-<p>参考URL: <a href="http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure">http://stackoverflow.com/questions/3208347/how-to-create-default-value-for-function-argument-in-clojure</a></p>
 ]]></content>
   </entry>
   

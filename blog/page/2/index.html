@@ -9,9 +9,8 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。
-利用するのは、Emacs+nrepl.el。
-ちなみに、Clojure Programmingで紹介されているSLIME, swankの利用はdeprecatedとのこと。 Javaのインストール オラクルのサイト &hellip;">
+  <meta name="description" content="Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。 requireにまとめることで、コードが若干すっきりするかもしれません。
+サンプルコード ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +78,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/10/clojure-require-use/">Clojureのuseをrequireで置き換える</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-10T18:41:00+09:00" pubdate data-updated="true">May 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
+
+<p>requireにまとめることで、コードが若干すっきりするかもしれません。<br/>
+<a href="https://gist.github.com/matstani/5553626">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/5553626.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -916,6 +960,10 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/04/lein-typed/">[Clojure] lein-typed</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/03/try-core-typed/">[Clojure] core.typedで静的型チェック</a>
       </li>
     
@@ -929,10 +977,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2013/07/30/lein-try/">lein-tryでClojureのライブラリを手軽にお試し</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/18/clojure-default-value/">Clojureで引数のデフォルト値を指定する</a>
       </li>
     
   </ul>
