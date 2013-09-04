@@ -14,7 +14,7 @@ Clojureは動的型付けの言語ですが、[core.typed](https://github.com/cl
 $ lein new try-typed
 $ cd try-typed
 ```
-`project.clj`に`[org.clojure/core.typed "0.2.1"]`を追記します。
+`project.clj`に`[org.clojure/core.typed "0.2.3"]`を追記します。
 ```
 $ lein deps
 ```
