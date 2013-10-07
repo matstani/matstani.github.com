@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-10-07T17:32:28+09:00</updated>
+  <updated>2013-10-07T21:16:01+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)]]></title>
+    <link href="http://matstani.github.com/blog/2013/10/07/try-itext-compojure/"/>
+    <updated>2013-10-07T20:52:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/10/07/try-itext-compojure</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>ベースのClojureウェブアプリケーションで、<a href="http://itextpdf.com/">iText</a>を利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例は<a href="/blog/2013/10/07/clojure-itext-japanese/">こちら</a>。)<br/>
+例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。</p>
+
+<h2>テスト用プロジェクト作成</h2>
+
+<p><code>
+$ lein new compojure try-itext-compojure
+$ cd try-itext-compojure
+</code>
+<code>project.clj</code>の<code>:dependencies</code>に<code>[com.itextpdf/itextpdf "5.4.4"]</code> <code>[com.itextpdf/itext-asian "5.2.0"]</code> <code>[org.xerial/sqlite-jdbc "3.7.2"]</code> <code>[korma "0.3.0-RC5"]</code>を追記します。
+<code>
+$ lein deps
+</code></p>
+
+<h2>データベース準備</h2>
+
+<p><code>
+$ mkdir db
+$ sqlite3 db/try-itext.sqlite3 "CREATE TABLE employees (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
+$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 一郎');"
+$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 二郎');"
+$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 三郎');"
+</code></p>
+
+<h2>サンプルコード</h2>
+
+<p><a href="https://gist.github.com/matstani/6866740">handler.clj</a>
+<div><script src='https://gist.github.com/6866740.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6866740&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+</p>
+
+<h2>起動</h2>
+
+<p><code>
+$ lein ring server-headless
+</code>
+ブラウザでlocalhost:3000にアクセスするとPDFファイルが表示されます。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] iTextでPDFファイル作成]]></title>
@@ -1133,76 +1178,6 @@ v        -&gt; (1 2 3 4 5)
 </code>
 上記2つのシーケンスの重なっている要素同士の足し算"+"が行われ、目的が実現できています。<br/>
 <code>map</code>関数に長さの異なるシーケンスを渡された場合、長いシーケンスの余り部分は無視されます。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[clojure/core.asyncでGo]]></title>
-    <link href="http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/"/>
-    <updated>2013-07-30T21:01:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/clojure/core.async">clojure/core.async</a>ライブラリを利用すると、<a href="http://golang.org">Go言語</a>のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。</p>
-
-<p>試しに、<a href="http://golang.jp/go_tutorial#index12">Go言語チュートリアルに掲載されている素数の篩(ふるい)</a>をClojureで実装してみました。</p>
-
-<p><a href="https://gist.github.com/matstani/6112340#file-project-clj">project.clj</a>
-<div><script src='https://gist.github.com/6112340.js?file=project.clj'></script>
-<noscript><pre><code>(defproject async-test &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
-  :dependencies [[org.clojure/clojure &quot;1.5.1&quot;]
-                 [org.clojure/core.async &quot;0.1.0-SNAPSHOT&quot;]]
-  :repositories {&quot;sonatype-oss-public&quot; &quot;https://oss.sonatype.org/content/groups/public/&quot;}
-  :main async-test.core)
-</code></pre></noscript></div>
-</p>
-
-<p><a href="https://gist.github.com/matstani/6112340#file-core-clj">core.clj</a>
-<div><script src='https://gist.github.com/6112340.js?file=core.clj'></script>
-<noscript><pre><code>(ns async-test.core
-  (:require [clojure.core.async :as async :refer [&lt;! &gt;! &lt;!! chan go]]))
-
-(defn generate
-  []
-  (let [ch (chan)]
-    (go
-     (doseq [e (iterate inc 2)]
-       (&gt;! ch e)))
-    ch))
-
-(defn sieve-filter
-  [in prime]
-  (let [out (chan)]
-    (go
-     (while true
-       (let [i (&lt;! in)]
-         (when-not (= (mod i prime) 0)
-           (&gt;! out i)))))
-    out))
-
-(defn sieve
-  []
-  (let [out (chan)]
-    (go
-     (loop [ch (generate)]
-       (let [prime (&lt;! ch)]
-         (&gt;! out prime)
-         (recur (sieve-filter ch prime)))))
-    out))
-
-(defn -main
-  []
-  (let [primes (sieve)]
-    (doseq [_ (range 100)]
-      (println (&lt;!! primes)))))</code></pre></noscript></div>
-</p>
-
-<p>Go言語版をほぼそのままの形で実装できています。<br/>
-他言語の構文をライブラリとして提供できるのはLispならではです。</p>
-
-<p>ちなみに、<a href="https://github.com/clojure/clojurescript">ClojureScript</a>(Clojure-JavaScriptコンパイラ)でも利用可能とのことです。</p>
 ]]></content>
   </entry>
   
