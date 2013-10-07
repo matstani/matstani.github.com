@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-09-04T18:27:32+09:00</updated>
+  <updated>2013-10-07T17:32:28+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,40 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] iTextでPDFファイル作成]]></title>
+    <link href="http://matstani.github.com/blog/2013/10/07/clojure-itext-japanese/"/>
+    <updated>2013-10-07T17:16:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2013/10/07/clojure-itext-japanese</id>
+    <content type="html"><![CDATA[<p>ClojureでPDFファイルを作成するためのライブラリとして<a href="https://github.com/yogthos/clj-pdf">clj-pdf</a>がありますが、そのままでは日本語フォントに対応していないようなので、直接<a href="http://itextpdf.com/">iText</a>を使う手順を紹介します。</p>
+
+<h2>テスト用プロジェクト作成</h2>
+
+<p><code>
+$ lein new app try-itext
+$ cd try-itext
+</code>
+<code>project.clj</code>の<code>:dependencies</code>に<code>[com.itextpdf/itextpdf "5.4.4"]</code> <code>[com.itextpdf/itext-asian "5.2.0"]</code>を追記します。
+<code>
+$ lein deps
+</code></p>
+
+<h2>サンプルコード</h2>
+
+<p><a href="https://gist.github.com/matstani/6864398">core.clj</a>
+<div><script src='https://gist.github.com/6864398.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6864398&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+</p>
+
+<h2>プログラム実行</h2>
+
+<p><code>
+$ lein run
+</code>
+実行すると、<code>test.pdf</code>が作成されます。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] lein-typed]]></title>
@@ -1169,44 +1203,6 @@ v        -&gt; (1 2 3 4 5)
 他言語の構文をライブラリとして提供できるのはLispならではです。</p>
 
 <p>ちなみに、<a href="https://github.com/clojure/clojurescript">ClojureScript</a>(Clojure-JavaScriptコンパイラ)でも利用可能とのことです。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[lein-tryでClojureのライブラリを手軽にお試し]]></title>
-    <link href="http://matstani.github.com/blog/2013/07/30/lein-try/"/>
-    <updated>2013-07-30T16:41:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/07/30/lein-try</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/technomancy/leiningen">Leiningen</a>のプラグインである<a href="https://github.com/rkneufeld/lein-try">lein-try</a>を利用すると、わざわざテスト用のプロジェクトを作らなくても、手軽にライブラリをREPL上で試すことができます。</p>
-
-<h2>lein-tryのインストール</h2>
-
-<p><code>~/.lein/profiles.clj</code>の<code>:user</code> <code>:plugins</code>に<code>[lein-try "0.3.0"]</code>を追記します。(ファイルが存在しない場合は新規作成)<br/>
-例)
-<code>
-{:user {:plugins [[lein-try "0.3.0"]]}}
-</code></p>
-
-<h2>lein-tryでライブラリを試す</h2>
-
-<p><a href="https://github.com/clj-time/clj-time">clj-time</a>を試してみます。
-```
-$ lein try clj-time
-user=> (require '[clj-time.core :refer [date-time]])
-nil
-user=> (date-time 2013 07 30 18 00 00)</p>
-
-<h1><DateTime 2013-07-30T18:00:00.000Z></h1>
-
-<p>```</p>
-
-<p>ちなみに、Leiningenのバージョンが2.1.3より古い場合エラーになることがあります。Leiningenを最新の安定版にアップデートするには、以下のコマンドを実行します。
-<code>
-$ lein upgrade
-</code></p>
-
-<p>参考にした記事<br/>
-<a href="http://dev.xscheme.de/2013/07/try-clojure-libraries-with-ease-using-lein-try/">Try Clojure libraries with ease using lein-try</a></p>
 ]]></content>
   </entry>
   

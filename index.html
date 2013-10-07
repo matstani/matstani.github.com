@@ -9,7 +9,10 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="lein-typedを利用すると、core.typedライブラリを利用したClojureプログラムの静的型チェックをLeiningenタスクとして実行できます。 インストール 全てのプロジェクトで利用する場合 ~/.lein/profiles.cljの:user :pluginsに[lein- &hellip;">
+  <meta name="description" content="ClojureでPDFファイルを作成するためのライブラリとしてclj-pdfがありますが、そのままでは日本語フォントに対応していないようなので、直接iTextを使う手順を紹介します。 テスト用プロジェクト作成 1
+2
+$ lein new app try-itext
+$ cd try-itext &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +80,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/07/clojure-itext-japanese/">[Clojure] iTextでPDFファイル作成</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-07T17:16:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ClojureでPDFファイルを作成するためのライブラリとして<a href="https://github.com/yogthos/clj-pdf">clj-pdf</a>がありますが、そのままでは日本語フォントに対応していないようなので、直接<a href="http://itextpdf.com/">iText</a>を使う手順を紹介します。</p>
+
+<h2>テスト用プロジェクト作成</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new app try-itext
+</span><span class='line'>$ cd try-itext</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>project.clj</code>の<code>:dependencies</code>に<code>[com.itextpdf/itextpdf "5.4.4"]</code> <code>[com.itextpdf/itext-asian "5.2.0"]</code>を追記します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>サンプルコード</h2>
+
+<p><a href="https://gist.github.com/matstani/6864398">core.clj</a></p>
+
+<div><script src='https://gist.github.com/6864398.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6864398&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>プログラム実行</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein run</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行すると、<code>test.pdf</code>が作成されます。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1875,51 +1944,6 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/15/paredit-with-screen-emacs/">screen内のEmacsでparedit.elを使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-15T15:23:00+09:00" pubdate data-updated="true">May 15<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Clojureなど、Lisp系言語の編集に便利な<a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a>ですが、<a href="http://www.gnu.org/software/screen/">GNU screen</a>内で起動した<a href="http://www.gnu.org/software/emacs/">Emacs</a>で利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。</p>
-
-<p>emacs起動時のコマンドでTERM変数を指定しておくと、とりあえず解決するようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>TERM=xterm emacs -nw somefile</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考にしたURL
-<a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1943,6 +1967,10 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/10/07/clojure-itext-japanese/">[Clojure] iTextでPDFファイル作成</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/04/lein-typed/">[Clojure] lein-typed</a>
       </li>
     
@@ -1956,10 +1984,6 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
     
       <li class="post">
         <a href="/blog/2013/07/30/prime-sieve-with-core-dot-async/">clojure/core.asyncでGo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/lein-try/">lein-tryでClojureのライブラリを手軽にお試し</a>
       </li>
     
   </ul>
