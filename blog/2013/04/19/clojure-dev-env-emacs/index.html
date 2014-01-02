@@ -2,16 +2,16 @@
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Clojure開発環境インストール手順(Emacs) - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。
-利用するのは、Emacs+nrepl.el。
-ちなみに、Clojure Programmingで紹介されているSLIME, swankの利用はdeprecatedとのこと。 Javaのインストール オラクルのサイト &hellip;">
+  <meta name="description" content="2014年1月　nrepl.elはciderに名称変更されたので記事修正しました 推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。
+利用するのは、Emacs+cider
+ちなみに、Clojure Programmingで紹介されているSLIME, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs">
+  <link rel="canonical" href="http://matstani.github.io/blog/2013/04/19/clojure-dev-env-emacs">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -64,7 +64,7 @@
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:matstani.github.com" />
+    <input type="hidden" name="q" value="site:matstani.github.io" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -105,8 +105,13 @@
   </header>
 
 
-<div class="entry-content"><p>推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。<br/>
-利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>。<br/>
+<div class="entry-content"><ul>
+<li>2014年1月　nrepl.elは<a href="https://github.com/clojure-emacs/cider">cider</a>に名称変更されたので記事修正しました</li>
+</ul>
+
+
+<p>推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。<br/>
+利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/clojure-emacs/cider">cider</a><br/>
 ちなみに、<a href="http://shop.oreilly.com/product/0636920013754.do">Clojure Programming</a>で紹介されているSLIME, swankの利用はdeprecatedとのこと。</p>
 
 <h3>Javaのインストール</h3>
@@ -152,7 +157,7 @@
 <h3><a href="https://gist.github.com/matstani/5419420">.emacs</a>に以下追記</h3>
 
 <div><script src='https://gist.github.com/5419420.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/5419420&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
 
 
 <p>追記後、Emacs上で以下のコマンドを実行すると、直ちに有効になる。</p>
@@ -169,7 +174,7 @@ Clojure編集の基本機能を追加するモード。インデントやシン�
 <li><a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a><br/>
 括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。<br/>
 動作が直感的でないところもあるので、<a href="http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html">チュートリアル</a>で勉強。</li>
-<li><a href="https://github.com/kingtim/nrepl.el">nrepl.el</a><br/>
+<li><a href="https://github.com/clojure-emacs/cider">cider</a><br/>
 Emacsから、<a href="https://github.com/clojure/tools.nrepl">nREPL</a>(ネットワーク経由で利用できるREPL)にアクセスするための機能。<br/>
 nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。</li>
 <li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">rainbow-delimiters.el</a><br/>
@@ -183,7 +188,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new demo</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Emacs上でnREPL起動</h3>
+<h3>Emacs上でnREPLサーバ起動&amp;接続</h3>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -194,7 +199,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
 <p>Emacs上で</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl-jack-in</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x cider-jack-in</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -232,7 +237,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/" data-via="" data-counturl="http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.io/blog/2013/04/19/clojure-dev-env-emacs/" data-via="" data-counturl="http://matstani.github.io/blog/2013/04/19/clojure-dev-env-emacs/" >Tweet</a>
   
   
   
@@ -309,7 +314,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Shunsaku MATSUTANI -
+  Copyright &copy; 2014 - Shunsaku MATSUTANI -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
@@ -321,8 +326,8 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/';
-        var disqus_url = 'http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/';
+        var disqus_identifier = 'http://matstani.github.io/blog/2013/04/19/clojure-dev-env-emacs/';
+        var disqus_url = 'http://matstani.github.io/blog/2013/04/19/clojure-dev-env-emacs/';
         var disqus_script = 'embed.js';
       
     (function () {
