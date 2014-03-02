@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>[Clojure] iTextでPDFファイル作成(ウェブアプリケーション) - /home/matstani/weblog</title>
+  <title>/home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="CompojureベースのClojureウェブアプリケーションで、iTextを利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例はこちら。)
-例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。 &hellip;">
+  <meta name="description" content="Clojureには、Leiningenという管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。 Clojureがインストールされていない状態から、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/2013/10/07/try-itext-compojure">
+  <link rel="canonical" href="http://matstani.github.com/blog/page/3">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -76,12 +75,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</h1>
+      <h1 class="entry-title"><a href="/blog/2013/01/23/create-compojure-project/">Clojureインストール、Compojureプロジェクト作成</a></h1>
     
     
       <p class="meta">
@@ -97,123 +99,69 @@
   
 
 
-<time datetime="2013-10-07T20:52:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
+<time datetime="2013-01-23T18:05:00+09:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>ベースのClojureウェブアプリケーションで、<a href="http://itextpdf.com/">iText</a>を利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例は<a href="/blog/2013/10/07/clojure-itext-japanese/">こちら</a>。)<br/>
-例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。</p>
+  <div class="entry-content"><p><a href="http://clojure.org/">Clojure</a>には、<a href="http://leiningen.org/">Leiningen</a>という管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。</p>
 
-<h2>テスト用プロジェクト作成</h2>
+<p>Clojureがインストールされていない状態から、ウェブアプリケーションフレームワーク<a href="https://github.com/weavejester/compojure">Compojure</a>を利用したウェブアプリケーションの開発用プロジェクトを作成するまでの手順は以下のとおりです。</p>
+
+<h4>Javaがインストールされていることを確認</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ java -version</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Leiningenインストール</h4>
+
+<h5>leinスクリプトをダウンロード</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>ダウンロードしたスクリプトをPATHの通った場所に置き、実行権を付与</h5>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure try-itext-compojure
-</span><span class='line'>$ cd try-itext-compojure</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mv lein ~/bin
+</span><span class='line'>$ chmod 755 ~/bin/lein </span></code></pre></td></tr></table></div></figure>
 
 
-<p><code>project.clj</code>の<code>:dependencies</code>に<code>[com.itextpdf/itextpdf "5.4.4"]</code> <code>[com.itextpdf/itext-asian "5.2.0"]</code> <code>[org.xerial/sqlite-jdbc "3.7.2"]</code> <code>[korma "0.3.0-RC5"]</code>を追記します。</p>
+<h4>compojureプロジェクトの作成（初回は時間かかる）</h4>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure helloworld </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>データベース準備</h2>
+<h4>開発用HTTPサーバ起動（初回は時間かかる）</h4>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir db
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "CREATE TABLE employees (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 一郎');"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 二郎');"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 三郎');"</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd helloworld
+</span><span class='line'>$ lein ring server-headless </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>サンプルコード</h2>
-
-<p><a href="https://gist.github.com/matstani/6866740">handler.clj</a></p>
-
-<div><script src='https://gist.github.com/6866740.js'></script>
-<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6866740&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
-
-
-<h2>起動</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein ring server-headless</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ブラウザでlocalhost:3000にアクセスするとPDFファイルが表示されます。</p>
+<p>Port3000でHTTPサーバが起動されるので、ブラウザで確認します。</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Shunsaku MATSUTANI</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2013-10-07T20:52:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/10/07/try-itext-compojure/" data-via="" data-counturl="http://matstani.github.com/blog/2013/10/07/try-itext-compojure/" >Tweet</a>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/10/07/clojure-itext-japanese/" title="Previous Post: [Clojure] iTextでPDFファイル作成">&laquo; [Clojure] iTextでPDFファイル作成</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2014/03/02/zf2-validator-translation/" title="Next Post: [ZF2] フォームバリデーションメッセージを変更する">[ZF2] フォームバリデーションメッセージを変更する &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
 </div>
-  </section>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
@@ -259,7 +207,6 @@
   
 </aside>
 
-
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -274,10 +221,7 @@
       var disqus_shortname = 'matstani-weblog';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.com/blog/2013/10/07/try-itext-compojure/';
-        var disqus_url = 'http://matstani.github.com/blog/2013/10/07/try-itext-compojure/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

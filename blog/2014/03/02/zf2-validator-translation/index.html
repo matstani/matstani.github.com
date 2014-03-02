@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>[Clojure] iTextでPDFファイル作成(ウェブアプリケーション) - /home/matstani/weblog</title>
+  <title>[ZF2] フォームバリデーションメッセージを変更する - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="CompojureベースのClojureウェブアプリケーションで、iTextを利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例はこちら。)
-例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。 &hellip;">
+  <meta name="description" content="Zend Framework2でフォームのバリデーションのエラーメッセージを変更するにはいくつか方法がありますが、InputFilter作成時のオプションで指定する方法を紹介します。 ZF2チュートリアルでは、空欄チェックと、文字列の長さチェックが付加されていますが、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/2013/10/07/try-itext-compojure">
+  <link rel="canonical" href="http://matstani.github.com/blog/2014/03/02/zf2-validator-translation">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -81,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</h1>
+      <h1 class="entry-title">[ZF2] フォームバリデーションメッセージを変更する</h1>
     
     
       <p class="meta">
@@ -97,59 +96,33 @@
   
 
 
-<time datetime="2013-10-07T20:52:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
+<time datetime="2014-03-02T18:24:00+09:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>ベースのClojureウェブアプリケーションで、<a href="http://itextpdf.com/">iText</a>を利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例は<a href="/blog/2013/10/07/clojure-itext-japanese/">こちら</a>。)<br/>
-例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。</p>
+<div class="entry-content"><p>Zend Framework2でフォームのバリデーションのエラーメッセージを変更するにはいくつか方法がありますが、InputFilter作成時のオプションで指定する方法を紹介します。</p>
 
-<h2>テスト用プロジェクト作成</h2>
+<p><a href="http://framework.zend.com/manual/2.2/en/user-guide/forms-and-actions.html">ZF2チュートリアル</a>では、空欄チェックと、文字列の長さチェックが付加されていますが、これを日本語メッセージにしてみます。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure try-itext-compojure
-</span><span class='line'>$ cd try-itext-compojure</span></code></pre></td></tr></table></div></figure>
+<p><a href="https://gist.github.com/matstani/9303960">サンプルコード</a></p>
 
-
-<p><code>project.clj</code>の<code>:dependencies</code>に<code>[com.itextpdf/itextpdf "5.4.4"]</code> <code>[com.itextpdf/itext-asian "5.2.0"]</code> <code>[org.xerial/sqlite-jdbc "3.7.2"]</code> <code>[korma "0.3.0-RC5"]</code>を追記します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
+<div><script src='https://gist.github.com/9303960.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9303960&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
 
 
-<h2>データベース準備</h2>
+<p>冗長に見えますが、配列の組み合わせなので、関数化して再利用するのは容易です。<br/>
+関数化した例をいくつか掲載します。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir db
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "CREATE TABLE employees (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 一郎');"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 二郎');"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 三郎');"</span></code></pre></td></tr></table></div></figure>
+<p><a href="https://gist.github.com/matstani/9304210">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9304210.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9304210&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
 
 
-<h2>サンプルコード</h2>
 
-<p><a href="https://gist.github.com/matstani/6866740">handler.clj</a></p>
-
-<div><script src='https://gist.github.com/6866740.js'></script>
-<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6866740&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
-
-
-<h2>起動</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein ring server-headless</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ブラウザでlocalhost:3000にアクセスするとPDFファイルが表示されます。</p>
 </div>
 
 
@@ -172,12 +145,12 @@
   
 
 
-<time datetime="2013-10-07T20:52:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
+<time datetime="2014-03-02T18:24:00+09:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
+    <a class='category' href='/blog/categories/php-/'>PHP,</a>, <a class='category' href='/blog/categories/zf2-/'>ZF2,</a>, <a class='category' href='/blog/categories/zendframework2/'>ZendFramework2</a>
   
 </span>
 
@@ -186,7 +159,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/10/07/try-itext-compojure/" data-via="" data-counturl="http://matstani.github.com/blog/2013/10/07/try-itext-compojure/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2014/03/02/zf2-validator-translation/" data-via="" data-counturl="http://matstani.github.com/blog/2014/03/02/zf2-validator-translation/" >Tweet</a>
   
   
   
@@ -197,10 +170,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/10/07/clojure-itext-japanese/" title="Previous Post: [Clojure] iTextでPDFファイル作成">&laquo; [Clojure] iTextでPDFファイル作成</a>
+        <a class="basic-alignment left" href="/blog/2013/10/07/try-itext-compojure/" title="Previous Post: [Clojure] iTextでPDFファイル作成(ウェブアプリケーション)">&laquo; [Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/03/02/zf2-validator-translation/" title="Next Post: [ZF2] フォームバリデーションメッセージを変更する">[ZF2] フォームバリデーションメッセージを変更する &raquo;</a>
       
     </p>
   </footer>
@@ -275,8 +246,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.com/blog/2013/10/07/try-itext-compojure/';
-        var disqus_url = 'http://matstani.github.com/blog/2013/10/07/try-itext-compojure/';
+        var disqus_identifier = 'http://matstani.github.com/blog/2014/03/02/zf2-validator-translation/';
+        var disqus_url = 'http://matstani.github.com/blog/2014/03/02/zf2-validator-translation/';
         var disqus_script = 'embed.js';
       
     (function () {

@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2013-10-08T11:04:35+09:00</updated>
+  <updated>2014-03-02T18:53:30+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[ZF2] フォームバリデーションメッセージを変更する]]></title>
+    <link href="http://matstani.github.com/blog/2014/03/02/zf2-validator-translation/"/>
+    <updated>2014-03-02T18:24:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2014/03/02/zf2-validator-translation</id>
+    <content type="html"><![CDATA[<p>Zend Framework2でフォームのバリデーションのエラーメッセージを変更するにはいくつか方法がありますが、InputFilter作成時のオプションで指定する方法を紹介します。</p>
+
+<p><a href="http://framework.zend.com/manual/2.2/en/user-guide/forms-and-actions.html">ZF2チュートリアル</a>では、空欄チェックと、文字列の長さチェックが付加されていますが、これを日本語メッセージにしてみます。</p>
+
+<p><a href="https://gist.github.com/matstani/9303960">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9303960.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9303960&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<p>冗長に見えますが、配列の組み合わせなので、関数化して再利用するのは容易です。<br/>
+関数化した例をいくつか掲載します。</p>
+
+<p><a href="https://gist.github.com/matstani/9304210">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9304210.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9304210&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)]]></title>
@@ -2268,55 +2296,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Clojureインストール、Compojureプロジェクト作成]]></title>
-    <link href="http://matstani.github.com/blog/2013/01/23/create-compojure-project/"/>
-    <updated>2013-01-23T18:05:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/01/23/create-compojure-project</id>
-    <content type="html"><![CDATA[<p><a href="http://clojure.org/">Clojure</a>には、<a href="http://leiningen.org/">Leiningen</a>という管理ツールがあり、Clojure本体のインストールや、各種ライブラリのインストール、プロジェクトの作成などがとても簡単にできるようになっています。</p>
-
-<p>Clojureがインストールされていない状態から、ウェブアプリケーションフレームワーク<a href="https://github.com/weavejester/compojure">Compojure</a>を利用したウェブアプリケーションの開発用プロジェクトを作成するまでの手順は以下のとおりです。</p>
-
-<h4>Javaがインストールされていることを確認</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ java -version</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Leiningenインストール</h4>
-
-<h5>leinスクリプトをダウンロード</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>ダウンロードしたスクリプトをPATHの通った場所に置き、実行権を付与</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mv lein ~/bin
-</span><span class='line'>$ chmod 755 ~/bin/lein </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>compojureプロジェクトの作成（初回は時間かかる）</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure helloworld </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>開発用HTTPサーバ起動（初回は時間かかる）</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd helloworld
-</span><span class='line'>$ lein ring server-headless </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Port3000でHTTPサーバが起動されるので、ブラウザで確認します。</p>
 ]]></content>
   </entry>
   

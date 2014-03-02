@@ -9,8 +9,7 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="CompojureベースのClojureウェブアプリケーションで、iTextを利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例はこちら。)
-例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。 &hellip;">
+  <meta name="description" content="Zend Framework2でフォームのバリデーションのエラーメッセージを変更するにはいくつか方法がありますが、InputFilter作成時のオプションで指定する方法を紹介します。 ZF2チュートリアルでは、空欄チェックと、文字列の長さチェックが付加されていますが、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/02/zf2-validator-translation/">[ZF2] フォームバリデーションメッセージを変更する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-02T18:24:00+09:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Zend Framework2でフォームのバリデーションのエラーメッセージを変更するにはいくつか方法がありますが、InputFilter作成時のオプションで指定する方法を紹介します。</p>
+
+<p><a href="http://framework.zend.com/manual/2.2/en/user-guide/forms-and-actions.html">ZF2チュートリアル</a>では、空欄チェックと、文字列の長さチェックが付加されていますが、これを日本語メッセージにしてみます。</p>
+
+<p><a href="https://gist.github.com/matstani/9303960">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9303960.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9303960&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<p>冗長に見えますが、配列の組み合わせなので、関数化して再利用するのは容易です。<br/>
+関数化した例をいくつか掲載します。</p>
+
+<p><a href="https://gist.github.com/matstani/9304210">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9304210.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9304210&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1804,67 +1858,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/19/php-memory-usage/">[PHP]memory_get_usageのreal_usageオプションについて</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-19T16:27:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>PHPで割り当てメモリ量を取得するには、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>関数を利用できます。</p>
-
-<p>この関数には、パラメータとして$real_usageを指定できるようになっており、</p>
-
-<blockquote><p>これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE を設定したりすると、 emalloc() が使用するメモリのみを報告します。</p></blockquote>
-
-<p>とあるのですが、「システムが割り当てた実際のメモリの大きさ」と、「emalloc()が使用するメモリ」の違いがよくわかりません。</p>
-
-<p>検索してみたところ、以下を見つけました。</p>
-
-<p><a href="http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php">http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php</a></p>
-
-<p>回答によると、PHPのメモリマネージャは、メモリを確保する際、アプリケーションが必要とするメモリをその都度mallocするのではなく、より大きな単位で確保しておいて内部で管理しているそうです。(デフォルトで256KB単位。環境変数ZEND_MM_SEG_SIZEで設定)</p>
-
-<p>ということで、割り当てメモリ量として以下2種類があることになります。</p>
-
-<ol>
-<li>PHPのメモリマネージャが確保しているメモリ量($real_usage=true)</li>
-<li>アプリケーションが実際に使用しているメモリ量($real_usage=false)</li>
-</ol>
-
-
-<p>php.ini等で指定するmemory_limitで制限しているのは1.になります。<br/>
-環境変数 USE_ZEND_ALLOC=0 を設定すると、上記の仕組みが無効になり、必要量をその都度mallocする動作になるとのことです。</p>
-
-<p>ちなみに、PHPの割り当てメモリ量を調べる関数としては、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>の他に、<a href="http://php.net/manual/ja/function.memory-get-peak-usage.php">memory_get_peak_usage</a>があり、こちらは呼び出し時点までに割り当てられた最大メモリ量を取得できます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1888,6 +1881,10 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/02/zf2-validator-translation/">[ZF2] フォームバリデーションメッセージを変更する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/10/07/try-itext-compojure/">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</a>
       </li>
     
@@ -1901,10 +1898,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
     
       <li class="post">
         <a href="/blog/2013/09/03/try-core-typed/">[Clojure] core.typedで静的型チェック</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a>
       </li>
     
   </ul>
@@ -1921,7 +1914,7 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Shunsaku MATSUTANI -
+  Copyright &copy; 2014 - Shunsaku MATSUTANI -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
