@@ -9,7 +9,10 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="PHPで割り当てメモリ量を取得するには、memory_get_usage関数を利用できます。 この関数には、パラメータとして$real_usageを指定できるようになっており、 これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE &hellip;">
+  <meta name="description" content="Clojure1.2以前の、clojure.contrib.seq/indexedの代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。 1
+2
+&gt; (map-indexed vector [:a :b :c :d :e])
+;([0 :a] [1 :b] [2 : &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +80,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/27/indexed-seq/">[Clojure] インデックス付きシーケンス</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T16:57:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Clojure1.2以前の、<a href="http://clojuredocs.org/clojure_contrib/clojure.contrib.seq/indexed">clojure.contrib.seq/indexed</a>の代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (map-indexed vector [:a :b :c :d :e])
+</span><span class='line'>;([0 :a] [1 :b] [2 :c] [3 :d] [4 :e])</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例)doseqでループ処理。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (doseq [[idx item] (map-indexed vector [:a :b :c :d :e])]
+</span><span class='line'>        (println (str idx ":" item)))
+</span><span class='line'>;0:a
+</span><span class='line'>;1:b
+</span><span class='line'>;2:c
+</span><span class='line'>;3:d</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1002,128 +1063,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/23/using-db-from-compojure-using-korma/">KormaでDBアクセス</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-23T19:41:00+09:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
-
-<p>Compojureベースのウェブアプリケーションで、データベースから読みだした値を表示してみます。</p>
-
-<p><a href="http://clojure.github.com/java.jdbc/">ClojureのJDBCラッパー</a>も十分に高機能なのですが、より柔軟にSQLを構築できる<a href="https://github.com/korma/Korma">Korma</a>というライブラリを使う手順を紹介します。なお、以下の手順では<a href="http://www.sqlite.org/">SQLite</a>を使っています。</p>
-
-<h4>データベース準備</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir db
-</span><span class='line'>$ sqlite3 db/helloworld.sqlite3 "CREATE TABLE items (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT);"
-</span><span class='line'>$ sqlite3 db/helloworld.sqlite3 "INSERT INTO items (title) VALUES ('最初のアイテム');"
-</span><span class='line'>$ sqlite3 db/helloworld.sqlite3 "INSERT INTO items (title) VALUES ('2つ目のアイテム');"</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>依存ライブラリインストール</h4>
-
-<p>project.cljの:dependenciesにJDBCドライバーとKorma、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。<br/>
-<a href="https://gist.github.com/matstani/5048794#file-project-clj">project.clj</a></p>
-
-<div><script src='https://gist.github.com/5048794.js?file=project.clj'></script>
-<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [compojure &quot;1.1.5&quot;]
-                 [org.xerial/sqlite-jdbc &quot;3.7.2&quot;]
-                 [korma &quot;0.3.0-RC2&quot;]
-                 [hiccup &quot;1.0.2&quot;]]
-  :plugins [[lein-ring &quot;0.8.2&quot;]]
-  :ring {:handler helloworld.handler/app}
-  :profiles
-  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
-
-
-<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Kormaを使ってデータベースから読み出し</h4>
-
-<p><a href="https://gist.github.com/matstani/5048794#file-handler-clj">handler.clj</a></p>
-
-<div><script src='https://gist.github.com/5048794.js?file=handler.clj'></script>
-<noscript><pre><code>(ns helloworld.handler
-  (:require [compojure.core :refer :all]
-            [compojure.handler :as handler]
-            [compojure.route :as route]
-            [korma.db :refer [defdb sqlite3]]
-            [korma.core :as korma]
-            [hiccup.core :refer [html]]))
-
-;;データベース定義
-(defdb db (sqlite3
-           ;;データベースファイルのパスを指定
-           {:db &quot;db/helloworld.sqlite3&quot;}))
-
-;;itemsテーブルに対応するEntity定義
-(korma/defentity items)
-
-;;itemsテーブルから全てのレコードを読み出し
-(def all-items (korma/select items))
-
-;;htmlのリストに変換する関数
-(defn to-html [items]
-  (html
-   [:head [:title &quot;Access DB using Korma.&quot;]]
-   [:body
-     [:ul
-       (map (fn [i] [:li (:title i)]) items)]]))
-
-(defroutes app-routes
-  ;;データベースから読みだしたレコードをリストに変換して表示
-  (GET &quot;/&quot; [] (to-html all-items))
-  (route/not-found &quot;Not Found&quot;))
-
-(def app
-  (handler/site app-routes))
-</code></pre></noscript></div>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1149,6 +1088,10 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/02/zf2-error-message-style/">[ZF2] バリデーションメッセージのスタイルを変更する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/02/zf2-validator-translation/">[ZF2] フォームバリデーションメッセージを変更する</a>
       </li>
     
@@ -1162,10 +1105,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2013/09/04/lein-typed/">[Clojure] lein-typed</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/03/try-core-typed/">[Clojure] core.typedで静的型チェック</a>
       </li>
     
   </ul>

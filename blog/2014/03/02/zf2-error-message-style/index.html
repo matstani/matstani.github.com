@@ -5,15 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>[Clojure] core.typedで静的型チェック - /home/matstani/weblog</title>
+  <title>[ZF2] バリデーションメッセージのスタイルを変更する - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Clojureは動的型付けの言語ですが、core.typedライブラリを利用すると、静的型チェックを行うことができます。
-バージョン0.2.0リリースで、Production Readyとアナウンスされました。
-単純な例を試してみたのでメモします。 テスト用プロジェクト作成 1
-2
-$ lein &hellip;">
+  <meta name="description" content="Zend Framework2でフォームバリデーションを行った際のエラーメッセージには、特定のスタイル(class)が指定されていないため、メッセージを赤字で表示したい、といった場合に困ります。 デフォルトの表示方法は、ビューヘルパーformElementErrorsとして登録されています。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +18,7 @@ $ lein &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/2013/09/03/try-core-typed">
+  <link rel="canonical" href="http://matstani.github.com/blog/2014/03/02/zf2-error-message-style">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -84,7 +80,7 @@ $ lein &hellip;">
   
   <header>
     
-      <h1 class="entry-title">[Clojure] core.typedで静的型チェック</h1>
+      <h1 class="entry-title">[ZF2] バリデーションメッセージのスタイルを変更する</h1>
     
     
       <p class="meta">
@@ -100,175 +96,22 @@ $ lein &hellip;">
   
 
 
-<time datetime="2013-09-03T13:25:00+09:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2013</time>
+<time datetime="2014-03-02T19:06:00+09:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Clojureは動的型付けの言語ですが、<a href="https://github.com/clojure/core.typed">core.typed</a>ライブラリを利用すると、静的型チェックを行うことができます。<br/>
-<a href="https://groups.google.com/forum/#!msg/clojure-core-typed/U_aA_Ce3qWg/gJWpdflBe4AJ">バージョン0.2.0リリースで、Production Readyとアナウンスされました。</a><br/>
-単純な例を試してみたのでメモします。</p>
+<div class="entry-content"><p>Zend Framework2でフォームバリデーションを行った際のエラーメッセージには、特定のスタイル(class)が指定されていないため、メッセージを赤字で表示したい、といった場合に困ります。</p>
 
-<h2>テスト用プロジェクト作成</h2>
+<p>デフォルトの表示方法は、<a href="http://framework.zend.com/manual/2.2/en/modules/zend.form.view.helpers.html">ビューヘルパー</a><code>formElementErrors</code>として登録されています。<br/>
+これを自作のクラスで置き換えることで、任意のスタイルでエラーメッセージを表示させることができます。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new try-typed
-</span><span class='line'>$ cd try-typed</span></code></pre></td></tr></table></div></figure>
+<p>例として、<code>Album\Helper\FormElementErrors</code>を作成します。<br/>
+<a href="https://gist.github.com/matstani/9304648">FormElementErrors.php</a></p>
 
-
-<p><code>project.clj</code>に<code>[org.clojure/core.typed "0.2.3"]</code>を追記します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>静的型チェックの実行</h2>
-
-<p><code>core.typed</code>を利用した静的型チェックは、プログラムのコンパイルとは別に、明示的に実行します。<br/>
-REPL内で<code>clojure.core.typed/check-ns</code>関数を実行することにより、指定したnamespaceをチェックします。</p>
-
-<h3>1. <code>REPL</code>起動</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein repl</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>2. 静的型チェック実行</h3>
-
-<p>先ほど作成したテスト用プロジェクトに対し、型チェックを行ってみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (use 'clojure.core.typed)
-</span><span class='line'>user=&gt; (check-ns 'try-typed.core)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記を実行すると、以下のようにエラーになります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Type Error (try-typed.core:3:1) Found untyped var definition: try-typed.core/foo
-</span><span class='line'>Hint: Add the annotation for try-typed.core/foo via check-ns or cf
-</span><span class='line'>in: (def foo (fn* ([x] (clojure.core/println x Hello, World!))))</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>core.typed</code>による静的型チェックでは、全ての<code>var</code>が明示的に型付けされている必要があります。<br/>
-上記では、<code>try-typed.core/foo</code>関数に型付けがされていないため、エラーになっています。</p>
-
-<h2>varに型付けを行う</h2>
-
-<p><code>clojure.core.typed/ann</code>で、varに型付けを行うことができます。<br/>
-上記でエラーになった<code>try-typed.core/foo</code>に型付けしてみます。<br/>
-<a href="https://gist.github.com/matstani/6420121">core.clj</a></p>
-
-<div><script src='https://gist.github.com/6420121.js?file=core.clj'></script>
-<noscript><pre><code>(ns try-typed.core
-  (:require [clojure.core.typed :refer :all]))
-
-(ann foo [String -&gt; nil])
-(defn foo
-  &quot;I don't do a whole lot.&quot;
-  [x]
-  (println x &quot;Hello, World!&quot;))</code></pre></noscript></div>
-
-
-<p>上記の例では、<code>try-typed.core/foo</code>に対し「<code>String</code>型の引数をとり<code>nil</code>を返す」という型情報を付与しています。<br/>
-この状態で型チェックを行うと、<code>:ok</code>となります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (check-ns 'try-typed.core)
-</span><span class='line'>Start collecting try-typed.core
-</span><span class='line'>Finished collecting try-typed.core
-</span><span class='line'>Collected 1 namespaces in 16.039067 msecs
-</span><span class='line'>Start checking try-typed.core
-</span><span class='line'>Checked try-typed.core in 65.01378 msecs
-</span><span class='line'>Checked 1 namespaces (approx. 8 lines) in 84.795137 msecs
-</span><span class='line'>:ok</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>型不一致エラー</h2>
-
-<p><code>clojure.core.typed/ann</code>で指定した型付けと整合しない呼び出しがあった場合、エラーとして検出されます。<br/>
-例) <a href="https://gist.github.com/matstani/6420121#file-core2-clj">core2.clj</a></p>
-
-<div><script src='https://gist.github.com/6420121.js?file=core2.clj'></script>
-<noscript><pre><code>(ns try-typed.core
-  (:require [clojure.core.typed :refer :all]))
-
-(ann foo [String -&gt; nil])
-(defn foo
-  &quot;I don't do a whole lot.&quot;
-  [x]
-  (println x &quot;Hello, World!&quot;))
-
-(ann call-foo [-&gt; nil])
-(defn call-foo []
-  ; 型情報[String -&gt; nil]と異なる呼出し                                                                                                                                                     
-  (foo 1.5))
-</code></pre></noscript></div>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (check-ns 'try-typed.core)
-</span><span class='line'>Start collecting try-typed.core
-</span><span class='line'>Finished collecting try-typed.core
-</span><span class='line'>Collected 1 namespaces in 15.624342 msecs
-</span><span class='line'>Start checking try-typed.core
-</span><span class='line'>Checked try-typed.core in 33.318364 msecs
-</span><span class='line'>Type Error (try-typed.core:13:3) Type mismatch:
-</span><span class='line'>
-</span><span class='line'>Expected:       String
-</span><span class='line'>
-</span><span class='line'>Actual:         (Value 1.5)
-</span><span class='line'>in: (try-typed.core/foo 1.5)</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>型情報の参照</h2>
-
-<p><code>clojure.core.typed/cf</code>で型情報を参照できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (cf try-typed.core/foo)
-</span><span class='line'>(Fn [String -&gt; nil])</span></code></pre></td></tr></table></div></figure>
-
-
-<p>標準関数についても、ほとんどがライブラリ内で型付けされています。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (cf inc)
-</span><span class='line'>(Fn [AnyInteger -&gt; AnyInteger] [Number -&gt; Number])</span></code></pre></td></tr></table></div></figure>
-
-
-<p>自作関数と、標準関数の間で型の不整合があった場合には、エラーとして検出されます。<br/>
-例) <a href="https://gist.github.com/matstani/6420121#file-core3-clj">core3.clj</a></p>
-
-<div><script src='https://gist.github.com/6420121.js?file=core3.clj'></script>
+<div><script src='https://gist.github.com/9304648.js?file=FormElementErrors.php'></script>
 <noscript><pre><code>&lt;!DOCTYPE html&gt;
 &lt;!--
 
@@ -614,9 +457,9 @@ Please, don't. https://github.com/styleguide/templates/2.0
       $(document).on('keydown', function(event) {
         if (event.target === document.body &amp;&amp; event.keyCode === 192 &amp;&amp; !event.metaKey) {
           $('#parallax_wrapper').css('-webkit-filter','grayscale(25%)')
-          document.cookie = 'stats=yes; path=/';
+
           setTimeout(function() {
-            location.reload();
+            window.location = '/site/toggle_staff'
           }, 250)
           return false;
         }
@@ -627,62 +470,12 @@ Please, don't. https://github.com/styleguide/templates/2.0
 </code></pre></noscript></div>
 
 
+<p>上記の例ではエラーメッセージの<code>ul</code>要素に<code>class="err-msg"</code>を指定しています。</p>
 
+<p>作成したビューヘルパーは、<code>Module.php</code>の<code>getViewHelperConfig</code>メソッドで登録します。<br/>
+<a href="https://gist.github.com/matstani/9304648">Module.php</a></p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (check-ns 'try-typed.core)
-</span><span class='line'>Start collecting try-typed.core
-</span><span class='line'>Finished collecting try-typed.core
-</span><span class='line'>Collected 1 namespaces in 22.306404 msecs
-</span><span class='line'>Start checking try-typed.core
-</span><span class='line'>Checked try-typed.core in 36.899735 msecs
-</span><span class='line'>Type Error (try-typed.core:8:3) Static method clojure.lang.Numbers/inc could not be applied to arguments:
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>Domains:
-</span><span class='line'>        AnyInteger
-</span><span class='line'>        Number
-</span><span class='line'>                
-</span><span class='line'>Arguments:
-</span><span class='line'>        String
-</span><span class='line'>        
-</span><span class='line'>Ranges:
-</span><span class='line'>        AnyInteger
-</span><span class='line'>        Number
-</span><span class='line'>                
-</span><span class='line'>with expected type:
-</span><span class='line'>        AnyInteger
-</span><span class='line'>        
-</span><span class='line'>in: (clojure.lang.Numbers/inc s)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>関数内で正しく型変換していると、チェックは<code>:ok</code>になります。<br/>
-例) <a href="https://gist.github.com/matstani/6420121#file-core4-clj">core4.clj</a></p>
-
-<div><script src='https://gist.github.com/6420121.js?file=core4.clj'></script>
+<div><script src='https://gist.github.com/9304648.js?file=Module.php'></script>
 <noscript><pre><code>&lt;!DOCTYPE html&gt;
 &lt;!--
 
@@ -1028,9 +821,9 @@ Please, don't. https://github.com/styleguide/templates/2.0
       $(document).on('keydown', function(event) {
         if (event.target === document.body &amp;&amp; event.keyCode === 192 &amp;&amp; !event.metaKey) {
           $('#parallax_wrapper').css('-webkit-filter','grayscale(25%)')
-          document.cookie = 'stats=yes; path=/';
+
           setTimeout(function() {
-            location.reload();
+            window.location = '/site/toggle_staff'
           }, 250)
           return false;
         }
@@ -1041,120 +834,7 @@ Please, don't. https://github.com/styleguide/templates/2.0
 </code></pre></noscript></div>
 
 
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (check-ns 'try-typed.core)
-</span><span class='line'>Start collecting try-typed.core
-</span><span class='line'>Finished collecting try-typed.core
-</span><span class='line'>Collected 1 namespaces in 36.006706 msecs
-</span><span class='line'>Start checking try-typed.core
-</span><span class='line'>Checked try-typed.core in 38.304219 msecs
-</span><span class='line'>Checked 1 namespaces (approx. 9 lines) in 78.396396 msecs
-</span><span class='line'>:ok</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>型付けの例</h2>
-
-<h3>引数が複数</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(ann my-add [Number, Number -&gt; Number])
-</span><span class='line'>(defn my-add [n1 n2]
-</span><span class='line'>  (+ n1 n2))</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>可変長引数</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(ann my-add [Number * -&gt; Number])
-</span><span class='line'>(defn my-add [& n]
-</span><span class='line'>  (apply + n))</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>シーケンス</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(ann my-add [(Seqable Number) -&gt; Number])
-</span><span class='line'>(defn my-add [n]
-</span><span class='line'>  (apply + n))</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Set</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(ann my-filter [(Set AnyInteger) -&gt; (Seqable AnyInteger)])
-</span><span class='line'>(defn my-filter [n]
-</span><span class='line'>  (filter odd? n))</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Map</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(ann get-count [(Map clojure.lang.Symbol Number) -&gt; (U nil Number)])
-</span><span class='line'>(defn get-count [m]
-</span><span class='line'>  (m :count))</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>無名関数</h3>
-
-<p>高階関数に無名関数を渡す場合、型付けが必要になる場合があるようです。
-<code>clojure.core.typed/fn&gt;</code>による型付け</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(ann inc-seq [Number, (Seqable Number) -&gt; (Seqable Number)])
-</span><span class='line'>(defn inc-seq
-</span><span class='line'>  [i s]
-</span><span class='line'>    (map
-</span><span class='line'>       ; clojure.core.typed/fn&gt; は無名関数のパラメータに型情報を付加できる
-</span><span class='line'>       (fn&gt; [e :- Number] (+ i e))
-</span><span class='line'>       s))</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>clojure.core.typed/ann-form</code>による型付け</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(ann inc-seq [Number, (Seqable Number) -&gt; (Seqable Number)])
-</span><span class='line'>(defn inc-seq
-</span><span class='line'>  [i s]
-</span><span class='line'>    (map
-</span><span class='line'>       ; clojure.core.typed/ann-form&gt; は任意のフォームに型情報を付加できる
-</span><span class='line'>       (ann-form #(+ i %) [Number -&gt; Number])
-</span><span class='line'>       s))</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>その他</h2>
-
-<p>Clojureには標準で型ヒント(<a href="http://clojure.org/java_interop#Java%20Interop-Type%20Hints">type hinting</a>)と呼ばれる機能がありますが、Javaを呼び出す際のリフレクションを防ぐためのもので、<code>core.typed</code>のような、静的型チェックの機能ではありません。</p>
+<p>登録後、バリデーションメッセージが指定したスタイルで表示されるようになります。</p>
 </div>
 
 
@@ -1177,21 +857,15 @@ Please, don't. https://github.com/styleguide/templates/2.0
   
 
 
-<time datetime="2013-09-03T13:25:00+09:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2013</time>
+<time datetime="2014-03-02T19:06:00+09:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/09/03/try-core-typed/" data-via="" data-counturl="http://matstani.github.com/blog/2013/09/03/try-core-typed/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2014/03/02/zf2-error-message-style/" data-via="" data-counturl="http://matstani.github.com/blog/2014/03/02/zf2-error-message-style/" >Tweet</a>
   
   
   
@@ -1202,10 +876,8 @@ Please, don't. https://github.com/styleguide/templates/2.0
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/02/difficult-sequences/" title="Previous Post: [Clojure] ちょっと難しいシーケンス処理">&laquo; [Clojure] ちょっと難しいシーケンス処理</a>
+        <a class="basic-alignment left" href="/blog/2014/03/02/zf2-validator-translation/" title="Previous Post: [ZF2] フォームバリデーションメッセージを変更する">&laquo; [ZF2] フォームバリデーションメッセージを変更する</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/09/04/lein-typed/" title="Next Post: [Clojure] lein-typed">[Clojure] lein-typed &raquo;</a>
       
     </p>
   </footer>
@@ -1280,8 +952,8 @@ Please, don't. https://github.com/styleguide/templates/2.0
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.com/blog/2013/09/03/try-core-typed/';
-        var disqus_url = 'http://matstani.github.com/blog/2013/09/03/try-core-typed/';
+        var disqus_identifier = 'http://matstani.github.com/blog/2014/03/02/zf2-error-message-style/';
+        var disqus_url = 'http://matstani.github.com/blog/2014/03/02/zf2-error-message-style/';
         var disqus_script = 'embed.js';
       
     (function () {
