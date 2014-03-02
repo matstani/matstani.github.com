@@ -9,7 +9,8 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、データベースから読みだした値を表示してみます。 ClojureのJDBCラッパーも十分に高機能なのですが、より柔軟にSQLを構築できるKormaというライブラリを使う手順を紹介します。なお、 &hellip;">
+  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、ファイルアップロードを行います。 依存ライブラリのインストール HTML生成ライブラリとしてHiccupを利用するので、以下のように追記します。
+project.clj (defproject &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +78,125 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/31/fileupload-with-compojure/">Compojureでファイルアップロード</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-31T21:50:00+09:00" pubdate data-updated="true">Jan 31<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
+
+<p>Compojureベースのウェブアプリケーションで、ファイルアップロードを行います。</p>
+
+<h4>依存ライブラリのインストール</h4>
+
+<p>HTML生成ライブラリとして<a href="https://github.com/weavejester/hiccup">Hiccup</a>を利用するので、以下のように追記します。<br/>
+<a href="https://gist.github.com/matstani/5064493#file-project-clj">project.clj</a></p>
+
+<div><script src='https://gist.github.com/5064493.js?file=project.clj'></script>
+<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
+                 [compojure &quot;1.1.5&quot;]
+                 [hiccup &quot;1.0.2&quot;]]
+  :plugins [[lein-ring &quot;0.8.2&quot;]]
+  :ring {:handler helloworld.handler/app}
+  :profiles
+  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})
+</code></pre></noscript></div>
+
+
+<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>ファイルアップロード</h4>
+
+<p>アップロードされたファイルを、プロジェクトのルートディレクトリに保存するコードです。<br/>
+<a href="https://gist.github.com/matstani/5064493#file-handler-clj">handler.clj</a></p>
+
+<div><script src='https://gist.github.com/5064493.js?file=handler.clj'></script>
+<noscript><pre><code>(ns helloworld.handler
+  (:use compojure.core)
+  (:require [clojure.java.io :as io]
+            [ring.util.response :as response]
+            [compojure.handler :as handler]
+            [compojure.route :as route]
+            [hiccup.form :as form]
+            [hiccup.core :refer [html]]))
+
+;; ページレイアウト                                                                                                                                               
+(defn layout [&amp; content]
+  (html
+   [:head [:title &quot;file upload with compojure.&quot;]]
+   [:body
+    content]))
+
+;; ファイルアップロード用フォーム                                                                                                                                 
+(def upload-form
+  (layout
+   (form/form-to
+    {:enctype &quot;multipart/form-data&quot;}
+    [:post &quot;/file&quot;]
+    (form/file-upload &quot;file&quot;)
+    (form/submit-button &quot;submit&quot;))))
+
+;; アップロード成功                                                                                                                                               
+(def success
+  (layout
+   [:h1 &quot;File uploaded successfully!&quot;]))
+
+;; アップロードされたファイルを保存する                                                                                                                           
+(defn save-file [filename tempfile]
+  (io/copy tempfile (io/file filename))
+  (io/delete-file tempfile))
+
+(defroutes app-routes
+  (GET &quot;/&quot; [] upload-form)
+  (GET &quot;/success&quot; [] success)
+  (POST &quot;/file&quot; {{{:keys [filename tempfile]} :file} :params}
+          (save-file filename tempfile)
+          (response/redirect &quot;/success&quot;))
+  (route/not-found &quot;Not Found&quot;))
+
+(def app
+    (handler/site app-routes))
+</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -299,6 +419,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/02/zf2-db-transaction/">[ZF2] データベーストランザクション</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/02/zf2-error-message-style/">[ZF2] バリデーションメッセージのスタイルを変更する</a>
       </li>
     
@@ -312,10 +436,6 @@
     
       <li class="post">
         <a href="/blog/2013/10/07/clojure-itext-japanese/">[Clojure] iTextでPDFファイル作成</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/04/lein-typed/">[Clojure] lein-typed</a>
       </li>
     
   </ul>
