@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Octopress | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/blog/categories/octopress/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2014-03-02T20:02:38+09:00</updated>
+  <updated>2014-03-09T17:07:53+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -21,7 +21,7 @@
     <content type="html"><![CDATA[<p><a href="http://octopress.org/docs/blogging/code/">ドキュメント</a>にあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
 <a href="https://gist.github.com/">gist</a>のコードを埋め込むには以下のように記述します。
 <code>
-{% gist gist_id [filename] %}
+{{ "{% gist gist_id [filename] " }}%}
 </code>
 このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、テーブルの枠幅がでこぼこになって見た目が悪かったので、スタイルシートを微調整しました。
 sassディレクトリ以下のscssファイルを修正すると、サイトに反映されるようです。</p>
