@@ -9,7 +9,9 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Zend Framework2でデータベースのトランザクションを利用する方法を紹介します。 サンプルコード &lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9304923&quot;&gt &hellip;">
+  <meta name="description" content="ZF2の提供するTableGatewayを利用した基本的なCRUD手順はチュートリアルで紹介されています。
+ここでは、より複雑な例をいくつか紹介します。 検索条件指定 TableGatewayを利用した検索で条件を指定するには、selectメソッドに無名関数を渡します。
+サンプルコード &lt; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +79,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/09/zf2-db-operation/">[ZF2] データベース操作色々</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-09T17:23:00+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ZF2の提供するTableGatewayを利用した基本的なCRUD手順は<a href="http://framework.zend.com/manual/2.2/en/user-guide/database-and-models.html">チュートリアル</a>で紹介されています。
+ここでは、より複雑な例をいくつか紹介します。</p>
+
+<h2>検索条件指定</h2>
+
+<p>TableGatewayを利用した検索で条件を指定するには、<code>select</code>メソッドに無名関数を渡します。<br/>
+<a href="https://gist.github.com/matstani/9445201">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445201.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445201&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>結果を配列で取得</h2>
+
+<p>TableGatewayを利用した検索では、結果はEntityオブジェクトに変換された状態で取得できますが、JOINしたカラム等は失われてしまいます。<br/>
+全てのカラムを取得したい場合は、以下のように<code>select</code>オブジェクトを生成して実行します。<br/>
+<a href="https://gist.github.com/matstani/9445275">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445275.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445275&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>JOIN</h2>
+
+<p>JOINする場合のサンプルコードです。<br/>
+<a href="https://gist.github.com/matstani/9445347">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445347.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445347&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>LEFT JOIN, RIGHT JOIN, INNER JOIN</h2>
+
+<p>結合方法を指定する場合は、<code>join</code>メソッドの第4引数で指定します。<br/>
+<a href="https://gist.github.com/matstani/9445475">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445475.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445475&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>集計</h2>
+
+<p>GROUP BY を使用した集計のサンプルコードです。<br/>
+<a href="https://gist.github.com/matstani/9445604">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445604.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445604&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>副問い合わせ</h2>
+
+<p><code>select</code>オブジェクトを組み合わせることで、副問い合わせを行うことができます。
+WHERE句に副問い合わせを指定する例です。<br/>
+<a href="https://gist.github.com/matstani/9445934">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445934.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445934&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<p>JOIN句に副問い合わせを指定する例です。<br/>
+<a href="https://gist.github.com/matstani/9445831">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445831.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445831&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2499,76 +2603,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/30/lein-try/">lein-tryでClojureのライブラリを手軽にお試し</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-30T16:41:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/technomancy/leiningen">Leiningen</a>のプラグインである<a href="https://github.com/rkneufeld/lein-try">lein-try</a>を利用すると、わざわざテスト用のプロジェクトを作らなくても、手軽にライブラリをREPL上で試すことができます。</p>
-
-<h2>lein-tryのインストール</h2>
-
-<p><code>~/.lein/profiles.clj</code>の<code>:user</code> <code>:plugins</code>に<code>[lein-try "0.3.0"]</code>を追記します。(ファイルが存在しない場合は新規作成)<br/>
-例)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{:user {:plugins [[lein-try "0.3.0"]]}}</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>lein-tryでライブラリを試す</h2>
-
-<p><a href="https://github.com/clj-time/clj-time">clj-time</a>を試してみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein try clj-time
-</span><span class='line'>user=&gt; (require '[clj-time.core :refer [date-time]])
-</span><span class='line'>nil
-</span><span class='line'>user=&gt; (date-time 2013 07 30 18 00 00)
-</span><span class='line'>#&lt;DateTime 2013-07-30T18:00:00.000Z&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ちなみに、Leiningenのバージョンが2.1.3より古い場合エラーになることがあります。Leiningenを最新の安定版にアップデートするには、以下のコマンドを実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein upgrade</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考にした記事<br/>
-<a href="http://dev.xscheme.de/2013/07/try-clojure-libraries-with-ease-using-lein-try/">Try Clojure libraries with ease using lein-try</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2592,6 +2626,10 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/09/zf2-db-operation/">[ZF2] データベース操作色々</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/02/zf2-db-transaction/">[ZF2] データベーストランザクション</a>
       </li>
     
@@ -2605,10 +2643,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
     
       <li class="post">
         <a href="/blog/2013/10/07/try-itext-compojure/">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/07/clojure-itext-japanese/">[Clojure] iTextでPDFファイル作成</a>
       </li>
     
   </ul>

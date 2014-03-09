@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>clojure/core.asyncでGo - /home/matstani/weblog</title>
+  <title>[ZF2] データベース操作色々 - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="clojure/core.asyncライブラリを利用すると、Go言語のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。 試しに、Go言語チュートリアルに掲載されている素数の篩(ふるい)をClojureで実装してみました。 project.clj ( &hellip;">
+  <meta name="description" content="ZF2の提供するTableGatewayを利用した基本的なCRUD手順はチュートリアルで紹介されています。
+ここでは、より複雑な例をいくつか紹介します。 検索条件指定 TableGatewayを利用した検索で条件を指定するには、selectメソッドに無名関数を渡します。
+サンプルコード &lt; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async">
+  <link rel="canonical" href="http://matstani.github.com/blog/2014/03/09/zf2-db-operation">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -80,7 +82,7 @@
   
   <header>
     
-      <h1 class="entry-title">clojure/core.asyncでGo</h1>
+      <h1 class="entry-title">[ZF2] データベース操作色々</h1>
     
     
       <p class="meta">
@@ -96,77 +98,80 @@
   
 
 
-<time datetime="2013-07-30T21:01:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
+<time datetime="2014-03-09T17:23:00+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="https://github.com/clojure/core.async">clojure/core.async</a>ライブラリを利用すると、<a href="http://golang.org">Go言語</a>のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。</p>
+<div class="entry-content"><p>ZF2の提供するTableGatewayを利用した基本的なCRUD手順は<a href="http://framework.zend.com/manual/2.2/en/user-guide/database-and-models.html">チュートリアル</a>で紹介されています。
+ここでは、より複雑な例をいくつか紹介します。</p>
 
-<p>試しに、<a href="http://golang.jp/go_tutorial#index12">Go言語チュートリアルに掲載されている素数の篩(ふるい)</a>をClojureで実装してみました。</p>
+<h2>検索条件指定</h2>
 
-<p><a href="https://gist.github.com/matstani/6112340#file-project-clj">project.clj</a></p>
+<p>TableGatewayを利用した検索で条件を指定するには、<code>select</code>メソッドに無名関数を渡します。<br/>
+<a href="https://gist.github.com/matstani/9445201">サンプルコード</a></p>
 
-<div><script src='https://gist.github.com/6112340.js?file=project.clj'></script>
-<noscript><pre><code>(defproject async-test &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
-  :dependencies [[org.clojure/clojure &quot;1.5.1&quot;]
-                 [org.clojure/core.async &quot;0.1.0-SNAPSHOT&quot;]]
-  :repositories {&quot;sonatype-oss-public&quot; &quot;https://oss.sonatype.org/content/groups/public/&quot;}
-  :main async-test.core)
-</code></pre></noscript></div>
+<div><script src='https://gist.github.com/9445201.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445201&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
 
 
-<p><a href="https://gist.github.com/matstani/6112340#file-core-clj">core.clj</a></p>
+<h2>結果を配列で取得</h2>
 
-<div><script src='https://gist.github.com/6112340.js?file=core.clj'></script>
-<noscript><pre><code>(ns async-test.core
-  (:require [clojure.core.async :as async :refer [&lt;! &gt;! &lt;!! chan go]]))
+<p>TableGatewayを利用した検索では、結果はEntityオブジェクトに変換された状態で取得できますが、JOINしたカラム等は失われてしまいます。<br/>
+全てのカラムを取得したい場合は、以下のように<code>select</code>オブジェクトを生成して実行します。<br/>
+<a href="https://gist.github.com/matstani/9445275">サンプルコード</a></p>
 
-(defn generate
-  []
-  (let [ch (chan)]
-    (go
-     (doseq [e (iterate inc 2)]
-       (&gt;! ch e)))
-    ch))
-
-(defn sieve-filter
-  [in prime]
-  (let [out (chan)]
-    (go
-     (while true
-       (let [i (&lt;! in)]
-         (when-not (= (mod i prime) 0)
-           (&gt;! out i)))))
-    out))
-
-(defn sieve
-  []
-  (let [out (chan)]
-    (go
-     (loop [ch (generate)]
-       (let [prime (&lt;! ch)]
-         (&gt;! out prime)
-         (recur (sieve-filter ch prime)))))
-    out))
-
-(defn -main
-  []
-  (let [primes (sieve)]
-    (doseq [_ (range 100)]
-      (println (&lt;!! primes)))))</code></pre></noscript></div>
+<div><script src='https://gist.github.com/9445275.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445275&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
 
 
-<p>Go言語版をほぼそのままの形で実装できています。<br/>
-他言語の構文をライブラリとして提供できるのはLispならではです。</p>
+<h2>JOIN</h2>
 
-<p>ちなみに、<a href="https://github.com/clojure/clojurescript">ClojureScript</a>(Clojure-JavaScriptコンパイラ)でも利用可能とのことです。</p>
+<p>JOINする場合のサンプルコードです。<br/>
+<a href="https://gist.github.com/matstani/9445347">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445347.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445347&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>LEFT JOIN, RIGHT JOIN, INNER JOIN</h2>
+
+<p>結合方法を指定する場合は、<code>join</code>メソッドの第4引数で指定します。<br/>
+<a href="https://gist.github.com/matstani/9445475">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445475.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445475&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>集計</h2>
+
+<p>GROUP BY を使用した集計のサンプルコードです。<br/>
+<a href="https://gist.github.com/matstani/9445604">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445604.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445604&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>副問い合わせ</h2>
+
+<p><code>select</code>オブジェクトを組み合わせることで、副問い合わせを行うことができます。
+WHERE句に副問い合わせを指定する例です。<br/>
+<a href="https://gist.github.com/matstani/9445934">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445934.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445934&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<p>JOIN句に副問い合わせを指定する例です。<br/>
+<a href="https://gist.github.com/matstani/9445831">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445831.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445831&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+
 </div>
 
 
@@ -189,12 +194,12 @@
   
 
 
-<time datetime="2013-07-30T21:01:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
+<time datetime="2014-03-09T17:23:00+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
+    <a class='category' href='/blog/categories/php/'>PHP</a>, <a class='category' href='/blog/categories/zf2/'>ZF2</a>, <a class='category' href='/blog/categories/zendframework2/'>ZendFramework2</a>
   
 </span>
 
@@ -203,7 +208,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/" data-via="" data-counturl="http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.com/blog/2014/03/09/zf2-db-operation/" data-via="" data-counturl="http://matstani.github.com/blog/2014/03/09/zf2-db-operation/" >Tweet</a>
   
   
   
@@ -214,10 +219,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/07/30/lein-try/" title="Previous Post: lein-tryでClojureのライブラリを手軽にお試し">&laquo; lein-tryでClojureのライブラリを手軽にお試し</a>
+        <a class="basic-alignment left" href="/blog/2014/03/02/zf2-db-transaction/" title="Previous Post: [ZF2] データベーストランザクション">&laquo; [ZF2] データベーストランザクション</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/08/02/difficult-sequences/" title="Next Post: [Clojure] ちょっと難しいシーケンス処理">[Clojure] ちょっと難しいシーケンス処理 &raquo;</a>
       
     </p>
   </footer>
@@ -292,8 +295,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/';
-        var disqus_url = 'http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/';
+        var disqus_identifier = 'http://matstani.github.com/blog/2014/03/09/zf2-db-operation/';
+        var disqus_url = 'http://matstani.github.com/blog/2014/03/09/zf2-db-operation/';
         var disqus_script = 'embed.js';
       
     (function () {

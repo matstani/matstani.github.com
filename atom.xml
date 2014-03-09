@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2014-03-02T20:02:40+09:00</updated>
+  <updated>2014-03-09T20:20:43+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,81 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[ZF2] データベース操作色々]]></title>
+    <link href="http://matstani.github.com/blog/2014/03/09/zf2-db-operation/"/>
+    <updated>2014-03-09T17:23:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2014/03/09/zf2-db-operation</id>
+    <content type="html"><![CDATA[<p>ZF2の提供するTableGatewayを利用した基本的なCRUD手順は<a href="http://framework.zend.com/manual/2.2/en/user-guide/database-and-models.html">チュートリアル</a>で紹介されています。
+ここでは、より複雑な例をいくつか紹介します。</p>
+
+<h2>検索条件指定</h2>
+
+<p>TableGatewayを利用した検索で条件を指定するには、<code>select</code>メソッドに無名関数を渡します。<br/>
+<a href="https://gist.github.com/matstani/9445201">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445201.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445201&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>結果を配列で取得</h2>
+
+<p>TableGatewayを利用した検索では、結果はEntityオブジェクトに変換された状態で取得できますが、JOINしたカラム等は失われてしまいます。<br/>
+全てのカラムを取得したい場合は、以下のように<code>select</code>オブジェクトを生成して実行します。<br/>
+<a href="https://gist.github.com/matstani/9445275">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445275.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445275&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>JOIN</h2>
+
+<p>JOINする場合のサンプルコードです。<br/>
+<a href="https://gist.github.com/matstani/9445347">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445347.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445347&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>LEFT JOIN, RIGHT JOIN, INNER JOIN</h2>
+
+<p>結合方法を指定する場合は、<code>join</code>メソッドの第4引数で指定します。<br/>
+<a href="https://gist.github.com/matstani/9445475">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445475.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445475&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>集計</h2>
+
+<p>GROUP BY を使用した集計のサンプルコードです。<br/>
+<a href="https://gist.github.com/matstani/9445604">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445604.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445604&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>副問い合わせ</h2>
+
+<p><code>select</code>オブジェクトを組み合わせることで、副問い合わせを行うことができます。
+WHERE句に副問い合わせを指定する例です。<br/>
+<a href="https://gist.github.com/matstani/9445934">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445934.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445934&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<p>JOIN句に副問い合わせを指定する例です。<br/>
+<a href="https://gist.github.com/matstani/9445831">サンプルコード</a></p>
+
+<div><script src='https://gist.github.com/9445831.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/9445831&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[ZF2] データベーストランザクション]]></title>
@@ -2729,143 +2804,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
 
 
 <p>近いうちに本体でも修正されるとは思いますが。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Friendを利用したフォーム認証]]></title>
-    <link href="http://matstani.github.com/blog/2013/02/05/form-authentication-using-friend/"/>
-    <updated>2013-02-05T20:01:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/02/05/form-authentication-using-friend</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="http://matstani.github.com/blog/2013/01/23/create-compojure-project/">こちら</a></p>
-
-<p>Compojureベースのウェブアプリケーションで、フォーム認証を行なってみます。</p>
-
-<p><a href="https://github.com/cemerick/friend">Friend</a>という認証／認可用のライブラリを利用できます。</p>
-
-<h4>依存ライブラリインストール</h4>
-
-<p><a href="https://gist.github.com/matstani/5046194#file-project-clj">project.clj</a>の:dependenciesにFriend、HTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。</p>
-
-<div><script src='https://gist.github.com/5046194.js?file=project.clj'></script>
-<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [compojure &quot;1.1.5&quot;]
-                 [hiccup &quot;1.0.2&quot;]
-                 [com.cemerick/friend &quot;0.1.3&quot;]]
-  :plugins [[lein-ring &quot;0.8.2&quot;]]
-  :ring {:handler helloworld.handler/app}
-  :profiles
-  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
-
-
-<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Friendを使ってフォーム認証</h4>
-
-<p>仮アカウントとしてadmin、userを用意し、それぞれ閲覧できるページが異なる設定にしています。
-認証に伴うリダイレクト処理はFriendが行ってくれます。<br/>
-<a href="https://gist.github.com/matstani/5046194#file-handler-clj">サンプルコード</a></p>
-
-<div><script src='https://gist.github.com/5046194.js?file=handler.clj'></script>
-<noscript><pre><code>(ns helloworld.handler
-  (:require [ring.util.response :as response]
-            [compojure.core :refer :all]
-            [compojure.handler :as handler]
-            [compojure.route :as route]
-            [hiccup.page :refer [html5]]
-            [hiccup.element :refer [link-to]]
-            [hiccup.form :as form]
-            [cemerick.friend :as friend]
-            (cemerick.friend [workflows :as workflows]
-                             [credentials :as creds])))
-
-;; 仮のアカウント定義
-(def users {&quot;admin&quot; {:username &quot;admin&quot;
-                    :password (creds/hash-bcrypt &quot;adminpassword&quot;)
-                    :roles #{::admin}}
-            &quot;user&quot; {:username &quot;user&quot;
-                    :password (creds/hash-bcrypt &quot;userpassword&quot;)
-                    :roles #{::user}}})
-
-;; ::admin ロールは ::user ロールを兼ねる
-(derive ::admin ::user)
-
-;; ページレイアウト
-(defn layout [&amp; content]
-  (html5
-   [:head [:title &quot;auth and authz using friend.&quot;]]
-   [:body
-    content]))
-
-;; 認証が必要なページの定義
-(defroutes secure-routes
-  ;; /admin以下は ::admin ロールが必要
-  (context &quot;/admin&quot; request
-           (friend/wrap-authorize
-            (routes
-             (GET &quot;/page1&quot; [] (layout &quot;admin page1.&quot;))
-             (GET &quot;/page2&quot; [] (layout &quot;admin page2.&quot;)))
-            #{::admin}))
-  ;; /user以下は ::user ロールが必要
-  (context &quot;/user&quot; request
-           (friend/wrap-authorize
-            (GET &quot;/private&quot; [] (layout &quot;private page.&quot;))
-            #{::user})))
-
-;; indexページ
-(def index
-  (layout
-   [:div
-    [:ul
-     [:li (link-to &quot;/admin/page1&quot; &quot;Admin page1&quot;)]
-     [:li (link-to &quot;/admin/page2&quot; &quot;Admin page2&quot;)]
-     [:li (link-to &quot;/user/private&quot; &quot;User's private page.&quot;)]]]
-   [:div (link-to &quot;/login&quot; &quot;Login&quot;)]
-   [:div (link-to &quot;/logout&quot; &quot;Logout&quot;)]))
-
-(def index-handler
-  (GET &quot;/&quot; [] index))
-
-;; ログインフォーム
-(def login-form
-  (layout
-    (form/form-to [:post &quot;/login&quot;]
-                  [:div
-                   [:div
-                    (form/label &quot;username&quot; &quot;user name:&quot;)
-                    (form/text-field &quot;username&quot;)]
-                   [:div (form/label &quot;password&quot; &quot;password:&quot;)
-                    (form/password-field &quot;password&quot;)]
-                   [:div (form/submit-button &quot;login!&quot;)]])))
-
-(def login-handler
-  (GET &quot;/login&quot; [] login-form))
-
-(defroutes app-routes
-  index-handler
-  login-handler
-  secure-routes
-  ;;ログアウトページ
-  (friend/logout (ANY &quot;/logout&quot; request (response/redirect &quot;/&quot;)))
-  (route/not-found &quot;Not Found&quot;))
-
-(def app
-  (-&gt; app-routes
-      ;;認証用ミドルウェア（依存ミドルウェアの内側に置く）
-      (friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn users)
-                            :workflows [(workflows/interactive-form)]})
-      handler/site))
-</code></pre></noscript></div>
-
-
-
 ]]></content>
   </entry>
   
