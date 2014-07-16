@@ -10,8 +10,9 @@
 
   
   <meta name="description" content="推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。
-利用するのは、Emacs+nrepl.el。
-ちなみに、Clojure Programmingで紹介されているSLIME, swankの利用はdeprecatedとのこと。 Javaのインストール オラクルのサイト &hellip;">
+※2014/07/16 nrepl.el→ciderに変更、リンク先修正。
+利用するのは、Emacs+cider。
+ちなみに、Clojure Programmingで紹介されているSLIME, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -106,7 +107,8 @@
 
 
 <div class="entry-content"><p>推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。<br/>
-利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>。<br/>
+※2014/07/16 nrepl.el→ciderに変更、リンク先修正。<br/>
+利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/clojure-emacs/cider">cider</a>。<br/>
 ちなみに、<a href="http://shop.oreilly.com/product/0636920013754.do">Clojure Programming</a>で紹介されているSLIME, swankの利用はdeprecatedとのこと。</p>
 
 <h3>Javaのインストール</h3>
@@ -164,15 +166,15 @@
 <p>ここでインストールされるパッケージは以下のとおり。</p>
 
 <ul>
-<li><a href="https://github.com/technomancy/clojure-mode">clojure-mode.el</a><br/>
+<li><a href="https://github.com/clojure-emacs/clojure-mode">clojure-model</a><br/>
 Clojure編集の基本機能を追加するモード。インデントやシンタックスハイライトなど。</li>
-<li><a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a><br/>
+<li><a href="http://emacswiki.org/emacs/ParEdit">ParEdit</a><br/>
 括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。<br/>
 動作が直感的でないところもあるので、<a href="http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html">チュートリアル</a>で勉強。</li>
-<li><a href="https://github.com/kingtim/nrepl.el">nrepl.el</a><br/>
+<li><a href="https://github.com/clojure-emacs/cider">cider</a><br/>
 Emacsから、<a href="https://github.com/clojure/tools.nrepl">nREPL</a>(ネットワーク経由で利用できるREPL)にアクセスするための機能。<br/>
 nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。</li>
-<li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">rainbow-delimiters.el</a><br/>
+<li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">RainbowDelimiters</a><br/>
 Lispにありがちな多重括弧を、キレイに色付けしてくれるモード。</li>
 </ul>
 
@@ -194,7 +196,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
 <p>Emacs上で</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl-jack-in</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x cider-jack-in</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
