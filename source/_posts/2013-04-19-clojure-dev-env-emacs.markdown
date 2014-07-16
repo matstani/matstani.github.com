@@ -7,7 +7,8 @@ categories: Clojure
 ---
 
 推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。  
-利用するのは、[Emacs](http://www.gnu.org/software/emacs/)+[nrepl.el](https://github.com/kingtim/nrepl.el)。  
+※2014/07/16 nrepl.el→ciderに変更、リンク先修正。  
+利用するのは、[Emacs](http://www.gnu.org/software/emacs/)+[cider](https://github.com/clojure-emacs/cider)。  
 ちなみに、[Clojure Programming](http://shop.oreilly.com/product/0636920013754.do)で紹介されているSLIME, swankの利用はdeprecatedとのこと。
 
 ### Javaのインストール
@@ -44,15 +45,15 @@ M-x eval-buffer
 
 ここでインストールされるパッケージは以下のとおり。
 
-* [clojure-mode.el](https://github.com/technomancy/clojure-mode)  
+* [clojure-model](https://github.com/clojure-emacs/clojure-mode)  
 Clojure編集の基本機能を追加するモード。インデントやシンタックスハイライトなど。
-* [paredit.el](http://emacswiki.org/emacs/ParEdit)  
+* [ParEdit](http://emacswiki.org/emacs/ParEdit)  
 括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。  
 動作が直感的でないところもあるので、[チュートリアル](http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html)で勉強。
-* [nrepl.el](https://github.com/kingtim/nrepl.el)  
+* [cider](https://github.com/clojure-emacs/cider)  
 Emacsから、[nREPL](https://github.com/clojure/tools.nrepl)(ネットワーク経由で利用できるREPL)にアクセスするための機能。  
 nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。
-* [rainbow-delimiters.el](http://www.emacswiki.org/emacs/RainbowDelimiters)  
+* [RainbowDelimiters](http://www.emacswiki.org/emacs/RainbowDelimiters)  
 Lispにありがちな多重括弧を、キレイに色付けしてくれるモード。
 
 ### Clojureプロジェクト作成
@@ -67,5 +68,5 @@ $ emacs src/demo/core.clj
 ```
 Emacs上で
 ```
-M-x nrepl-jack-in
+M-x cider-jack-in
 ```
