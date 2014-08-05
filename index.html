@@ -9,9 +9,9 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="ZF2の提供するTableGatewayを利用した基本的なCRUD手順はチュートリアルで紹介されています。
-ここでは、より複雑な例をいくつか紹介します。 検索条件指定 TableGatewayを利用した検索で条件を指定するには、selectメソッドに無名関数を渡します。
-サンプルコード &lt; &hellip;">
+  <meta name="description" content="JVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現するツールtools.namespaceを紹介します。 ClojureにはREPLが付属しており、動作を確かめながらソフトウェアを開発することができます。
+修正後のソースコードをREPL上に読み込むには通常、
+(use ' &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,150 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/05/clojure-tools-dot-namespace-component/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-05T16:42:00+09:00" pubdate data-updated="true">Aug 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>JVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現するツール<a href="https://github.com/clojure/tools.namespace">tools.namespace</a>を紹介します。</p>
+
+<p>ClojureにはREPLが付属しており、動作を確かめながらソフトウェアを開発することができます。<br/>
+修正後のソースコードをREPL上に読み込むには通常、<br/>
+<code>(use 'namespace :reload または :reload-all)</code><br/>
+を利用します。例)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (use 'my.app :reload-all)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>しかし、<code>:reload</code>、<code>reload-all</code>を利用したリロードでは、</p>
+
+<ul>
+<li>ソースコードから削除した定義がJVM上に残ってしまう</li>
+<li>依存するファイルのリロード漏れがあると、REPL上で古いコードと新しいコードが混在してしまう</li>
+</ul>
+
+
+<p>といった不便な点があります。<br/>
+リロードがうまくいかない場合は、JVMごと再起動するのが常套手段ですが、プロジェクトが大きくなるほど時間がかかります。<br/>
+<code>tools.namespace</code>を利用するとJVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現できます。</p>
+
+<h2><code>tools.namespace</code>の使い方</h2>
+
+<p><code>project.clj</code>の<code>dependencies</code>に以下を追記します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[org.clojure/tools.namespace "0.2.5"]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>開発中にソースコードを変更した際は、以下をREPL上で実行することで、ソースコードのリロードが行われます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (use '[clojure.tools.namespace.repl :only [refresh]])
+</span><span class='line'>user=&gt; (refresh)</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>リロードを活用するために</h2>
+
+<p><code>tools.namespace</code>によるリロードをスムーズに行うためには、ソフトウェアが以下のルールに従っている必要があります。</p>
+
+<h3>1. グローバルな状態を持たない</h3>
+
+<p>動作中に変化するアプリケーションの状態をグローバルVarに格納している場合、<code>(refresh)</code>は状態をクリアしてしまいます。<br/>
+リロードをスムーズに行うためには、アプリケーションの動作中にグローバルVarの状態を参照しない設計(状態を表すデータ構造はパラメータとして必要な関数に渡す設計)が求められます。</p>
+
+<h3>2. ライフサイクルを管理できる</h3>
+
+<p>REPL上からアプリケーションの起動、停止を行う関数を用意しておくことが求められます。<br/>
+起動関数では、アプリケーションの動作に必要なリソースを確保し、内部状態を表すデータ構造に組み立てて、必要な関数に渡します。<br/>
+終了関数では、全てのリソースを開放し、まっさらな状態に戻します。<br/>
+これらの関数と<code>tools.namespace</code>利用した開発の流れは以下のようになります。</p>
+
+<p>Step 1. REPL起動<br/>
+Step 2. アプリケーション起動</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (use 'clojure.tools.namespace.repl)
+</span><span class='line'>user=&gt; (refresh)
+</span><span class='line'>user=&gt; (def my-app {:state-of-world (ref {})
+</span><span class='line'>                    :object-handle (atom nil)})
+</span><span class='line'>user=&gt; (start my-app)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Step 3. 動作確認<br/>
+Step 4. ソースコード修正<br/>
+Step 5. アプリケーション再起動</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (stop my-app)
+</span><span class='line'>user=&gt; (refresh)
+</span><span class='line'>user=&gt; (def my-app {:state-of-world (ref {})
+</span><span class='line'>                    :object-handle (atom nil)})
+</span><span class='line'>user=&gt; (start my-app)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>※上記でグローバルVar<code>user/my-app</code>を利用していますが、アプリケーション内からは直接<code>user/my-app</code>を参照せず、ローカルパラメータとしてのみ参照されるため、リロードによって不都合が発生することはありません。</p>
+
+<h2>状態管理のフレームワーク</h2>
+
+<p>リロード可能なアプリケーションを実現するために、アプリケーションのライフサイクル管理の統一的なインターフェースを定義し、内部状態を適切に管理するための仕組みとして、<a href="https://github.com/stuartsierra/component">Componentフレームワーク</a>が<code>tools.namespace</code>と同じ作者によって提供されています。</p>
+
+<h2>注意点</h2>
+
+<ul>
+<li><a href="http://clojure.org/compilation">AOTコンパイル</a>非対応</li>
+<li>一部のライブラリ(<a href="https://github.com/ring-clojure/ring/tree/master/ring-devel">ring-devel</a>など)は機能が衝突する</li>
+<li><code>(reresh)</code>を実行した名前空間はクリアされる(REPL上で定義した内容は削除される)</li>
+</ul>
+
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://github.com/clojure/tools.namespace">tools.namespace</a></li>
+<li><a href="https://github.com/stuartsierra/component">stuartsierra.component</a></li>
+<li><a href="http://thinkrelevance.com/blog/2013/06/04/clojure-workflow-reloaded">My Clojure Workflow, Reloaded</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2504,105 +2648,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/30/prime-sieve-with-core-dot-async/">clojure/core.asyncでGo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-30T21:01:00+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/clojure/core.async">clojure/core.async</a>ライブラリを利用すると、<a href="http://golang.org">Go言語</a>のGoroutineと同様に、チャネルを介した平行プログラミングを行うことができます。</p>
-
-<p>試しに、<a href="http://golang.jp/go_tutorial#index12">Go言語チュートリアルに掲載されている素数の篩(ふるい)</a>をClojureで実装してみました。</p>
-
-<p><a href="https://gist.github.com/matstani/6112340#file-project-clj">project.clj</a></p>
-
-<div><script src='https://gist.github.com/6112340.js?file=project.clj'></script>
-<noscript><pre><code>(defproject async-test &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
-  :dependencies [[org.clojure/clojure &quot;1.5.1&quot;]
-                 [org.clojure/core.async &quot;0.1.0-SNAPSHOT&quot;]]
-  :repositories {&quot;sonatype-oss-public&quot; &quot;https://oss.sonatype.org/content/groups/public/&quot;}
-  :main async-test.core)
-</code></pre></noscript></div>
-
-
-<p><a href="https://gist.github.com/matstani/6112340#file-core-clj">core.clj</a></p>
-
-<div><script src='https://gist.github.com/6112340.js?file=core.clj'></script>
-<noscript><pre><code>(ns async-test.core
-  (:require [clojure.core.async :as async :refer [&lt;! &gt;! &lt;!! chan go]]))
-
-(defn generate
-  []
-  (let [ch (chan)]
-    (go
-     (doseq [e (iterate inc 2)]
-       (&gt;! ch e)))
-    ch))
-
-(defn sieve-filter
-  [in prime]
-  (let [out (chan)]
-    (go
-     (while true
-       (let [i (&lt;! in)]
-         (when-not (= (mod i prime) 0)
-           (&gt;! out i)))))
-    out))
-
-(defn sieve
-  []
-  (let [out (chan)]
-    (go
-     (loop [ch (generate)]
-       (let [prime (&lt;! ch)]
-         (&gt;! out prime)
-         (recur (sieve-filter ch prime)))))
-    out))
-
-(defn -main
-  []
-  (let [primes (sieve)]
-    (doseq [_ (range 100)]
-      (println (&lt;!! primes)))))</code></pre></noscript></div>
-
-
-<p>Go言語版をほぼそのままの形で実装できています。<br/>
-他言語の構文をライブラリとして提供できるのはLispならではです。</p>
-
-<p>ちなみに、<a href="https://github.com/clojure/clojurescript">ClojureScript</a>(Clojure-JavaScriptコンパイラ)でも利用可能とのことです。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2626,6 +2671,10 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/05/clojure-tools-dot-namespace-component/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/09/zf2-db-operation/">[ZF2] データベース操作色々</a>
       </li>
     
@@ -2639,10 +2688,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
     
       <li class="post">
         <a href="/blog/2014/03/02/zf2-validator-translation/">[ZF2] フォームバリデーションメッセージを変更する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/07/try-itext-compojure/">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</a>
       </li>
     
   </ul>

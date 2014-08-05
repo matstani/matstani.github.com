@@ -9,7 +9,9 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Compojureプロジェクトの作成手順はこちら Compojureベースのウェブアプリケーションで、フォーム認証を行なってみます。 Friendという認証／認可用のライブラリを利用できます。 依存ライブラリインストール project.cljの:dependenciesにFriend、 &hellip;">
+  <meta name="description" content="ドキュメントにあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
+gistのコードを埋め込むには以下のように記述します。 1
+{% gist gist_id [filename] %} このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +79,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/28/fix-gist-width/">Octopressのスタイルシートを変更</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-28T10:03:00+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://octopress.org/docs/blogging/code/">ドキュメント</a>にあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
+<a href="https://gist.github.com/">gist</a>のコードを埋め込むには以下のように記述します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{% gist gist_id [filename] %}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、テーブルの枠幅がでこぼこになって見た目が悪かったので、スタイルシートを微調整しました。
+sassディレクトリ以下のscssファイルを修正すると、サイトに反映されるようです。</p>
+
+<p>今回はsass/custom/_styles.scssに以下を追記しました。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.gist .line-data { width: 100% }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>近いうちに本体でも修正されるとは思いますが。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -582,6 +636,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/05/clojure-tools-dot-namespace-component/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/09/zf2-db-operation/">[ZF2] データベース操作色々</a>
       </li>
     
@@ -595,10 +653,6 @@
     
       <li class="post">
         <a href="/blog/2014/03/02/zf2-validator-translation/">[ZF2] フォームバリデーションメッセージを変更する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/07/try-itext-compojure/">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</a>
       </li>
     
   </ul>

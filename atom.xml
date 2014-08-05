@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.com/atom.xml" rel="self"/>
   <link href="http://matstani.github.com/"/>
-  <updated>2014-07-16T12:06:02+09:00</updated>
+  <updated>2014-08-05T21:19:06+09:00</updated>
   <id>http://matstani.github.com/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,123 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード]]></title>
+    <link href="http://matstani.github.com/blog/2014/08/05/clojure-tools-dot-namespace-component/"/>
+    <updated>2014-08-05T16:42:00+09:00</updated>
+    <id>http://matstani.github.com/blog/2014/08/05/clojure-tools-dot-namespace-component</id>
+    <content type="html"><![CDATA[<p>JVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現するツール<a href="https://github.com/clojure/tools.namespace">tools.namespace</a>を紹介します。</p>
+
+<p>ClojureにはREPLが付属しており、動作を確かめながらソフトウェアを開発することができます。<br/>
+修正後のソースコードをREPL上に読み込むには通常、<br/>
+<code>(use 'namespace :reload または :reload-all)</code><br/>
+を利用します。例)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (use 'my.app :reload-all)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>しかし、<code>:reload</code>、<code>reload-all</code>を利用したリロードでは、</p>
+
+<ul>
+<li>ソースコードから削除した定義がJVM上に残ってしまう</li>
+<li>依存するファイルのリロード漏れがあると、REPL上で古いコードと新しいコードが混在してしまう</li>
+</ul>
+
+
+<p>といった不便な点があります。<br/>
+リロードがうまくいかない場合は、JVMごと再起動するのが常套手段ですが、プロジェクトが大きくなるほど時間がかかります。<br/>
+<code>tools.namespace</code>を利用するとJVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現できます。</p>
+
+<h2><code>tools.namespace</code>の使い方</h2>
+
+<p><code>project.clj</code>の<code>dependencies</code>に以下を追記します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[org.clojure/tools.namespace "0.2.5"]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>開発中にソースコードを変更した際は、以下をREPL上で実行することで、ソースコードのリロードが行われます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (use '[clojure.tools.namespace.repl :only [refresh]])
+</span><span class='line'>user=&gt; (refresh)</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>リロードを活用するために</h2>
+
+<p><code>tools.namespace</code>によるリロードをスムーズに行うためには、ソフトウェアが以下のルールに従っている必要があります。</p>
+
+<h3>1. グローバルな状態を持たない</h3>
+
+<p>動作中に変化するアプリケーションの状態をグローバルVarに格納している場合、<code>(refresh)</code>は状態をクリアしてしまいます。<br/>
+リロードをスムーズに行うためには、アプリケーションの動作中にグローバルVarの状態を参照しない設計(状態を表すデータ構造はパラメータとして必要な関数に渡す設計)が求められます。</p>
+
+<h3>2. ライフサイクルを管理できる</h3>
+
+<p>REPL上からアプリケーションの起動、停止を行う関数を用意しておくことが求められます。<br/>
+起動関数では、アプリケーションの動作に必要なリソースを確保し、内部状態を表すデータ構造に組み立てて、必要な関数に渡します。<br/>
+終了関数では、全てのリソースを開放し、まっさらな状態に戻します。<br/>
+これらの関数と<code>tools.namespace</code>利用した開発の流れは以下のようになります。</p>
+
+<p>Step 1. REPL起動<br/>
+Step 2. アプリケーション起動</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (use 'clojure.tools.namespace.repl)
+</span><span class='line'>user=&gt; (refresh)
+</span><span class='line'>user=&gt; (def my-app {:state-of-world (ref {})
+</span><span class='line'>                    :object-handle (atom nil)})
+</span><span class='line'>user=&gt; (start my-app)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Step 3. 動作確認<br/>
+Step 4. ソースコード修正<br/>
+Step 5. アプリケーション再起動</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user=&gt; (stop my-app)
+</span><span class='line'>user=&gt; (refresh)
+</span><span class='line'>user=&gt; (def my-app {:state-of-world (ref {})
+</span><span class='line'>                    :object-handle (atom nil)})
+</span><span class='line'>user=&gt; (start my-app)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>※上記でグローバルVar<code>user/my-app</code>を利用していますが、アプリケーション内からは直接<code>user/my-app</code>を参照せず、ローカルパラメータとしてのみ参照されるため、リロードによって不都合が発生することはありません。</p>
+
+<h2>状態管理のフレームワーク</h2>
+
+<p>リロード可能なアプリケーションを実現するために、アプリケーションのライフサイクル管理の統一的なインターフェースを定義し、内部状態を適切に管理するための仕組みとして、<a href="https://github.com/stuartsierra/component">Componentフレームワーク</a>が<code>tools.namespace</code>と同じ作者によって提供されています。</p>
+
+<h2>注意点</h2>
+
+<ul>
+<li><a href="http://clojure.org/compilation">AOTコンパイル</a>非対応</li>
+<li>一部のライブラリ(<a href="https://github.com/ring-clojure/ring/tree/master/ring-devel">ring-devel</a>など)は機能が衝突する</li>
+<li><code>(reresh)</code>を実行した名前空間はクリアされる(REPL上で定義した内容は削除される)</li>
+</ul>
+
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://github.com/clojure/tools.namespace">tools.namespace</a></li>
+<li><a href="https://github.com/stuartsierra/component">stuartsierra.component</a></li>
+<li><a href="http://thinkrelevance.com/blog/2013/06/04/clojure-workflow-reloaded">My Clojure Workflow, Reloaded</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[ZF2] データベース操作色々]]></title>
@@ -2780,31 +2897,6 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Octopressのスタイルシートを変更]]></title>
-    <link href="http://matstani.github.com/blog/2013/02/28/fix-gist-width/"/>
-    <updated>2013-02-28T10:03:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/02/28/fix-gist-width</id>
-    <content type="html"><![CDATA[<p><a href="http://octopress.org/docs/blogging/code/">ドキュメント</a>にあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
-<a href="https://gist.github.com/">gist</a>のコードを埋め込むには以下のように記述します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{% gist gist_id [filename] %}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、テーブルの枠幅がでこぼこになって見た目が悪かったので、スタイルシートを微調整しました。
-sassディレクトリ以下のscssファイルを修正すると、サイトに反映されるようです。</p>
-
-<p>今回はsass/custom/_styles.scssに以下を追記しました。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.gist .line-data { width: 100% }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>近いうちに本体でも修正されるとは思いますが。</p>
 ]]></content>
   </entry>
   
