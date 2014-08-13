@@ -2,15 +2,15 @@
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Clojure開発環境インストール手順(Emacs) - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="2014年1月　nrepl.elはciderに名称変更されたので記事修正しました 利用するのは、Emacs+cider
-ちなみに、Clojure Programmingで紹介されているSLIME, swankの利用はdeprecatedとのこと。 Javaのインストール オラクルのサイト &hellip;">
+  <meta name="description" content="推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。 2014/07/16 nrepl.el -> ciderに変更、リンク先修正。
+2014/08/13 CIDER 0.7.0 リリースに合わせて、leinプラグインの記述を追加 利用するのは、Emacs+CIDER。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,12 +104,15 @@
   </header>
 
 
-<div class="entry-content"><ul>
-<li>2014年1月　nrepl.elは<a href="https://github.com/clojure-emacs/cider">cider</a>に名称変更されたので記事修正しました</li>
+<div class="entry-content"><p>推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。</p>
+
+<ul>
+<li>2014/07/16 nrepl.el -> ciderに変更、リンク先修正。</li>
+<li>2014/08/13 CIDER 0.7.0 リリースに合わせて、leinプラグインの記述を追加</li>
 </ul>
 
 
-<p>利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/clojure-emacs/cider">cider</a><br/>
+<p>利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/clojure-emacs/cider">CIDER</a>。<br/>
 ちなみに、<a href="http://shop.oreilly.com/product/0636920013754.do">Clojure Programming</a>で紹介されているSLIME, swankの利用はdeprecatedとのこと。</p>
 
 <h3>Javaのインストール</h3>
@@ -167,17 +170,31 @@
 <p>ここでインストールされるパッケージは以下のとおり。</p>
 
 <ul>
-<li><a href="https://github.com/technomancy/clojure-mode">clojure-mode.el</a><br/>
+<li><a href="https://github.com/clojure-emacs/clojure-mode">clojure-mode</a><br/>
 Clojure編集の基本機能を追加するモード。インデントやシンタックスハイライトなど。</li>
-<li><a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a><br/>
+<li><a href="http://emacswiki.org/emacs/ParEdit">ParEdit</a><br/>
 括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。<br/>
 動作が直感的でないところもあるので、<a href="http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html">チュートリアル</a>で勉強。</li>
-<li><a href="https://github.com/clojure-emacs/cider">cider</a><br/>
+<li><a href="https://github.com/clojure-emacs/cider">CIDER</a><br/>
 Emacsから、<a href="https://github.com/clojure/tools.nrepl">nREPL</a>(ネットワーク経由で利用できるREPL)にアクセスするための機能。<br/>
 nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。</li>
-<li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">rainbow-delimiters.el</a><br/>
+<li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">RainbowDelimiters</a><br/>
 Lispにありがちな多重括弧を、キレイに色付けしてくれるモード。</li>
 </ul>
+
+
+<h3>cider-nreplプラグインインストール</h3>
+
+<p>CIDER 0.7.0以降では、leinプラグインと協調して動作するようになっています。インストールのために、以下の記述を<code>~/.lein/profiles.clj</code>に追記します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:plugins [[cider/cider-nrepl "0.7.0"]]</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>~/.lein/profiles.clj</code>が存在しない場合は、以下の内容で新規に作成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{:user {:plugins [[cider/cider-nrepl "0.7.0"]]}}</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>Clojureプロジェクト作成</h3>
@@ -186,7 +203,7 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new demo</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Emacs上でnREPLサーバ起動&amp;接続</h3>
+<h3>Emacs上でnREPL起動</h3>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -278,23 +295,23 @@ Lispにありがちな多重括弧を、キレイに色付けしてくれるモ�
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/07/try-itext-compojure/">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</a>
+        <a href="/blog/2014/08/05/clojure-tools-dot-namespace/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/10/07/clojure-itext-japanese/">[Clojure] iTextでPDFファイル作成</a>
+        <a href="/blog/2014/03/09/zf2-db-operation/">[ZF2] データベース操作色々</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/09/04/lein-typed/">[Clojure] lein-typed</a>
+        <a href="/blog/2014/03/02/zf2-db-transaction/">[ZF2] データベーストランザクション</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/09/03/try-core-typed/">[Clojure] core.typedで静的型チェック</a>
+        <a href="/blog/2014/03/02/zf2-error-message-style/">[ZF2] バリデーションメッセージのスタイルを変更する</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a>
+        <a href="/blog/2014/03/02/zf2-validator-translation/">[ZF2] フォームバリデーションメッセージを変更する</a>
       </li>
     
   </ul>

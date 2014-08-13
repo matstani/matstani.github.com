@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>[PHP]memory_get_usageのreal_usageオプションについて - /home/matstani/weblog</title>
+  <title>[ZF2] データベーストランザクション - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="PHPで割り当てメモリ量を取得するには、memory_get_usage関数を利用できます。 この関数には、パラメータとして$real_usageを指定できるようになっており、 これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE &hellip;">
+  <meta name="description" content="Zend Framework2でデータベースのトランザクションを利用する方法を紹介します。 サンプルコード ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.io/blog/2013/06/19/php-memory-usage">
+  <link rel="canonical" href="http://matstani.github.io/blog/2014/03/02/zf2-db-transaction">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -80,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">[PHP]memory_get_usageのreal_usageオプションについて</h1>
+      <h1 class="entry-title">[ZF2] データベーストランザクション</h1>
     
     
       <p class="meta">
@@ -96,39 +96,22 @@
   
 
 
-<time datetime="2013-06-19T16:27:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
+<time datetime="2014-03-02T19:46:00+09:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>PHPで割り当てメモリ量を取得するには、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>関数を利用できます。</p>
+<div class="entry-content"><p>Zend Framework2でデータベースのトランザクションを利用する方法を紹介します。</p>
 
-<p>この関数には、パラメータとして$real_usageを指定できるようになっており、</p>
+<p><a href="https://gist.github.com/matstani/9304923">サンプルコード</a></p>
 
-<blockquote><p>これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE を設定したりすると、 emalloc() が使用するメモリのみを報告します。</p></blockquote>
-
-<p>とあるのですが、「システムが割り当てた実際のメモリの大きさ」と、「emalloc()が使用するメモリ」の違いがよくわかりません。</p>
-
-<p>検索してみたところ、以下を見つけました。</p>
-
-<p><a href="http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php">http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php</a></p>
-
-<p>回答によると、PHPのメモリマネージャは、メモリを確保する際、アプリケーションが必要とするメモリをその都度mallocするのではなく、より大きな単位で確保しておいて内部で管理しているそうです。(デフォルトで256KB単位。環境変数ZEND_MM_SEG_SIZEで設定)</p>
-
-<p>ということで、割り当てメモリ量として以下2種類があることになります。</p>
-
-<ol>
-<li>PHPのメモリマネージャが確保しているメモリ量($real_usage=true)</li>
-<li>アプリケーションが実際に使用しているメモリ量($real_usage=false)</li>
-</ol>
+<div><script src='https://gist.github.com/9304923.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
 
 
-<p>php.ini等で指定するmemory_limitで制限しているのは1.になります。<br/>
-環境変数 USE_ZEND_ALLOC=0 を設定すると、上記の仕組みが無効になり、必要量をその都度mallocする動作になるとのことです。</p>
 
-<p>ちなみに、PHPの割り当てメモリ量を調べる関数としては、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>の他に、<a href="http://php.net/manual/ja/function.memory-get-peak-usage.php">memory_get_peak_usage</a>があり、こちらは呼び出し時点までに割り当てられた最大メモリ量を取得できます。</p>
 </div>
 
 
@@ -151,12 +134,12 @@
   
 
 
-<time datetime="2013-06-19T16:27:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
+<time datetime="2014-03-02T19:46:00+09:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/php/'>PHP</a>
+    <a class='category' href='/blog/categories/php/'>PHP</a>, <a class='category' href='/blog/categories/zf2/'>ZF2</a>, <a class='category' href='/blog/categories/zendframework2/'>ZendFramework2</a>
   
 </span>
 
@@ -165,7 +148,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.io/blog/2013/06/19/php-memory-usage/" data-via="" data-counturl="http://matstani.github.io/blog/2013/06/19/php-memory-usage/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.io/blog/2014/03/02/zf2-db-transaction/" data-via="" data-counturl="http://matstani.github.io/blog/2014/03/02/zf2-db-transaction/" >Tweet</a>
   
   
   
@@ -176,10 +159,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/05/20/embed-nrepl/" title="Previous Post: Clojureアプリケーションを動的に書き換える">&laquo; Clojureアプリケーションを動的に書き換える</a>
+        <a class="basic-alignment left" href="/blog/2014/03/02/zf2-error-message-style/" title="Previous Post: [ZF2] バリデーションメッセージのスタイルを変更する">&laquo; [ZF2] バリデーションメッセージのスタイルを変更する</a>
       
       
-        <a class="basic-alignment right" href="/blog/2013/06/27/indexed-seq/" title="Next Post: [Clojure] インデックス付きシーケンス">[Clojure] インデックス付きシーケンス &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/03/09/zf2-db-operation/" title="Next Post: [ZF2] データベース操作色々">[ZF2] データベース操作色々 &raquo;</a>
       
     </p>
   </footer>
@@ -254,8 +237,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.io/blog/2013/06/19/php-memory-usage/';
-        var disqus_url = 'http://matstani.github.io/blog/2013/06/19/php-memory-usage/';
+        var disqus_identifier = 'http://matstani.github.io/blog/2014/03/02/zf2-db-transaction/';
+        var disqus_url = 'http://matstani.github.io/blog/2014/03/02/zf2-db-transaction/';
         var disqus_script = 'embed.js';
       
     (function () {

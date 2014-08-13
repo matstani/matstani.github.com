@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
   <link href="http://matstani.github.io/blog/categories/clojure/atom.xml" rel="self"/>
   <link href="http://matstani.github.io/"/>
-  <updated>2014-01-02T22:21:30+09:00</updated>
+  <updated>2014-08-13T12:43:50+09:00</updated>
   <id>http://matstani.github.io/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,111 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード]]></title>
+    <link href="http://matstani.github.io/blog/2014/08/05/clojure-tools-dot-namespace/"/>
+    <updated>2014-08-05T16:42:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2014/08/05/clojure-tools-dot-namespace</id>
+    <content type="html"><![CDATA[<p>JVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現するツール<a href="https://github.com/clojure/tools.namespace">tools.namespace</a>を紹介します。</p>
+
+<p>ClojureにはREPLが付属しており、動作を確かめながらソフトウェアを開発することができます。<br/>
+修正後のソースコードをREPL上に読み込むには通常、<br/>
+<code>(use 'namespace :reload または :reload-all)</code><br/>
+を利用します。例)
+<code>
+user=&gt; (use 'my.app :reload-all)
+</code>
+しかし、<code>:reload</code>、<code>reload-all</code>を利用したリロードでは、</p>
+
+<ul>
+<li>ソースコードから削除した定義がJVM上に残ってしまう</li>
+<li>依存するファイルのリロード漏れがあると、REPL上で古いコードと新しいコードが混在してしまう</li>
+</ul>
+
+
+<p>といった不便な点があります。<br/>
+リロードがうまくいかない場合は、JVMごと再起動するのが常套手段ですが、プロジェクトが大きくなるほど時間がかかります。<br/>
+<code>tools.namespace</code>を利用するとJVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現できます。</p>
+
+<h2><code>tools.namespace</code>の使い方</h2>
+
+<p><code>project.clj</code>の<code>dependencies</code>に以下を追記します。
+<code>
+[org.clojure/tools.namespace "0.2.5"]
+</code>
+開発中にソースコードを変更した際は、以下をREPL上で実行することで、ソースコードのリロードが行われます。
+<code>
+user=&gt; (use '[clojure.tools.namespace.repl :only [refresh]])
+user=&gt; (refresh)
+</code></p>
+
+<h2>リロードを活用するために</h2>
+
+<p><code>tools.namespace</code>によるリロードをスムーズに行うためには、ソフトウェアが以下のルールに従っている必要があります。</p>
+
+<h3>1. グローバルな状態を持たない</h3>
+
+<p>動作中に変化するアプリケーションの状態をグローバルVarに格納している場合、<code>(refresh)</code>は状態をクリアしてしまいます。<br/>
+リロードをスムーズに行うためには、アプリケーションの動作中にグローバルVarの状態を参照しない設計(状態を表すデータ構造はパラメータとして必要な関数に渡す設計)が求められます。</p>
+
+<h3>2. ライフサイクルを管理できる</h3>
+
+<p>REPL上からアプリケーションの起動、停止を行う関数を用意しておくことが求められます。<br/>
+起動関数では、アプリケーションの動作に必要なリソースを確保し、内部状態を表すデータ構造に組み立てて、必要な関数に渡します。<br/>
+終了関数では、全てのリソースを開放し、まっさらな状態に戻します。<br/>
+これらの関数と<code>tools.namespace</code>利用した開発の流れは以下のようになります。</p>
+
+<p>Step 1. REPL起動<br/>
+Step 2. アプリケーション起動
+```
+user=> (use 'clojure.tools.namespace.repl)
+user=> (refresh)
+user=> (def my-app {:state-of-world (ref {})</p>
+
+<pre><code>                :object-handle (atom nil)})
+</code></pre>
+
+<p>user=> (start my-app)
+<code>
+Step 3. 動作確認  
+Step 4. ソースコード修正  
+Step 5. アプリケーション再起動
+</code>
+user=> (stop my-app)
+user=> (refresh)
+user=> (def my-app {:state-of-world (ref {})</p>
+
+<pre><code>                :object-handle (atom nil)})
+</code></pre>
+
+<p>user=> (start my-app)
+<code>``
+※上記でグローバルVar</code>user/my-app<code>を利用していますが、アプリケーション内からは直接</code>user/my-app`を参照せず、ローカルパラメータとしてのみ参照されるため、リロードによって不都合が発生することはありません。</p>
+
+<h2>状態管理のフレームワーク</h2>
+
+<p>リロード可能なアプリケーションを実現するために、アプリケーションのライフサイクル管理の統一的なインターフェースを定義し、内部状態を適切に管理するための仕組みとして、<a href="https://github.com/stuartsierra/component">Componentフレームワーク</a>が<code>tools.namespace</code>と同じ作者によって提供されています。</p>
+
+<h2>注意点</h2>
+
+<ul>
+<li><a href="http://clojure.org/compilation">AOTコンパイル</a>非対応</li>
+<li>一部のライブラリ(<a href="https://github.com/ring-clojure/ring/tree/master/ring-devel">ring-devel</a>など)は機能が衝突する</li>
+<li><code>(reresh)</code>を実行した名前空間はクリアされる(REPL上で定義した内容は削除される)</li>
+</ul>
+
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://github.com/clojure/tools.namespace">tools.namespace</a></li>
+<li><a href="https://github.com/stuartsierra/component">stuartsierra.component</a></li>
+<li><a href="http://thinkrelevance.com/blog/2013/06/04/clojure-workflow-reloaded">My Clojure Workflow, Reloaded</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)]]></title>
@@ -1812,62 +1917,6 @@ Checked 1 namespaces (approx. 9 lines) in 78.396396 msecs
 <h2>その他</h2>
 
 <p>Clojureには標準で型ヒント(<a href="http://clojure.org/java_interop#Java%20Interop-Type%20Hints">type hinting</a>)と呼ばれる機能がありますが、Javaを呼び出す際のリフレクションを防ぐためのもので、<code>core.typed</code>のような、静的型チェックの機能ではありません。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[[Clojure] ちょっと難しいシーケンス処理]]></title>
-    <link href="http://matstani.github.io/blog/2013/08/02/difficult-sequences/"/>
-    <updated>2013-08-02T18:06:00+09:00</updated>
-    <id>http://matstani.github.io/blog/2013/08/02/difficult-sequences</id>
-    <content type="html"><![CDATA[<p><a href="http://blog.safaribooksonline.com/2013/07/24/sequence-abstractions-in-clojure/">Sequence Abstractions in Clojure</a></p>
-
-<p>上記のリンクはClojureのシーケンスに関する記事なのですが、"Difficult Sequences"のところが面白かったのでメモします。</p>
-
-<p>Clojureでは、<code>map</code>、<code>filter</code>を始めとした豊富なシーケンス用関数がありますが、例えば「1つ前の要素を参照する」処理はどう書くのでしょうか。<br/>
-手続き型言語では、以下のように記述できます。
-```
-v = [1 2 3 4 5];
-for (i=1; i&lt;v.length; i++)</p>
-
-<pre><code>print v[i] + v[i-1];
-</code></pre>
-
-<p>-> 3 5 7 9
-```</p>
-
-<p>この「1つ前の要素を参照する」処理をシーケンスで実現するために、まず「1つずらしたシーケンス」を考えてみます。
-<code>
-  [1 2 3 4 5]
-[1 2 3 4 5]
-</code>
-すると、上下が重なっている部分が、「1つ前の要素」と「現在の要素」の組み合わせになっています。<br/>
-Clojureのmap関数では、復数のシーケンスを同時に扱うことができます。
-<code>
-(map + [1 3] [2 4])
--&gt; (3 7)
-</code>
-渡したシーケンスの最初の要素同士、2番目の要素同士、がそれぞれ"+"されています。<br/>
-「元のシーケンス」、「1つずらしたシーケンス」、を用意してmap関数に渡してやれば、目的の処理が実現できそうです。<br/>
-「1つずらしたシーケンス」を得るには、<code>rest</code>関数が利用できます。
-<code>
-(def v [1 2 3 4 5])
-(rest v)
--&gt; (2 3 4 5)
-</code>
-rest関数が返すのは、シーケンスの先頭以外を含むシーケンスです。<br/>
-これらを組み合わせると目的の処理を実現できます。
-<code>
-(map + v (rest v))
--&gt; (3 5 7 9)
-</code>
-ここでは
-<code>
-v        -&gt; (1 2 3 4 5)
-(rest v) -&gt; (2 3 4 5)
-</code>
-上記2つのシーケンスの重なっている要素同士の足し算"+"が行われ、目的が実現できています。<br/>
-<code>map</code>関数に長さの異なるシーケンスを渡された場合、長いシーケンスの余り部分は無視されます。</p>
 ]]></content>
   </entry>
   
