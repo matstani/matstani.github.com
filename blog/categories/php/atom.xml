@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: PHP | /home/matstani/weblog]]></title>
+  <link href="http://matstani.github.io/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://matstani.github.io/"/>
+  <updated>2014-08-18T07:13:18+09:00</updated>
+  <id>http://matstani.github.io/</id>
+  <author>
+    <name><![CDATA[Shunsaku MATSUTANI]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[[ZF2] データベース操作色々]]></title>
+    <link href="http://matstani.github.io/blog/2014/03/09/zf2-db-operation/"/>
+    <updated>2014-03-09T17:23:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2014/03/09/zf2-db-operation</id>
+    <content type="html"><![CDATA[<p>ZF2の提供するTableGatewayを利用した基本的なCRUD手順は<a href="http://framework.zend.com/manual/2.2/en/user-guide/database-and-models.html">チュートリアル</a>で紹介されています。
+ここでは、より複雑な例をいくつか紹介します。</p>
+
+<h2>検索条件指定</h2>
+
+<p>TableGatewayを利用した検索で条件を指定するには、<code>select</code>メソッドに無名関数を渡します。<br/>
+<a href="https://gist.github.com/matstani/9445201">サンプルコード</a>
+<div><script src='https://gist.github.com/9445201.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+
+<h2>結果を配列で取得</h2>
+
+<p>TableGatewayを利用した検索では、結果はEntityオブジェクトに変換された状態で取得できますが、JOINしたカラム等は失われてしまいます。<br/>
+全てのカラムを取得したい場合は、以下のように<code>select</code>オブジェクトを生成して実行します。<br/>
+<a href="https://gist.github.com/matstani/9445275">サンプルコード</a>
+<div><script src='https://gist.github.com/9445275.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+
+<h2>JOIN</h2>
+
+<p>JOINする場合のサンプルコードです。<br/>
+<a href="https://gist.github.com/matstani/9445347">サンプルコード</a>
+<div><script src='https://gist.github.com/9445347.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+
+<h2>LEFT JOIN, RIGHT JOIN, INNER JOIN</h2>
+
+<p>結合方法を指定する場合は、<code>join</code>メソッドの第4引数で指定します。<br/>
+<a href="https://gist.github.com/matstani/9445475">サンプルコード</a>
+<div><script src='https://gist.github.com/9445475.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+
+<h2>集計</h2>
+
+<p>GROUP BY を使用した集計のサンプルコードです。<br/>
+<a href="https://gist.github.com/matstani/9445604">サンプルコード</a>
+<div><script src='https://gist.github.com/9445604.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+
+<h2>副問い合わせ</h2>
+
+<p><code>select</code>オブジェクトを組み合わせることで、副問い合わせを行うことができます。
+WHERE句に副問い合わせを指定する例です。<br/>
+<a href="https://gist.github.com/matstani/9445934">サンプルコード</a>
+<div><script src='https://gist.github.com/9445934.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+
+<p>JOIN句に副問い合わせを指定する例です。<br/>
+<a href="https://gist.github.com/matstani/9445831">サンプルコード</a>
+<div><script src='https://gist.github.com/9445831.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[ZF2] データベーストランザクション]]></title>
+    <link href="http://matstani.github.io/blog/2014/03/02/zf2-db-transaction/"/>
+    <updated>2014-03-02T19:46:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2014/03/02/zf2-db-transaction</id>
+    <content type="html"><![CDATA[<p>Zend Framework2でデータベースのトランザクションを利用する方法を紹介します。</p>
+
+<p><a href="https://gist.github.com/matstani/9304923">サンプルコード</a>
+<div><script src='https://gist.github.com/9304923.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[ZF2] バリデーションメッセージのスタイルを変更する]]></title>
+    <link href="http://matstani.github.io/blog/2014/03/02/zf2-error-message-style/"/>
+    <updated>2014-03-02T19:06:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2014/03/02/zf2-error-message-style</id>
+    <content type="html"><![CDATA[<p>Zend Framework2でフォームバリデーションを行った際のエラーメッセージには、特定のスタイル(class)が指定されていないため、メッセージを赤字で表示したい、といった場合に困ります。</p>
+
+<p>デフォルトの表示方法は、<a href="http://framework.zend.com/manual/2.2/en/modules/zend.form.view.helpers.html">ビューヘルパー</a><code>formElementErrors</code>として登録されています。<br/>
+これを自作のクラスで置き換えることで、任意のスタイルでエラーメッセージを表示させることができます。</p>
+
+<p>例として、<code>Album\Helper\FormElementErrors</code>を作成します。<br/>
+<a href="https://gist.github.com/matstani/9304648">FormElementErrors.php</a>
+<div><script src='https://gist.github.com/9304648.js?file=FormElementErrors.php'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+上記の例ではエラーメッセージの<code>ul</code>要素に<code>class="err-msg"</code>を指定しています。</p>
+
+<p>作成したビューヘルパーは、<code>Module.php</code>の<code>getViewHelperConfig</code>メソッドで登録します。<br/>
+<a href="https://gist.github.com/matstani/9304648">Module.php</a>
+<div><script src='https://gist.github.com/9304648.js?file=Module.php'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+
+<p>登録後、バリデーションメッセージが指定したスタイルで表示されるようになります。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[ZF2] フォームバリデーションメッセージを変更する]]></title>
+    <link href="http://matstani.github.io/blog/2014/03/02/zf2-validator-translation/"/>
+    <updated>2014-03-02T18:24:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2014/03/02/zf2-validator-translation</id>
+    <content type="html"><![CDATA[<p>Zend Framework2でフォームのバリデーションのエラーメッセージを変更するにはいくつか方法がありますが、InputFilter作成時のオプションで指定する方法を紹介します。</p>
+
+<p><a href="http://framework.zend.com/manual/2.2/en/user-guide/forms-and-actions.html">ZF2チュートリアル</a>では、空欄チェックと、文字列の長さチェックが付加されていますが、これを日本語メッセージにしてみます。</p>
+
+<p><a href="https://gist.github.com/matstani/9303960">サンプルコード</a></p>
+
+<p><div><script src='https://gist.github.com/9303960.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+
+<p>冗長に見えますが、配列の組み合わせなので、関数化して再利用するのは容易です。<br/>
+関数化した例をいくつか掲載します。</p>
+
+<p><a href="https://gist.github.com/matstani/9304210">サンプルコード</a></p>
+
+<p><div><script src='https://gist.github.com/9304210.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[PHP]memory_get_usageのreal_usageオプションについて]]></title>
+    <link href="http://matstani.github.io/blog/2013/06/19/php-memory-usage/"/>
+    <updated>2013-06-19T16:27:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2013/06/19/php-memory-usage</id>
+    <content type="html"><![CDATA[<p>PHPで割り当てメモリ量を取得するには、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>関数を利用できます。</p>
+
+<p>この関数には、パラメータとして$real_usageを指定できるようになっており、</p>
+
+<blockquote><p>これを TRUE に設定すると、システムが割り当てた実際のメモリの大きさを取得します。 省略したり FALSE を設定したりすると、 emalloc() が使用するメモリのみを報告します。</p></blockquote>
+
+<p>とあるのですが、「システムが割り当てた実際のメモリの大きさ」と、「emalloc()が使用するメモリ」の違いがよくわかりません。</p>
+
+<p>検索してみたところ、以下を見つけました。</p>
+
+<p><a href="http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php">http://stackoverflow.com/questions/2290611/tracking-memory-usage-in-php</a></p>
+
+<p>回答によると、PHPのメモリマネージャは、メモリを確保する際、アプリケーションが必要とするメモリをその都度mallocするのではなく、より大きな単位で確保しておいて内部で管理しているそうです。(デフォルトで256KB単位。環境変数ZEND_MM_SEG_SIZEで設定)</p>
+
+<p>ということで、割り当てメモリ量として以下2種類があることになります。</p>
+
+<ol>
+<li>PHPのメモリマネージャが確保しているメモリ量($real_usage=true)</li>
+<li>アプリケーションが実際に使用しているメモリ量($real_usage=false)</li>
+</ol>
+
+
+<p>php.ini等で指定するmemory_limitで制限しているのは1.になります。<br/>
+環境変数 USE_ZEND_ALLOC=0 を設定すると、上記の仕組みが無効になり、必要量をその都度mallocする動作になるとのことです。</p>
+
+<p>ちなみに、PHPの割り当てメモリ量を調べる関数としては、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>の他に、<a href="http://php.net/manual/ja/function.memory-get-peak-usage.php">memory_get_peak_usage</a>があり、こちらは呼び出し時点までに割り当てられた最大メモリ量を取得できます。</p>
+]]></content>
+  </entry>
+  
+</feed>
