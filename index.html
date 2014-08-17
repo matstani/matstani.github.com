@@ -9,9 +9,9 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="JVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現するツールtools.namespaceを紹介します。 ClojureにはREPLが付属しており、動作を確かめながらソフトウェアを開発することができます。
-修正後のソースコードをREPL上に読み込むには通常、
-(use ' &hellip;">
+  <meta name="description" content="componentフレームワークは動作中に状態を保持するソフトウェアに関して 起動・停止のインターフェイスを定義する
+ソフトウェアをコンポーネントに分割し、コンポーネント間の依存関係を宣言的に記述する
+動作中のソフトウェア全体の状態を一つのデータ構造（システム）にまとめる &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,234 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/18/clojure-component-example/">[Clojure] componentフレームワークを利用した開発</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-18T03:48:00+09:00" pubdate data-updated="true">Aug 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/stuartsierra/component">componentフレームワーク</a>は動作中に状態を保持するソフトウェアに関して</p>
+
+<ul>
+<li>起動・停止のインターフェイスを定義する</li>
+<li>ソフトウェアをコンポーネントに分割し、コンポーネント間の依存関係を宣言的に記述する</li>
+<li>動作中のソフトウェア全体の状態を一つのデータ構造（システム）にまとめる</li>
+</ul>
+
+
+<p>といった機能を持つフレームワークです。componentフレームワークを利用することで、<a href="/blog/2014/08/05/clojure-tools-dot-namespace/">tools.namespaceを利用した開発</a>が容易になります。</p>
+
+<p>ring/compojureベースのWebアプリケーションに、componentフレームワークを適用する例を紹介します。</p>
+
+<h3>プロジェクト作成</h3>
+
+<p>compojure用テンプレートを利用してプロジェクトを作成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure example-component-ring</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>依存ライブラリ追加</h3>
+
+<p><code>project.clj</code>の<code>:dependencies</code>に以下を追記します。</p>
+
+<h4>componentフレームワーク</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[com.stuartsierra/component "0.2.1"]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>tools.namespace</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[org.clojure/tools.namespace "0.2.5"]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4><a href="https://github.com/ring-clojure/ring#libraries">ring-jetty-adapter</a>(ringアプリケーションの直接起動、停止)</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[ring/ring-jetty-adapter "1.3.0"]</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>HttpServerコンポーネント定義</h3>
+
+<p><code>example-component-ring.component</code>ネームスペースに、HttpServerコンポーネントを記述した例です。<br/>
+<a href="https://gist.github.com/matstani/1ad5129577c065d4a8cf#file-component-clj">component.clj</a></p>
+
+<script src="https://gist.github.com/matstani/1ad5129577c065d4a8cf.js"></script>
+
+
+<p>コンポーネントは<code>Lifecycle</code>プロトコルを実装したレコードとして定義します。<br/>
+<code>Lifecycle</code>プロトコルはメソッドとして<code>start</code>と<code>stop</code>を持っています。これをHTTPサーバの起動、停止を行うように実装しています。この時、サーバオブジェクト（このアプリケーションにおける状態）をレコードのフィールドに格納しています。</p>
+
+<p><code>create-system</code>関数は、コンポーネントを作成し、１つのシステムにまとめる関数です。内部で<code>system-map</code>関数を利用しています。上記では、HttpServerコンポーネントのみ作成していますが、複数のコンポーネントを組み合わせて１つのシステムにまとめることや、コンポーネント間の依存関係を記述することができます。</p>
+
+<h3>システムの起動・停止・リロード</h3>
+
+<p>システムの起動・停止・リロードを行うための関数を定義します。REPLから利用しやすいように、<code>user</code>ネームスペースに定義する例を紹介します。</p>
+
+<h4>project.clj追記</h4>
+
+<p>起動・停止・リロード用の関数は、開発時のみ読み込まれるファイルに記述します。<br/>
+<code>project.clj</code>の<code>:profiles :dev</code>に以下を追記します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:source-paths ["dev"]</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>project.clj</code>全体は以下のようになります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(defproject example-component-ring "0.1.0-SNAPSHOT"
+</span><span class='line'>  :description "FIXME: write description"
+</span><span class='line'>  :url "http://example.com/FIXME"
+</span><span class='line'>  :dependencies [[org.clojure/clojure "1.6.0"]
+</span><span class='line'>                 [compojure "1.1.8"]
+</span><span class='line'>                 [com.stuartsierra/component "0.2.1"]
+</span><span class='line'>                 [ring/ring-jetty-adapter "1.3.0"]
+</span><span class='line'>                 [org.clojure/tools.namespace "0.2.5"]]
+</span><span class='line'>  :plugins [[lein-ring "0.8.11"]]
+</span><span class='line'>  :ring {:handler example-component-ring.handler/app}
+</span><span class='line'>  :profiles
+</span><span class='line'>  {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
+</span><span class='line'>                        [ring-mock "0.1.5"]]
+</span><span class='line'>         :source-paths ["dev"]}})
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>user.clj作成</h4>
+
+<p><code>dev/user.clj</code>ファイルを作成し、システム起動・停止・リロードを行う関数を定義します。
+<a href="https://gist.github.com/matstani/4852df3eb4856bccbce4#file-user-clj">user.clj</a></p>
+
+<script src="https://gist.github.com/matstani/4852df3eb4856bccbce4.js"></script>
+
+
+<p>プロジェクト内でREPLを起動すると自動的にこれらの関数が読み込まれた状態になります。</p>
+
+<h4>システムを起動する</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user&gt; (go)
+</span><span class='line'>;; Starting HTTP server
+</span><span class='line'>#com.stuartsierra.component.SystemMap{:http-server #example_component_ring.component.HttpServer{:port 3000, :server #&lt;Server org.eclipse.jetty.server.Server@120f5c9&gt;}}</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>システムを停止する</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user&gt; (stop)
+</span><span class='line'>;; HTTP server stopped
+</span><span class='line'>#com.stuartsierra.component.SystemMap{:http-server #example_component_ring.component.HttpServer{:port 3000, :server nil}}</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>（ソースコード修正時）システムをリロードする</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user&gt; (reset)
+</span><span class='line'>:reloading (example-component-ring.handler example-component-ring.component example-component-ring.test.handler user)
+</span><span class='line'>;; Starting HTTP server
+</span><span class='line'>#com.stuartsierra.component.SystemMap{:http-server #example_component_ring.component.HttpServer{:port 3000, :server #&lt;Server org.eclipse.jetty.server.Server@1fc6f6a&gt;}}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>複数のコンポーネントの連携</h3>
+
+<p>componentフレームワークでは、複数のコンポーネントの依存関係を記述し、コンポーネント同士を連携させることができます。<br/>
+ここでは、Databaseコンポーネントを導入し、HttpServerコンポーネントが利用する（HttpServerコンポーネントがDatabaseコンポーネントに依存する）例を紹介します。</p>
+
+<h4><a href="http://www.mongodb.org/">MongoDB</a>導入</h4>
+
+<p>Databaseコンポーネントの中身として、MongoDBを利用することにします。ClojureからMongoDBを利用するためのクライアントライブラリとして<a href="http://clojuremongodb.info/">Monger</a>を利用します。<code>project.clj</code>に以下を追記します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[com.novemberain/monger "2.0.0"]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Databaseコンポーネント定義</h4>
+
+<p><code>component.clj</code>にDatabaseコンポーネントを定義します。<br/>
+<a href="https://gist.github.com/matstani/d46e1929d1419547ed5c#file-component-clj">component.clj</a></p>
+
+<script src="https://gist.github.com/matstani/d46e1929d1419547ed5c.js"></script>
+
+
+<p><code>HttpServer</code>と同様に、<code>Lifecycle</code>プロトコルを実装したレコードとして定義しています。<br/>
+既存コードへの変更点として、<code>HttpServer</code>レコードに、<code>database</code>フィールドを追加しています。このフィールドに<code>Database</code>コンポーネントのオブジェクトを、状態として保持します。<br/>
+また、<code>create-system</code>関数では、<code>using</code>関数を利用して依存関係を定義しています。上記では、<code>HttpServer</code>コンポーネントが<code>Database</code>コンポーネントを利用する、という関係を記述しています。これにより<code>HttpServer</code>インスタンスの<code>database</code>フィールドには、<code>Database</code>インスタンスが代入されます（依存関係の定義に従って代入が自動的に行われる仕組みをDependency Injectionといいます）。</p>
+
+<h4>コンポーネントをringハンドラに渡す</h4>
+
+<p>上記までの例で、HttpServerコンポーネントにDatabaseコンポーネントを渡すことはできていますが、ringアプリケーションのエントリポイントとなるハンドラに、直接引数として渡すことはできないため、Webアプリケーション内からDatabaseコンポーネントを利用するためには、さらに一工夫が必要になります。<br/>
+例として、requestマップ内にDatabaseコンポーネントを追加するringミドルウェアを利用する方法を紹介します。<br/>
+<a href="https://gist.github.com/matstani/1fb4b7b94a71780a423b#file-component-clj">component.clj</a></p>
+
+<script src="https://gist.github.com/matstani/1fb4b7b94a71780a423b.js"></script>
+
+
+<p><code>wrap-app-component</code>ミドルウェアで、requestに<code>Database</code>コンポーネントを追加しています。これにより、ringハンドラ内の処理で、Databaseコンポーネントを利用できるようになります。<br/>
+<a href="https://gist.github.com/matstani/4846ff717e4997139937#file-handler-clj">handler.clj</a></p>
+
+<script src="https://gist.github.com/matstani/4846ff717e4997139937.js"></script>
+
+
+<h3>参考リンク</h3>
+
+<ul>
+<li><a href="https://www.youtube.com/watch?v=13cmHf_kt-Q">video from Clojure/West 2014</a></li>
+<li><a href="https://github.com/clojure/tools.namespace">tools.namespace</a></li>
+<li><a href="https://github.com/stuartsierra/component">stuartsierra.component</a></li>
+<li><a href="http://thinkrelevance.com/blog/2013/06/04/clojure-workflow-reloaded">My Clojure Workflow, Reloaded</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2528,106 +2756,6 @@ Please, don't. https://github.com/styleguide/templates/2.0
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/02/difficult-sequences/">[Clojure] ちょっと難しいシーケンス処理</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-02T18:06:00+09:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://blog.safaribooksonline.com/2013/07/24/sequence-abstractions-in-clojure/">Sequence Abstractions in Clojure</a></p>
-
-<p>上記のリンクはClojureのシーケンスに関する記事なのですが、&#8221;Difficult Sequences&#8221;のところが面白かったのでメモします。</p>
-
-<p>Clojureでは、<code>map</code>、<code>filter</code>を始めとした豊富なシーケンス用関数がありますが、例えば「1つ前の要素を参照する」処理はどう書くのでしょうか。<br/>
-手続き型言語では、以下のように記述できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>v = [1 2 3 4 5];
-</span><span class='line'>for (i=1; i&lt;v.length; i++)
-</span><span class='line'>    print v[i] + v[i-1];
-</span><span class='line'>-&gt; 3 5 7 9</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この「1つ前の要素を参照する」処理をシーケンスで実現するために、まず「1つずらしたシーケンス」を考えてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>  [1 2 3 4 5]
-</span><span class='line'>[1 2 3 4 5]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>すると、上下が重なっている部分が、「1つ前の要素」と「現在の要素」の組み合わせになっています。<br/>
-Clojureのmap関数では、復数のシーケンスを同時に扱うことができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(map + [1 3] [2 4])
-</span><span class='line'>-&gt; (3 7)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>渡したシーケンスの最初の要素同士、2番目の要素同士、がそれぞれ&#8221;+&#8221;されています。<br/>
-「元のシーケンス」、「1つずらしたシーケンス」、を用意してmap関数に渡してやれば、目的の処理が実現できそうです。<br/>
-「1つずらしたシーケンス」を得るには、<code>rest</code>関数が利用できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(def v [1 2 3 4 5])
-</span><span class='line'>(rest v)
-</span><span class='line'>-&gt; (2 3 4 5)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>rest関数が返すのは、シーケンスの先頭以外を含むシーケンスです。<br/>
-これらを組み合わせると目的の処理を実現できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(map + v (rest v))
-</span><span class='line'>-&gt; (3 5 7 9)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ここでは</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>v        -&gt; (1 2 3 4 5)
-</span><span class='line'>(rest v) -&gt; (2 3 4 5)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記2つのシーケンスの重なっている要素同士の足し算&#8221;+&#8221;が行われ、目的が実現できています。<br/>
-<code>map</code>関数に長さの異なるシーケンスを渡された場合、長いシーケンスの余り部分は無視されます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2651,6 +2779,10 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/18/clojure-component-example/">[Clojure] componentフレームワークを利用した開発</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/08/05/clojure-tools-dot-namespace/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a>
       </li>
     
@@ -2664,10 +2796,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
     
       <li class="post">
         <a href="/blog/2014/03/02/zf2-error-message-style/">[ZF2] バリデーションメッセージのスタイルを変更する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/02/zf2-validator-translation/">[ZF2] フォームバリデーションメッセージを変更する</a>
       </li>
     
   </ul>
