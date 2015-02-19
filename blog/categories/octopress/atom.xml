@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Octopress | /home/matstani/weblog]]></title>
-  <link href="http://matstani.github.com/blog/categories/octopress/atom.xml" rel="self"/>
-  <link href="http://matstani.github.com/"/>
-  <updated>2014-08-05T21:21:12+09:00</updated>
-  <id>http://matstani.github.com/</id>
+  <link href="http://matstani.github.io/blog/categories/octopress/atom.xml" rel="self"/>
+  <link href="http://matstani.github.io/"/>
+  <updated>2015-02-19T13:39:51+09:00</updated>
+  <id>http://matstani.github.io/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Octopressのスタイルシートを変更]]></title>
-    <link href="http://matstani.github.com/blog/2013/02/28/fix-gist-width/"/>
+    <link href="http://matstani.github.io/blog/2013/02/28/fix-gist-width/"/>
     <updated>2013-02-28T10:03:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/02/28/fix-gist-width</id>
+    <id>http://matstani.github.io/blog/2013/02/28/fix-gist-width</id>
     <content type="html"><![CDATA[<p><a href="http://octopress.org/docs/blogging/code/">ドキュメント</a>にあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
 <a href="https://gist.github.com/">gist</a>のコードを埋め込むには以下のように記述します。
 <code>

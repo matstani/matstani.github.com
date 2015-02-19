@@ -9,9 +9,8 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="ドキュメントにあるとおり、Octopressでは、ソースコードを簡単に貼り付けできます。
-gistのコードを埋め込むには以下のように記述します。 1
-{% gist gist_id [filename] %} このgistの埋め込み結果なのですが、Octopressのデフォルトのスタイルだと、 &hellip;">
+  <meta name="description" content="推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。 2014/07/16 nrepl.el -> ciderに変更、リンク先修正。
+2014/08/13 CIDER 0.7.0 リリースに合わせて、leinプラグインの記述を追加 利用するのは、Emacs+CIDER。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@ gistのコードを埋め込むには以下のように記述します。 1
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.com/blog/page/3">
+  <link rel="canonical" href="http://matstani.github.io/blog/page/3">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -64,7 +63,7 @@ gistのコードを埋め込むには以下のように記述します。 1
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:matstani.github.com" />
+    <input type="hidden" name="q" value="site:matstani.github.io" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -79,6 +78,307 @@ gistのコードを埋め込むには以下のように記述します。 1
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/19/clojure-dev-env-emacs/">Clojure開発環境インストール手順(Emacs)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-19T18:29:00+09:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>推奨環境、手順はこまめに変化するようなので、2013年4月時点での手順のメモ。</p>
+
+<ul>
+<li>2014/07/16 nrepl.el -> ciderに変更、リンク先修正。</li>
+<li>2014/08/13 CIDER 0.7.0 リリースに合わせて、leinプラグインの記述を追加</li>
+</ul>
+
+
+<p>利用するのは、<a href="http://www.gnu.org/software/emacs/">Emacs</a>+<a href="https://github.com/clojure-emacs/cider">CIDER</a>。<br/>
+ちなみに、<a href="http://shop.oreilly.com/product/0636920013754.do">Clojure Programming</a>で紹介されているSLIME, swankの利用はdeprecatedとのこと。</p>
+
+<h3>Javaのインストール</h3>
+
+<ul>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">オラクルのサイト</a></li>
+<li>OpenJDKをインストールする場合</li>
+</ul>
+
+
+<p>Ubuntuの場合</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt-get install openjdk-7-jdk</span></code></pre></td></tr></table></div></figure>
+
+
+<p>CentOSの場合</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install java-1.7.0-openjdk</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>leiningenインストール</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein  
+</span><span class='line'>$ mv lein ~/bin  
+</span><span class='line'>$ chmod 755 ~/bin/lein  </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Emacsのインストール</h3>
+
+<p>Emacs24以降のバージョンを利用すると、パッケージ管理システムが標準で同梱されているので、以降の手順が簡単。</p>
+
+<ul>
+<li><a href="http://gihyo.jp/admin/serial/01/ubuntu-recipe/0235">Ubuntuにインストール</a></li>
+<li><a href="http://dqn.sakusakutto.jp/2012/06/centos62emacs241install.html">CentOSにインストール</a></li>
+</ul>
+
+
+<h3><a href="https://gist.github.com/matstani/5419420">.emacs</a>に以下追記</h3>
+
+<div><script src='https://gist.github.com/5419420.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+<p>追記後、Emacs上で以下のコマンドを実行すると、直ちに有効になる。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-buffer</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここでインストールされるパッケージは以下のとおり。</p>
+
+<ul>
+<li><a href="https://github.com/clojure-emacs/clojure-mode">clojure-mode</a><br/>
+Clojure編集の基本機能を追加するモード。インデントやシンタックスハイライトなど。</li>
+<li><a href="http://emacswiki.org/emacs/ParEdit">ParEdit</a><br/>
+括弧のペアを管理してくれるモード。開き括弧の入力時に自動的に閉じ括弧を入れてくれたり、括弧(S式)単位での編集ができたり。<br/>
+動作が直感的でないところもあるので、<a href="http://www.daregada.sakuraweb.com/paredit_tutorial_ja.html">チュートリアル</a>で勉強。</li>
+<li><a href="https://github.com/clojure-emacs/cider">CIDER</a><br/>
+Emacsから、<a href="https://github.com/clojure/tools.nrepl">nREPL</a>(ネットワーク経由で利用できるREPL)にアクセスするための機能。<br/>
+nREPLサーバをアプリケーションに組み込んでおくと、動作中のアプリケーションの情報を取得したり、動的にパッチを当てたり、色々できる。</li>
+<li><a href="http://www.emacswiki.org/emacs/RainbowDelimiters">RainbowDelimiters</a><br/>
+Lispにありがちな多重括弧を、キレイに色付けしてくれるモード。</li>
+</ul>
+
+
+<h3>cider-nreplプラグインインストール</h3>
+
+<p>CIDER 0.7.0以降では、leinプラグインと協調して動作するようになっています。インストールのために、以下の記述を<code>~/.lein/profiles.clj</code>に追記します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:plugins [[cider/cider-nrepl "0.7.0"]]</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>~/.lein/profiles.clj</code>が存在しない場合は、以下の内容で新規に作成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{:user {:plugins [[cider/cider-nrepl "0.7.0"]]}}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Clojureプロジェクト作成</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new demo</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Emacs上でnREPL起動</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd demo
+</span><span class='line'>$ emacs src/demo/core.clj</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Emacs上で</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x cider-jack-in</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/28/validation-with-lib-noir/">lib-noirを利用したフォームバリデーション</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-28T13:02:00+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>プロジェクトの作成手順は<a href="/blog/2013/01/23/create-compojure-project/">こちら</a></p>
+
+<p>Compojureベースのウェブアプリケーションで、フォームバリデーションを行います。</p>
+
+<p>ウェブアプリケーション用ライブラリ<a href="https://github.com/noir-clojure/lib-noir">lib-noir</a>を利用するコードを紹介します。</p>
+
+<h4>依存ライブラリのインストール</h4>
+
+<p>lib-noirとHTML生成ライブラリの<a href="https://github.com/weavejester/hiccup">Hiccup</a>を追記します。<br/>
+<a href="https://gist.github.com/matstani/5055544#file-project-clj">project.clj</a></p>
+
+<div><script src='https://gist.github.com/5055544.js?file=project.clj'></script>
+<noscript><pre><code>(defproject helloworld &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
+                 [compojure &quot;1.1.5&quot;]
+                 [lib-noir &quot;0.4.6&quot;]
+                 [hiccup &quot;1.0.2&quot;]]
+  :plugins [[lein-ring &quot;0.8.2&quot;]]
+  :ring {:handler helloworld.handler/app}
+  :profiles
+  {:dev {:dependencies [[ring-mock &quot;0.1.3&quot;]]}})</code></pre></noscript></div>
+
+
+<p>:dependenciesに追記後、以下のコマンドでライブラリをインストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>lib-noir/validationを使ってフォームバリデーション</h4>
+
+<p>フォームからPOSTされた日付データ、時刻データを、正規表現でチェックするコードです。バリデーションが失敗した場合は、エラーメッセージを表示しています。<br/>
+<a href="https://gist.github.com/matstani/5055544#file-handler-clj">handler.clj</a></p>
+
+<div><script src='https://gist.github.com/5055544.js?file=handler.clj'></script>
+<noscript><pre><code>(ns helloworld.handler
+  (:use compojure.core)
+  (:require [compojure.handler :as handler]
+            [compojure.route :as route]
+            [hiccup.form :as form]
+            [hiccup.core :refer [html]]
+            [noir.validation :as vali]))
+
+;; レイアウト                                                                                                                                                     
+(defn layout [&amp; content]
+  (html
+   [:head [:title &quot;Form validation using lib-noir.&quot;]]
+   [:body
+    content]))
+
+;; エラーメッセージ                                                                                                                                               
+(defn error-message [[first-error]]
+  [:span.error first-error])
+
+;; 日付・時刻をPOSTするフォーム                                                                                                                                   
+(defn date-time-form [&amp; [{:keys [date time]}]]
+  (layout
+    (form/form-to
+     [:post &quot;.&quot;]
+     [:div
+      (form/label &quot;date&quot; &quot;日付&quot;)
+      (form/text-field &quot;date&quot; date)
+      ;; バリデーション失敗時はエラーメッセージ                                                                                                                   
+      (vali/on-error :date error-message)]
+     [:div
+      (form/label &quot;time&quot; &quot;時刻&quot;)
+      (form/text-field &quot;time&quot; time)
+      ;; バリデーション失敗時はエラーメッセージ                                                                                                                   
+      (vali/on-error :time error-message)]
+     [:div (form/submit-button &quot;送信&quot;)])))
+
+;;日付チェック用正規表現                                                                                                                                          
+(def regex-date-pattern
+  (re-pattern &quot;^\\d{4}/(1[0-2]|0?[1-9])/(0?[1-9]|[1-2][0-9]|3[01])$&quot;))
+
+;;時刻チェック用正規表現                                                                                                                                          
+(def regex-time-pattern
+  (re-pattern &quot;^([01]?[0-9]|2[0-3]):([0-5][0-9])$&quot;))
+
+;;POSTデータのバリデーションルール                                                                                                                                
+(defn valid-date-time? [{:keys [date time]}]
+  ;; dateをバリデート                                                                                                                                             
+  (vali/rule (re-matches regex-date-pattern date)
+             ;; 失敗したら :date にエラーメッセージ追加                                                                                                           
+             [:date &quot;日付を入力してください(yyyy/MM/dd)&quot;])
+  ;; timeをバリデート                                                                                                                                             
+  (vali/rule (re-matches regex-time-pattern time)
+             ;; 失敗したら :time にエラーメッセージ追加                                                                                                           
+             [:time &quot;時刻を入力してください(HH:mm)&quot;])
+  ;; バリデーション結果を返す                                                                                                                                     
+  (not (vali/errors? :date :time)))
+
+;; POSTされた値を表示                                                                                                                                             
+(defn show-date-time [{:keys [date time]}]
+  (layout
+   [:p (str &quot;日付は「&quot; date &quot;」です。&quot;)]
+   [:p (str &quot;時刻は「&quot; time &quot;」です。&quot;)]))
+
+(defroutes app-routes
+  (GET &quot;/&quot; [] (date-time-form))
+  (POST &quot;/&quot; {param :params}
+        (if (valid-date-time? param)
+          ;; バリデーション成功                                                                                                                                   
+          (show-date-time param)
+          ;; バリデーション失敗                                                                                                                                   
+          (date-time-form param)))
+  (route/not-found &quot;Not Found&quot;))
+
+(def app
+  (-&gt; app-routes
+      ;;バリデーション用ミドルウェア                                                                                                                              
+      vali/wrap-noir-validation
+      handler/site))
+</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -636,6 +936,14 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/19/clojure-vim/">[Clojure] UbuntuでClojure & VIM開発環境</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/18/clojure-component-example/">[Clojure] componentフレームワークを利用した開発</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/08/05/clojure-tools-dot-namespace/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a>
       </li>
     
@@ -645,14 +953,6 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     
       <li class="post">
         <a href="/blog/2014/03/02/zf2-db-transaction/">[ZF2] データベーストランザクション</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/02/zf2-error-message-style/">[ZF2] バリデーションメッセージのスタイルを変更する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/02/zf2-validator-translation/">[ZF2] フォームバリデーションメッセージを変更する</a>
       </li>
     
   </ul>
@@ -669,7 +969,7 @@ sassディレクトリ以下のscssファイルを修正すると、サイトに
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Shunsaku MATSUTANI -
+  Copyright &copy; 2015 - Shunsaku MATSUTANI -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

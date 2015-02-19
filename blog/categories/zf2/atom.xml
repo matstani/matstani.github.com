@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ZF2 | /home/matstani/weblog]]></title>
-  <link href="http://matstani.github.com/blog/categories/zf2/atom.xml" rel="self"/>
-  <link href="http://matstani.github.com/"/>
-  <updated>2014-08-05T21:21:12+09:00</updated>
-  <id>http://matstani.github.com/</id>
+  <link href="http://matstani.github.io/blog/categories/zf2/atom.xml" rel="self"/>
+  <link href="http://matstani.github.io/"/>
+  <updated>2015-02-19T13:39:51+09:00</updated>
+  <id>http://matstani.github.io/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[[ZF2] データベース操作色々]]></title>
-    <link href="http://matstani.github.com/blog/2014/03/09/zf2-db-operation/"/>
+    <link href="http://matstani.github.io/blog/2014/03/09/zf2-db-operation/"/>
     <updated>2014-03-09T17:23:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2014/03/09/zf2-db-operation</id>
+    <id>http://matstani.github.io/blog/2014/03/09/zf2-db-operation</id>
     <content type="html"><![CDATA[<p>ZF2の提供するTableGatewayを利用した基本的なCRUD手順は<a href="http://framework.zend.com/manual/2.2/en/user-guide/database-and-models.html">チュートリアル</a>で紹介されています。
 ここでは、より複雑な例をいくつか紹介します。</p>
 
@@ -81,9 +81,9 @@ WHERE句に副問い合わせを指定する例です。<br/>
   
   <entry>
     <title type="html"><![CDATA[[ZF2] データベーストランザクション]]></title>
-    <link href="http://matstani.github.com/blog/2014/03/02/zf2-db-transaction/"/>
+    <link href="http://matstani.github.io/blog/2014/03/02/zf2-db-transaction/"/>
     <updated>2014-03-02T19:46:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2014/03/02/zf2-db-transaction</id>
+    <id>http://matstani.github.io/blog/2014/03/02/zf2-db-transaction</id>
     <content type="html"><![CDATA[<p>Zend Framework2でデータベースのトランザクションを利用する方法を紹介します。</p>
 
 <p><a href="https://gist.github.com/matstani/9304923">サンプルコード</a>
@@ -95,9 +95,9 @@ WHERE句に副問い合わせを指定する例です。<br/>
   
   <entry>
     <title type="html"><![CDATA[[ZF2] バリデーションメッセージのスタイルを変更する]]></title>
-    <link href="http://matstani.github.com/blog/2014/03/02/zf2-error-message-style/"/>
+    <link href="http://matstani.github.io/blog/2014/03/02/zf2-error-message-style/"/>
     <updated>2014-03-02T19:06:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2014/03/02/zf2-error-message-style</id>
+    <id>http://matstani.github.io/blog/2014/03/02/zf2-error-message-style</id>
     <content type="html"><![CDATA[<p>Zend Framework2でフォームバリデーションを行った際のエラーメッセージには、特定のスタイル(class)が指定されていないため、メッセージを赤字で表示したい、といった場合に困ります。</p>
 
 <p>デフォルトの表示方法は、<a href="http://framework.zend.com/manual/2.2/en/modules/zend.form.view.helpers.html">ビューヘルパー</a><code>formElementErrors</code>として登録されています。<br/>
@@ -832,9 +832,9 @@ Please, don't. https://github.com/styleguide/templates/2.0
   
   <entry>
     <title type="html"><![CDATA[[ZF2] フォームバリデーションメッセージを変更する]]></title>
-    <link href="http://matstani.github.com/blog/2014/03/02/zf2-validator-translation/"/>
+    <link href="http://matstani.github.io/blog/2014/03/02/zf2-validator-translation/"/>
     <updated>2014-03-02T18:24:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2014/03/02/zf2-validator-translation</id>
+    <id>http://matstani.github.io/blog/2014/03/02/zf2-validator-translation</id>
     <content type="html"><![CDATA[<p>Zend Framework2でフォームのバリデーションのエラーメッセージを変更するにはいくつか方法がありますが、InputFilter作成時のオプションで指定する方法を紹介します。</p>
 
 <p><a href="http://framework.zend.com/manual/2.2/en/user-guide/forms-and-actions.html">ZF2チュートリアル</a>では、空欄チェックと、文字列の長さチェックが付加されていますが、これを日本語メッセージにしてみます。</p>

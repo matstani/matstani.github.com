@@ -1,115 +1,123 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://matstani.github.com/blog/2013/01/23/create-compojure-project/</loc>
+        <loc>http://matstani.github.io/blog/2013/01/23/create-compojure-project/</loc>
         <lastmod>2013-05-20T13:33:14+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/01/23/using-db-from-compojure-using-korma/</loc>
+        <loc>http://matstani.github.io/blog/2013/01/23/using-db-from-compojure-using-korma/</loc>
         <lastmod>2013-08-02T17:46:11+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/01/31/fileupload-with-compojure/</loc>
+        <loc>http://matstani.github.io/blog/2013/01/31/fileupload-with-compojure/</loc>
         <lastmod>2013-07-30T22:20:22+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/02/05/form-authentication-using-friend/</loc>
+        <loc>http://matstani.github.io/blog/2013/02/05/form-authentication-using-friend/</loc>
         <lastmod>2013-07-30T22:15:42+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/02/28/fix-gist-width/</loc>
+        <loc>http://matstani.github.io/blog/2013/02/28/fix-gist-width/</loc>
         <lastmod>2013-05-20T13:33:14+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/02/28/validation-with-lib-noir/</loc>
+        <loc>http://matstani.github.io/blog/2013/02/28/validation-with-lib-noir/</loc>
         <lastmod>2013-07-30T22:18:49+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/04/19/clojure-dev-env-emacs/</loc>
-        <lastmod>2014-07-16T12:04:53+09:00</lastmod>
+        <loc>http://matstani.github.io/blog/2013/04/19/clojure-dev-env-emacs/</loc>
+        <lastmod>2014-09-02T12:59:33+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/05/10/clojure-require-use/</loc>
+        <loc>http://matstani.github.io/blog/2013/05/10/clojure-require-use/</loc>
         <lastmod>2013-07-30T21:54:32+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/05/15/paredit-with-screen-emacs/</loc>
+        <loc>http://matstani.github.io/blog/2013/05/15/paredit-with-screen-emacs/</loc>
         <lastmod>2013-05-20T13:33:14+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/05/20/embed-nrepl/</loc>
+        <loc>http://matstani.github.io/blog/2013/05/20/embed-nrepl/</loc>
         <lastmod>2013-07-30T21:56:26+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/06/19/php-memory-usage/</loc>
+        <loc>http://matstani.github.io/blog/2013/06/19/php-memory-usage/</loc>
         <lastmod>2013-06-19T17:02:10+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/06/27/indexed-seq/</loc>
+        <loc>http://matstani.github.io/blog/2013/06/27/indexed-seq/</loc>
         <lastmod>2013-06-27T19:34:04+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/07/18/clojure-default-value/</loc>
+        <loc>http://matstani.github.io/blog/2013/07/18/clojure-default-value/</loc>
         <lastmod>2013-07-30T21:55:27+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/07/30/lein-try/</loc>
+        <loc>http://matstani.github.io/blog/2013/07/30/lein-try/</loc>
         <lastmod>2013-07-30T18:00:35+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/07/30/prime-sieve-with-core-dot-async/</loc>
+        <loc>http://matstani.github.io/blog/2013/07/30/prime-sieve-with-core-dot-async/</loc>
         <lastmod>2013-07-30T21:44:59+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/08/02/difficult-sequences/</loc>
+        <loc>http://matstani.github.io/blog/2013/08/02/difficult-sequences/</loc>
         <lastmod>2013-08-02T18:56:43+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/09/03/try-core-typed/</loc>
+        <loc>http://matstani.github.io/blog/2013/09/03/try-core-typed/</loc>
         <lastmod>2013-09-04T18:25:21+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/09/04/lein-typed/</loc>
+        <loc>http://matstani.github.io/blog/2013/09/04/lein-typed/</loc>
         <lastmod>2013-09-04T18:22:33+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/10/07/clojure-itext-japanese/</loc>
+        <loc>http://matstani.github.io/blog/2013/10/07/clojure-itext-japanese/</loc>
         <lastmod>2013-10-07T17:29:38+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2013/10/07/try-itext-compojure/</loc>
+        <loc>http://matstani.github.io/blog/2013/10/07/try-itext-compojure/</loc>
         <lastmod>2013-10-07T21:14:32+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2014/03/02/zf2-validator-translation/</loc>
+        <loc>http://matstani.github.io/blog/2014/03/02/zf2-validator-translation/</loc>
         <lastmod>2014-03-02T18:55:34+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2014/03/02/zf2-error-message-style/</loc>
+        <loc>http://matstani.github.io/blog/2014/03/02/zf2-error-message-style/</loc>
         <lastmod>2014-03-02T20:02:34+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2014/03/02/zf2-db-transaction/</loc>
+        <loc>http://matstani.github.io/blog/2014/03/02/zf2-db-transaction/</loc>
         <lastmod>2014-03-02T20:00:40+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2014/03/09/zf2-db-operation/</loc>
+        <loc>http://matstani.github.io/blog/2014/03/09/zf2-db-operation/</loc>
         <lastmod>2014-03-09T19:46:08+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/2014/08/05/clojure-tools-dot-namespace/</loc>
+        <loc>http://matstani.github.io/blog/2014/08/05/clojure-tools-dot-namespace/</loc>
         <lastmod>2014-08-05T21:14:33+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/blog/archives/</loc>
-        <lastmod>2014-08-05T21:14:33+09:00</lastmod>
+        <loc>http://matstani.github.io/blog/2014/08/18/clojure-component-example/</loc>
+        <lastmod>2014-09-02T12:59:33+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/</loc>
-        <lastmod>2014-08-05T21:14:33+09:00</lastmod>
+        <loc>http://matstani.github.io/blog/2015/02/19/clojure-vim/</loc>
+        <lastmod>2015-02-19T13:38:21+09:00</lastmod>
     </url>
     <url>
-        <loc>http://matstani.github.com/robots.txt</loc>
+        <loc>http://matstani.github.io/blog/archives/</loc>
+        <lastmod>2015-02-19T13:38:21+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://matstani.github.io/</loc>
+        <lastmod>2015-02-19T13:38:21+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://matstani.github.io/robots.txt</loc>
         <lastmod>2013-05-20T13:33:14+09:00</lastmod>
     </url>
 </urlset>

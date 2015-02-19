@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Clojure | /home/matstani/weblog]]></title>
-  <link href="http://matstani.github.com/blog/categories/clojure/atom.xml" rel="self"/>
-  <link href="http://matstani.github.com/"/>
-  <updated>2014-08-05T21:21:12+09:00</updated>
-  <id>http://matstani.github.com/</id>
+  <link href="http://matstani.github.io/blog/categories/clojure/atom.xml" rel="self"/>
+  <link href="http://matstani.github.io/"/>
+  <updated>2015-02-19T13:39:51+09:00</updated>
+  <id>http://matstani.github.io/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード]]></title>
-    <link href="http://matstani.github.com/blog/2014/08/05/clojure-tools-dot-namespace/"/>
+    <link href="http://matstani.github.io/blog/2014/08/05/clojure-tools-dot-namespace/"/>
     <updated>2014-08-05T16:42:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2014/08/05/clojure-tools-dot-namespace</id>
+    <id>http://matstani.github.io/blog/2014/08/05/clojure-tools-dot-namespace</id>
     <content type="html"><![CDATA[<p>JVMを再起動することなく、プロジェクト全体のソースコードのリロードを実現するツール<a href="https://github.com/clojure/tools.namespace">tools.namespace</a>を紹介します。</p>
 
 <p>ClojureにはREPLが付属しており、動作を確かめながらソフトウェアを開発することができます。<br/>
@@ -120,9 +120,9 @@ user=> (def my-app {:state-of-world (ref {})</p>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)]]></title>
-    <link href="http://matstani.github.com/blog/2013/10/07/try-itext-compojure/"/>
+    <link href="http://matstani.github.io/blog/2013/10/07/try-itext-compojure/"/>
     <updated>2013-10-07T20:52:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/10/07/try-itext-compojure</id>
+    <id>http://matstani.github.io/blog/2013/10/07/try-itext-compojure</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/weavejester/compojure">Compojure</a>ベースのClojureウェブアプリケーションで、<a href="http://itextpdf.com/">iText</a>を利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例は<a href="/blog/2013/10/07/clojure-itext-japanese/">こちら</a>。)<br/>
 例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。</p>
 
@@ -165,9 +165,9 @@ $ lein ring server-headless
   
   <entry>
     <title type="html"><![CDATA[[Clojure] iTextでPDFファイル作成]]></title>
-    <link href="http://matstani.github.com/blog/2013/10/07/clojure-itext-japanese/"/>
+    <link href="http://matstani.github.io/blog/2013/10/07/clojure-itext-japanese/"/>
     <updated>2013-10-07T17:16:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/10/07/clojure-itext-japanese</id>
+    <id>http://matstani.github.io/blog/2013/10/07/clojure-itext-japanese</id>
     <content type="html"><![CDATA[<p>ClojureでPDFファイルを作成するためのライブラリとして<a href="https://github.com/yogthos/clj-pdf">clj-pdf</a>がありますが、そのままでは日本語フォントに対応していないようなので、直接<a href="http://itextpdf.com/">iText</a>を使う手順を紹介します。</p>
 
 <h2>テスト用プロジェクト作成</h2>
@@ -199,9 +199,9 @@ $ lein run
   
   <entry>
     <title type="html"><![CDATA[[Clojure] lein-typed]]></title>
-    <link href="http://matstani.github.com/blog/2013/09/04/lein-typed/"/>
+    <link href="http://matstani.github.io/blog/2013/09/04/lein-typed/"/>
     <updated>2013-09-04T17:57:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/09/04/lein-typed</id>
+    <id>http://matstani.github.io/blog/2013/09/04/lein-typed</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/frenchy64/lein-typed">lein-typed</a>を利用すると、<a href="https://github.com/clojure/core.typed">core.typed</a>ライブラリを利用したClojureプログラムの静的型チェックを<a href="https://github.com/technomancy/leiningen">Leiningen</a>タスクとして実行できます。</p>
 
 <h2>インストール</h2>
@@ -268,9 +268,9 @@ Found 4 annotated vars out of 4 vars
   
   <entry>
     <title type="html"><![CDATA[[Clojure] core.typedで静的型チェック]]></title>
-    <link href="http://matstani.github.com/blog/2013/09/03/try-core-typed/"/>
+    <link href="http://matstani.github.io/blog/2013/09/03/try-core-typed/"/>
     <updated>2013-09-03T13:25:00+09:00</updated>
-    <id>http://matstani.github.com/blog/2013/09/03/try-core-typed</id>
+    <id>http://matstani.github.io/blog/2013/09/03/try-core-typed</id>
     <content type="html"><![CDATA[<p>Clojureは動的型付けの言語ですが、<a href="https://github.com/clojure/core.typed">core.typed</a>ライブラリを利用すると、静的型チェックを行うことができます。<br/>
 <a href="https://groups.google.com/forum/#!msg/clojure-core-typed/U_aA_Ce3qWg/gJWpdflBe4AJ">バージョン0.2.0リリースで、Production Readyとアナウンスされました。</a><br/>
 単純な例を試してみたのでメモします。</p>
