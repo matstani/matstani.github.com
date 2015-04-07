@@ -9,11 +9,7 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Clojureは動的型付けの言語ですが、core.typedライブラリを利用すると、静的型チェックを行うことができます。
-バージョン0.2.0リリースで、Production Readyとアナウンスされました。
-単純な例を試してみたのでメモします。 テスト用プロジェクト作成 1
-2
-$ lein &hellip;">
+  <meta name="description" content="lein-typedを利用すると、core.typedライブラリを利用したClojureプログラムの静的型チェックをLeiningenタスクとして実行できます。 インストール 全てのプロジェクトで利用する場合 ~/.lein/profiles.cljの:user :pluginsに[lein- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +77,132 @@ $ lein &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/04/lein-typed/">[Clojure] lein-typed</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-04T17:57:00+09:00" pubdate data-updated="true">Sep 4<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/frenchy64/lein-typed">lein-typed</a>を利用すると、<a href="https://github.com/clojure/core.typed">core.typed</a>ライブラリを利用したClojureプログラムの静的型チェックを<a href="https://github.com/technomancy/leiningen">Leiningen</a>タスクとして実行できます。</p>
+
+<h2>インストール</h2>
+
+<h3>全てのプロジェクトで利用する場合</h3>
+
+<p><code>~/.lein/profiles.clj</code>の<code>:user</code> <code>:plugins</code>に<code>[lein-typed "0.3.0"]</code>を追記します。(ファイルが存在しない場合は新規作成)<br/>
+例)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{:user {:plugins [[lein-typed "0.3.0"]]}}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>特定のプロジェクトで利用する場合</h3>
+
+<p><code>project.clj</code>の<code>:plugins</code>に<code>[lein-typed "0.3.0"]</code>を追記します。</p>
+
+<h2>型チェックの実行</h2>
+
+<p><code>project.clj</code>にチェック対象となるnamespaceを記述します。<br/>
+例)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(defproject try-typed "0.1.0-SNAPSHOT"
+</span><span class='line'>  :description "FIXME: write description"
+</span><span class='line'>  :url "http://example.com/FIXME"
+</span><span class='line'>  :license {:name "Eclipse Public License"
+</span><span class='line'>  :url "http://www.eclipse.org/legal/epl-v10.html"}
+</span><span class='line'>  :dependencies [[org.clojure/clojure "1.5.1"]
+</span><span class='line'>                 [org.clojure/core.typed "0.2.3"]]
+</span><span class='line'>  :plugins [[lein-typed "0.3.0"]] 
+</span><span class='line'>  ; 対象namespaceを指定
+</span><span class='line'>  :core.typed {:check [try-typed.core]})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>静的型チェックを実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein typed check
+</span><span class='line'>Initializing core.typed ...
+</span><span class='line'>"Elapsed time: 11563.779405 msecs"
+</span><span class='line'>core.typed initialized.
+</span><span class='line'>Start collecting try-typed.core
+</span><span class='line'>Finished collecting try-typed.core
+</span><span class='line'>Collected 1 namespaces in 11658.922614 msecs
+</span><span class='line'>Start checking try-typed.core
+</span><span class='line'>Checked try-typed.core in 423.743596 msecs
+</span><span class='line'>Checked 1 namespaces (approx. 33 lines) in 12087.276047 msecs</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>check</code>の替わりに<code>coverage</code>を指定すると、型指定annotationの網羅率を表示します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>lein typed coverage
+</span><span class='line'>Initializing core.typed ...
+</span><span class='line'>"Elapsed time: 3286.597969 msecs"
+</span><span class='line'>core.typed initialized.
+</span><span class='line'>Start collecting try-typed.core
+</span><span class='line'>Finished collecting try-typed.core
+</span><span class='line'>Collected 1 namespaces in 3383.256821 msecs
+</span><span class='line'>Checked 0 namespaces (approx. 0 lines) in 3385.801947 msecs
+</span><span class='line'>Found 4 annotated vars out of 4 vars
+</span><span class='line'>100% var annotation coverage</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1798,51 +1920,6 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/10/clojure-require-use/">Clojureのuseをrequireで置き換える</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-10T18:41:00+09:00" pubdate data-updated="true">May 10<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
-
-<p>requireにまとめることで、コードが若干すっきりするかもしれません。<br/>
-<a href="https://gist.github.com/matstani/5553626">サンプルコード</a></p>
-
-<div><script src='https://gist.github.com/5553626.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1868,6 +1945,10 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/07/delete-s3-by-pattern/">S3バケット内のファイルをファイル名のパターンで削除</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/19/clojure-vim/">[Clojure] UbuntuでClojure & VIM開発環境</a>
       </li>
     
@@ -1881,10 +1962,6 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
     
       <li class="post">
         <a href="/blog/2014/03/09/zf2-db-operation/">[ZF2] データベース操作色々</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/02/zf2-db-transaction/">[ZF2] データベーストランザクション</a>
       </li>
     
   </ul>

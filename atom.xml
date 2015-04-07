@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.io/atom.xml" rel="self"/>
   <link href="http://matstani.github.io/"/>
-  <updated>2015-02-19T13:39:51+09:00</updated>
+  <updated>2015-04-07T11:40:24+09:00</updated>
   <id>http://matstani.github.io/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[S3バケット内のファイルをファイル名のパターンで削除]]></title>
+    <link href="http://matstani.github.io/blog/2015/04/07/delete-s3-by-pattern/"/>
+    <updated>2015-04-07T11:31:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2015/04/07/delete-s3-by-pattern</id>
+    <content type="html"><![CDATA[<p><code>my.bucket.name</code>バケット内の<code>temp</code>をファイル名に含むファイルを削除</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ aws s3 rm --recursive s3://my.bucket.name/ --exclude '*' --include '*temp*'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行前に<code>--dryrun</code>で確認しておく</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] UbuntuでClojure & VIM開発環境]]></title>
@@ -3000,24 +3015,6 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
 
 <p>参考にしたURL
 <a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Clojureのuseをrequireで置き換える]]></title>
-    <link href="http://matstani.github.io/blog/2013/05/10/clojure-require-use/"/>
-    <updated>2013-05-10T18:41:00+09:00</updated>
-    <id>http://matstani.github.io/blog/2013/05/10/clojure-require-use</id>
-    <content type="html"><![CDATA[<p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
-
-<p>requireにまとめることで、コードが若干すっきりするかもしれません。<br/>
-<a href="https://gist.github.com/matstani/5553626">サンプルコード</a></p>
-
-<div><script src='https://gist.github.com/5553626.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-
-
-
 ]]></content>
   </entry>
   
