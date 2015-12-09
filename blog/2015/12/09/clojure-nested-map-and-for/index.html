@@ -5,14 +5,16 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>[Clojure] インデックス付きシーケンス - /home/matstani/weblog</title>
+  <title>[Clojure] forでネストしたマップを扱う - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Clojure1.2以前の、clojure.contrib.seq/indexedの代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。 1
+  <meta name="description" content="Clojureで以下のようなネストしたデータ構造を扱いたい場合があります。 1
 2
-&gt; (map-indexed vector [:a :b :c :d :e])
-;([0 :a] [1 :b] [2 : &hellip;">
+3
+4
+5
+{:division1 {:group1 [:staff1 :staff2] :group2 [:staff3 :staff4 :staff5]} :division2 {:group3 [: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +23,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.io/blog/2013/06/27/indexed-seq">
+  <link rel="canonical" href="http://matstani.github.io/blog/2015/12/09/clojure-nested-map-and-for">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -83,7 +85,7 @@
   
   <header>
     
-      <h1 class="entry-title">[Clojure] インデックス付きシーケンス</h1>
+      <h1 class="entry-title">[Clojure] forでネストしたマップを扱う</h1>
     
     
       <p class="meta">
@@ -99,35 +101,58 @@
   
 
 
-<time datetime="2013-06-27T16:57:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+<time datetime="2015-12-09T12:31:00+09:00" pubdate data-updated="true">Dec 9<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Clojure1.2以前の、<a href="http://clojuredocs.org/clojure_contrib/clojure.contrib.seq/indexed">clojure.contrib.seq/indexed</a>の代替として、インデックス付きシーケンスがほしいときは、以下のコードが使えます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (map-indexed vector [:a :b :c :d :e])
-</span><span class='line'>;([0 :a] [1 :b] [2 :c] [3 :d] [4 :e])</span></code></pre></td></tr></table></div></figure>
-
-
-<p>例)doseqでループ処理。</p>
+<div class="entry-content"><p>Clojureで以下のようなネストしたデータ構造を扱いたい場合があります。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; (doseq [[idx item] (map-indexed vector [:a :b :c :d :e])]
-</span><span class='line'>        (println (str idx ":" item)))
-</span><span class='line'>;0:a
-</span><span class='line'>;1:b
-</span><span class='line'>;2:c
-</span><span class='line'>;3:d</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{:division1
+</span><span class='line'> {:group1 [:staff1 :staff2]
+</span><span class='line'>  :group2 [:staff3 :staff4 :staff5]}
+</span><span class='line'> :division2
+</span><span class='line'> {:group3 [:staff6 :staff7]}}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここからstaff要素を参照したい場合、手続き型言語ではforeach文を重ねるのが一般的だと思いますが、Clojureで<code>map</code>関数や<code>reduce</code>関数をネストすると非常に読みづらくなってしまいます。<br/>
+Clojureで構造や深さがあらかじめわかっているデータ構造を扱う場合は、<code>for</code>マクロが便利です。
+以下のコードでネストしたキーと値の組み合わせが取り出せます。<br/>
+<a href="https://gist.github.com/matstani/00c29777685713b09ac5">nested.clj</a></p>
+
+<script src="https://gist.github.com/matstani/00c29777685713b09ac5.js"></script>
+
+
+<p><code>reduce</code>と組み合わせると値の更新ができます。<br/>
+<a href="https://gist.github.com/matstani/fa2a9fa3bbf457f9db9a">nested.clj</a></p>
+
+<script src="https://gist.github.com/matstani/fa2a9fa3bbf457f9db9a.js"></script>
+
+
+<h3>その他の便利な関数</h3>
+
+<h4>特定の位置の値を扱う　</h4>
+
+<ul>
+<li><a href="https://clojuredocs.org/clojure.core/get-in">get-in</a></li>
+<li><a href="https://clojuredocs.org/clojure.core/assoc-in">assoc-in</a></li>
+<li><a href="https://clojuredocs.org/clojure.core/update-in">update-in</a></li>
+</ul>
+
+
+<h4>深さがわからないデータ構造を扱う</h4>
+
+<ul>
+<li><a href="https://clojuredocs.org/clojure.walk/postwalk">clojure.walk.postwalk</a></li>
+<li><a href="https://clojuredocs.org/clojure.walk/prewalk">clojure.walk.prewalk</a></li>
+</ul>
 
 </div>
 
@@ -151,21 +176,15 @@
   
 
 
-<time datetime="2013-06-27T16:57:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+<time datetime="2015-12-09T12:31:00+09:00" pubdate data-updated="true">Dec 9<span>th</span>, 2015</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.io/blog/2013/06/27/indexed-seq/" data-via="" data-counturl="http://matstani.github.io/blog/2013/06/27/indexed-seq/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.io/blog/2015/12/09/clojure-nested-map-and-for/" data-via="" data-counturl="http://matstani.github.io/blog/2015/12/09/clojure-nested-map-and-for/" >Tweet</a>
   
   
   
@@ -176,10 +195,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/19/php-memory-usage/" title="Previous Post: [PHP]memory_get_usageのreal_usageオプションについて">&laquo; [PHP]memory_get_usageのreal_usageオプションについて</a>
+        <a class="basic-alignment left" href="/blog/2015/04/07/delete-s3-by-pattern/" title="Previous Post: S3バケット内のファイルをファイル名のパターンで削除">&laquo; S3バケット内のファイルをファイル名のパターンで削除</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/07/18/clojure-default-value/" title="Next Post: Clojureで引数のデフォルト値を指定する">Clojureで引数のデフォルト値を指定する &raquo;</a>
       
     </p>
   </footer>
@@ -254,8 +271,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.io/blog/2013/06/27/indexed-seq/';
-        var disqus_url = 'http://matstani.github.io/blog/2013/06/27/indexed-seq/';
+        var disqus_identifier = 'http://matstani.github.io/blog/2015/12/09/clojure-nested-map-and-for/';
+        var disqus_url = 'http://matstani.github.io/blog/2015/12/09/clojure-nested-map-and-for/';
         var disqus_script = 'embed.js';
       
     (function () {

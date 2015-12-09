@@ -9,9 +9,12 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="my.bucket.nameバケット内のtempをファイル名に含むファイルを削除 1
-$ aws s3 rm --recursive s3://my.bucket.name/ --exclude '*' --include '*temp*' 実行前に--dryrunで確認しておく
-">
+  <meta name="description" content="Clojureで以下のようなネストしたデータ構造を扱いたい場合があります。 1
+2
+3
+4
+5
+{:division1 {:group1 [:staff1 :staff2] :group2 [:staff3 :staff4 :staff5]} :division2 {:group3 [: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +82,87 @@ $ aws s3 rm --recursive s3://my.bucket.name/ --exclude '*' --include '*temp*' �
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/09/clojure-nested-map-and-for/">[Clojure] forでネストしたマップを扱う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-09T12:31:00+09:00" pubdate data-updated="true">Dec 9<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Clojureで以下のようなネストしたデータ構造を扱いたい場合があります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{:division1
+</span><span class='line'> {:group1 [:staff1 :staff2]
+</span><span class='line'>  :group2 [:staff3 :staff4 :staff5]}
+</span><span class='line'> :division2
+</span><span class='line'> {:group3 [:staff6 :staff7]}}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここからstaff要素を参照したい場合、手続き型言語ではforeach文を重ねるのが一般的だと思いますが、Clojureで<code>map</code>関数や<code>reduce</code>関数をネストすると非常に読みづらくなってしまいます。<br/>
+Clojureで構造や深さがあらかじめわかっているデータ構造を扱う場合は、<code>for</code>マクロが便利です。
+以下のコードでネストしたキーと値の組み合わせが取り出せます。<br/>
+<a href="https://gist.github.com/matstani/00c29777685713b09ac5">nested.clj</a></p>
+
+<script src="https://gist.github.com/matstani/00c29777685713b09ac5.js"></script>
+
+
+<p><code>reduce</code>と組み合わせると値の更新ができます。<br/>
+<a href="https://gist.github.com/matstani/fa2a9fa3bbf457f9db9a">nested.clj</a></p>
+
+<script src="https://gist.github.com/matstani/fa2a9fa3bbf457f9db9a.js"></script>
+
+
+<h3>その他の便利な関数</h3>
+
+<h4>特定の位置の値を扱う　</h4>
+
+<ul>
+<li><a href="https://clojuredocs.org/clojure.core/get-in">get-in</a></li>
+<li><a href="https://clojuredocs.org/clojure.core/assoc-in">assoc-in</a></li>
+<li><a href="https://clojuredocs.org/clojure.core/update-in">update-in</a></li>
+</ul>
+
+
+<h4>深さがわからないデータ構造を扱う</h4>
+
+<ul>
+<li><a href="https://clojuredocs.org/clojure.walk/postwalk">clojure.walk.postwalk</a></li>
+<li><a href="https://clojuredocs.org/clojure.walk/prewalk">clojure.walk.prewalk</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1717,72 +1801,6 @@ Please, don't. https://github.com/styleguide/templates/2.0
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/07/clojure-itext-japanese/">[Clojure] iTextでPDFファイル作成</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-07T17:16:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ClojureでPDFファイルを作成するためのライブラリとして<a href="https://github.com/yogthos/clj-pdf">clj-pdf</a>がありますが、そのままでは日本語フォントに対応していないようなので、直接<a href="http://itextpdf.com/">iText</a>を使う手順を紹介します。</p>
-
-<h2>テスト用プロジェクト作成</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new app try-itext
-</span><span class='line'>$ cd try-itext</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>project.clj</code>の<code>:dependencies</code>に<code>[com.itextpdf/itextpdf "5.4.4"]</code> <code>[com.itextpdf/itext-asian "5.2.0"]</code>を追記します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>サンプルコード</h2>
-
-<p><a href="https://gist.github.com/matstani/6864398">core.clj</a></p>
-
-<div><script src='https://gist.github.com/6864398.js'></script>
-<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6864398&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
-
-
-<h2>プログラム実行</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein run</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行すると、<code>test.pdf</code>が作成されます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1806,6 +1824,10 @@ Please, don't. https://github.com/styleguide/templates/2.0
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/09/clojure-nested-map-and-for/">[Clojure] forでネストしたマップを扱う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/07/delete-s3-by-pattern/">S3バケット内のファイルをファイル名のパターンで削除</a>
       </li>
     
@@ -1819,10 +1841,6 @@ Please, don't. https://github.com/styleguide/templates/2.0
     
       <li class="post">
         <a href="/blog/2014/08/05/clojure-tools-dot-namespace/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/09/zf2-db-operation/">[ZF2] データベース操作色々</a>
       </li>
     
   </ul>

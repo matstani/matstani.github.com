@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.io/atom.xml" rel="self"/>
   <link href="http://matstani.github.io/"/>
-  <updated>2015-04-07T11:40:24+09:00</updated>
+  <updated>2015-12-09T14:11:01+09:00</updated>
   <id>http://matstani.github.io/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,60 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Clojure] forでネストしたマップを扱う]]></title>
+    <link href="http://matstani.github.io/blog/2015/12/09/clojure-nested-map-and-for/"/>
+    <updated>2015-12-09T12:31:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2015/12/09/clojure-nested-map-and-for</id>
+    <content type="html"><![CDATA[<p>Clojureで以下のようなネストしたデータ構造を扱いたい場合があります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{:division1
+</span><span class='line'> {:group1 [:staff1 :staff2]
+</span><span class='line'>  :group2 [:staff3 :staff4 :staff5]}
+</span><span class='line'> :division2
+</span><span class='line'> {:group3 [:staff6 :staff7]}}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここからstaff要素を参照したい場合、手続き型言語ではforeach文を重ねるのが一般的だと思いますが、Clojureで<code>map</code>関数や<code>reduce</code>関数をネストすると非常に読みづらくなってしまいます。<br/>
+Clojureで構造や深さがあらかじめわかっているデータ構造を扱う場合は、<code>for</code>マクロが便利です。
+以下のコードでネストしたキーと値の組み合わせが取り出せます。<br/>
+<a href="https://gist.github.com/matstani/00c29777685713b09ac5">nested.clj</a></p>
+
+<script src="https://gist.github.com/matstani/00c29777685713b09ac5.js"></script>
+
+
+<p><code>reduce</code>と組み合わせると値の更新ができます。<br/>
+<a href="https://gist.github.com/matstani/fa2a9fa3bbf457f9db9a">nested.clj</a></p>
+
+<script src="https://gist.github.com/matstani/fa2a9fa3bbf457f9db9a.js"></script>
+
+
+<h3>その他の便利な関数</h3>
+
+<h4>特定の位置の値を扱う　</h4>
+
+<ul>
+<li><a href="https://clojuredocs.org/clojure.core/get-in">get-in</a></li>
+<li><a href="https://clojuredocs.org/clojure.core/assoc-in">assoc-in</a></li>
+<li><a href="https://clojuredocs.org/clojure.core/update-in">update-in</a></li>
+</ul>
+
+
+<h4>深さがわからないデータ構造を扱う</h4>
+
+<ul>
+<li><a href="https://clojuredocs.org/clojure.walk/postwalk">clojure.walk.postwalk</a></li>
+<li><a href="https://clojuredocs.org/clojure.walk/prewalk">clojure.walk.prewalk</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[S3バケット内のファイルをファイル名のパターンで削除]]></title>
@@ -2997,24 +3051,6 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
 
 
 <p>ボタンを押すと、コンソールにログが表示されるようになりました。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[screen内のEmacsでparedit.elを使う]]></title>
-    <link href="http://matstani.github.io/blog/2013/05/15/paredit-with-screen-emacs/"/>
-    <updated>2013-05-15T15:23:00+09:00</updated>
-    <id>http://matstani.github.io/blog/2013/05/15/paredit-with-screen-emacs</id>
-    <content type="html"><![CDATA[<p>Clojureなど、Lisp系言語の編集に便利な<a href="http://emacswiki.org/emacs/ParEdit">paredit.el</a>ですが、<a href="http://www.gnu.org/software/screen/">GNU screen</a>内で起動した<a href="http://www.gnu.org/software/emacs/">Emacs</a>で利用しようとしたところ、Ctrl-矢印キーが使えず(5C, 5Dなどと入力される)、飲み込みや吐き出しの操作ができませんでした。</p>
-
-<p>emacs起動時のコマンドでTERM変数を指定しておくと、とりあえず解決するようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>TERM=xterm emacs -nw somefile</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考にしたURL
-<a href="http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html">http://lists.gnu.org/archive/html/screen-users/2009-12/msg00037.html</a></p>
 ]]></content>
   </entry>
   
