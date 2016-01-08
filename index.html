@@ -9,12 +9,8 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Clojureで以下のようなネストしたデータ構造を扱いたい場合があります。 1
-2
-3
-4
-5
-{:division1 {:group1 [:staff1 :staff2] :group2 [:staff3 :staff4 :staff5]} :division2 {:group3 [: &hellip;">
+  <meta name="description" content="ClojureScriptの開発ツールFigwheelを利用すると、ソースコードの変更時に自動的にブラウザにロードされるほか、付属のREPLでは、コンソールに入力したClojureScriptコードをブラウザ上で実行することができます。
+この時に利用されるWebSocket接続ですが、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +78,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/01/08/clojurescript-remote-figwheel/">[ClojureScript] リモートのfigwheelに接続する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-08T14:09:00+09:00" pubdate data-updated="true">Jan 8<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ClojureScriptの開発ツール<a href="https://github.com/bhauman/lein-figwheel">Figwheel</a>を利用すると、ソースコードの変更時に自動的にブラウザにロードされるほか、付属のREPLでは、コンソールに入力したClojureScriptコードをブラウザ上で実行することができます。<br/>
+この時に利用されるWebSocket接続ですが、デフォルトでは接続先がlocalhostになっています。<br/>
+figwheelプロセスをリモートサーバで実行している場合、デフォルトでは以下のようなエラーがブラウザのJavaScriptコンソールに表示されます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Figwheel: trying to open cljs reload socket
+</span><span class='line'>ws://localhost:3449/figwheel-ws/flappy-bird-demo のサーバへの接続を確立できませんでした。</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接続先のホストは、<code>project.clj</code>でキー<code>{:cljsbuild {:builds [{:figwheel {:websocket-host 接続先}]}}</code>で指定できます。<br/>
+リモートサーバのホスト名やIPアドレスを直接記述することもできますが、<code>:js-client-host</code>を指定すると、<code>location.host</code>の値を設定してくれるので便利です。<br/>
+設定例)<br/>
+<a href="https://gist.github.com/matstani/4db238e1db767ca8de9b">project.clj</a></p>
+
+<script src="https://gist.github.com/matstani/4db238e1db767ca8de9b.js"></script>
+
+
+<p><a href="https://github.com/bhauman/lein-figwheel">README</a>にあるのですが、見逃していました。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1720,87 +1770,6 @@ Please, don't. https://github.com/styleguide/templates/2.0
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/07/try-itext-compojure/">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-07T20:52:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>ベースのClojureウェブアプリケーションで、<a href="http://itextpdf.com/">iText</a>を利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例は<a href="/blog/2013/10/07/clojure-itext-japanese/">こちら</a>。)<br/>
-例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。</p>
-
-<h2>テスト用プロジェクト作成</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure try-itext-compojure
-</span><span class='line'>$ cd try-itext-compojure</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>project.clj</code>の<code>:dependencies</code>に<code>[com.itextpdf/itextpdf "5.4.4"]</code> <code>[com.itextpdf/itext-asian "5.2.0"]</code> <code>[org.xerial/sqlite-jdbc "3.7.2"]</code> <code>[korma "0.3.0-RC5"]</code>を追記します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>データベース準備</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir db
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "CREATE TABLE employees (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 一郎');"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 二郎');"
-</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 三郎');"</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>サンプルコード</h2>
-
-<p><a href="https://gist.github.com/matstani/6866740">handler.clj</a></p>
-
-<div><script src='https://gist.github.com/6866740.js'></script>
-<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6866740&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
-
-
-<h2>起動</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein ring server-headless</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ブラウザでlocalhost:3000にアクセスするとPDFファイルが表示されます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1824,6 +1793,10 @@ Please, don't. https://github.com/styleguide/templates/2.0
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/08/clojurescript-remote-figwheel/">[ClojureScript] リモートのfigwheelに接続する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/09/clojure-nested-map-and-for/">[Clojure] forでネストしたマップを扱う</a>
       </li>
     
@@ -1837,10 +1810,6 @@ Please, don't. https://github.com/styleguide/templates/2.0
     
       <li class="post">
         <a href="/blog/2014/08/18/clojure-component-example/">[Clojure] componentフレームワークを利用した開発</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/08/05/clojure-tools-dot-namespace/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a>
       </li>
     
   </ul>
@@ -1857,7 +1826,7 @@ Please, don't. https://github.com/styleguide/templates/2.0
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Shunsaku MATSUTANI -
+  Copyright &copy; 2016 - Shunsaku MATSUTANI -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

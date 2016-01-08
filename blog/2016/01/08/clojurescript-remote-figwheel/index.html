@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="ja"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Clojureのuseをrequireで置き換える - /home/matstani/weblog</title>
+  <title>[ClojureScript] リモートのfigwheelに接続する - /home/matstani/weblog</title>
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。 requireにまとめることで、コードが若干すっきりするかもしれません。
-サンプルコード ">
+  <meta name="description" content="ClojureScriptの開発ツールFigwheelを利用すると、ソースコードの変更時に自動的にブラウザにロードされるほか、付属のREPLでは、コンソールに入力したClojureScriptコードをブラウザ上で実行することができます。
+この時に利用されるWebSocket接続ですが、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://matstani.github.io/blog/2013/05/10/clojure-require-use">
+  <link rel="canonical" href="http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="/home/matstani/weblog" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Clojureのuseをrequireで置き換える</h1>
+      <h1 class="entry-title">[ClojureScript] リモートのfigwheelに接続する</h1>
     
     
       <p class="meta">
@@ -97,23 +97,32 @@
   
 
 
-<time datetime="2013-05-10T18:41:00+09:00" pubdate data-updated="true">May 10<span>th</span>, 2013</time>
+<time datetime="2016-01-08T14:09:00+09:00" pubdate data-updated="true">Jan 8<span>th</span>, 2016</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Clojureで他の名前空間を参照する方法として、requireとuseがありますが、Clojure1.4以降では、require単独でuseと同様にプレフィックス無しでの参照ができるようになっています。</p>
+<div class="entry-content"><p>ClojureScriptの開発ツール<a href="https://github.com/bhauman/lein-figwheel">Figwheel</a>を利用すると、ソースコードの変更時に自動的にブラウザにロードされるほか、付属のREPLでは、コンソールに入力したClojureScriptコードをブラウザ上で実行することができます。<br/>
+この時に利用されるWebSocket接続ですが、デフォルトでは接続先がlocalhostになっています。<br/>
+figwheelプロセスをリモートサーバで実行している場合、デフォルトでは以下のようなエラーがブラウザのJavaScriptコンソールに表示されます。</p>
 
-<p>requireにまとめることで、コードが若干すっきりするかもしれません。<br/>
-<a href="https://gist.github.com/matstani/5553626">サンプルコード</a></p>
-
-<div><script src='https://gist.github.com/5553626.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Figwheel: trying to open cljs reload socket
+</span><span class='line'>ws://localhost:3449/figwheel-ws/flappy-bird-demo のサーバへの接続を確立できませんでした。</span></code></pre></td></tr></table></div></figure>
 
 
+<p>接続先のホストは、<code>project.clj</code>でキー<code>{:cljsbuild {:builds [{:figwheel {:websocket-host 接続先}]}}</code>で指定できます。<br/>
+リモートサーバのホスト名やIPアドレスを直接記述することもできますが、<code>:js-client-host</code>を指定すると、<code>location.host</code>の値を設定してくれるので便利です。<br/>
+設定例)<br/>
+<a href="https://gist.github.com/matstani/4db238e1db767ca8de9b">project.clj</a></p>
+
+<script src="https://gist.github.com/matstani/4db238e1db767ca8de9b.js"></script>
+
+
+<p><a href="https://github.com/bhauman/lein-figwheel">README</a>にあるのですが、見逃していました。</p>
 </div>
 
 
@@ -136,12 +145,12 @@
   
 
 
-<time datetime="2013-05-10T18:41:00+09:00" pubdate data-updated="true">May 10<span>th</span>, 2013</time>
+<time datetime="2016-01-08T14:09:00+09:00" pubdate data-updated="true">Jan 8<span>th</span>, 2016</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/clojure/'>Clojure</a>
+    <a class='category' href='/blog/categories/clojure-clojurescript/'>Clojure,ClojureScript</a>
   
 </span>
 
@@ -150,7 +159,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.io/blog/2013/05/10/clojure-require-use/" data-via="" data-counturl="http://matstani.github.io/blog/2013/05/10/clojure-require-use/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel/" data-via="" data-counturl="http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel/" >Tweet</a>
   
   
   
@@ -161,10 +170,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/19/clojure-dev-env-emacs/" title="Previous Post: Clojure開発環境インストール手順(Emacs)">&laquo; Clojure開発環境インストール手順(Emacs)</a>
+        <a class="basic-alignment left" href="/blog/2015/12/09/clojure-nested-map-and-for/" title="Previous Post: [Clojure] forでネストしたマップを扱う">&laquo; [Clojure] forでネストしたマップを扱う</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/05/15/paredit-with-screen-emacs/" title="Next Post: screen内のEmacsでparedit.elを使う">screen内のEmacsでparedit.elを使う &raquo;</a>
       
     </p>
   </footer>
@@ -239,8 +246,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://matstani.github.io/blog/2013/05/10/clojure-require-use/';
-        var disqus_url = 'http://matstani.github.io/blog/2013/05/10/clojure-require-use/';
+        var disqus_identifier = 'http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel/';
+        var disqus_url = 'http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel/';
         var disqus_script = 'embed.js';
       
     (function () {

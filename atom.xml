@@ -4,7 +4,7 @@
   <title><![CDATA[/home/matstani/weblog]]></title>
   <link href="http://matstani.github.io/atom.xml" rel="self"/>
   <link href="http://matstani.github.io/"/>
-  <updated>2015-12-09T14:11:01+09:00</updated>
+  <updated>2016-01-08T15:14:30+09:00</updated>
   <id>http://matstani.github.io/</id>
   <author>
     <name><![CDATA[Shunsaku MATSUTANI]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[ClojureScript] リモートのfigwheelに接続する]]></title>
+    <link href="http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel/"/>
+    <updated>2016-01-08T14:09:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel</id>
+    <content type="html"><![CDATA[<p>ClojureScriptの開発ツール<a href="https://github.com/bhauman/lein-figwheel">Figwheel</a>を利用すると、ソースコードの変更時に自動的にブラウザにロードされるほか、付属のREPLでは、コンソールに入力したClojureScriptコードをブラウザ上で実行することができます。<br/>
+この時に利用されるWebSocket接続ですが、デフォルトでは接続先がlocalhostになっています。<br/>
+figwheelプロセスをリモートサーバで実行している場合、デフォルトでは以下のようなエラーがブラウザのJavaScriptコンソールに表示されます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Figwheel: trying to open cljs reload socket
+</span><span class='line'>ws://localhost:3449/figwheel-ws/flappy-bird-demo のサーバへの接続を確立できませんでした。</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接続先のホストは、<code>project.clj</code>でキー<code>{:cljsbuild {:builds [{:figwheel {:websocket-host 接続先}]}}</code>で指定できます。<br/>
+リモートサーバのホスト名やIPアドレスを直接記述することもできますが、<code>:js-client-host</code>を指定すると、<code>location.host</code>の値を設定してくれるので便利です。<br/>
+設定例)<br/>
+<a href="https://gist.github.com/matstani/4db238e1db767ca8de9b">project.clj</a></p>
+
+<script src="https://gist.github.com/matstani/4db238e1db767ca8de9b.js"></script>
+
+
+<p><a href="https://github.com/bhauman/lein-figwheel">README</a>にあるのですが、見逃していました。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[Clojure] forでネストしたマップを扱う]]></title>
@@ -2920,137 +2947,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
 環境変数 USE_ZEND_ALLOC=0 を設定すると、上記の仕組みが無効になり、必要量をその都度mallocする動作になるとのことです。</p>
 
 <p>ちなみに、PHPの割り当てメモリ量を調べる関数としては、<a href="http://php.net/manual/ja/function.memory-get-usage.php">memory_get_usage</a>の他に、<a href="http://php.net/manual/ja/function.memory-get-peak-usage.php">memory_get_peak_usage</a>があり、こちらは呼び出し時点までに割り当てられた最大メモリ量を取得できます。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Clojureアプリケーションを動的に書き換える]]></title>
-    <link href="http://matstani.github.io/blog/2013/05/20/embed-nrepl/"/>
-    <updated>2013-05-20T12:45:00+09:00</updated>
-    <id>http://matstani.github.io/blog/2013/05/20/embed-nrepl</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/clojure/tools.nrepl">nREPL</a>サーバをClojureアプリケーションに組み込んでおくと、動作中のClojureアプリケーションに接続して、デバッグを行ったり、動作を書き換えたりすることができます。</p>
-
-<p>試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。<br/>
-Clojureからは、JavaのSwingを直接利用できますが、せっかくなので、よりClojureっぽく書ける<a href="https://github.com/daveray/seesaw">Seesaw</a>を使ってみます。</p>
-
-<p><a href="https://gist.github.com/matstani/5610271#file-project-clj">project.clj</a>は以下のとおり。</p>
-
-<div><script src='https://gist.github.com/5610271.js?file=project.clj'></script>
-<noscript><pre><code>(defproject nrepl-test &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [seesaw &quot;1.4.2&quot;]
-                 [org.clojure/tools.nrepl &quot;0.2.3&quot;]]
-  :main nrepl-test.core)
-</code></pre></noscript></div>
-
-
-<p><a href="https://gist.github.com/matstani/5610271#file-core-clj">アプリケーションのコード</a>は以下のとおり。</p>
-
-<div><script src='https://gist.github.com/5610271.js?file=core.clj'></script>
-<noscript><pre><code>(ns nrepl-test.core
-  (:require [seesaw.core :refer :all]
-            [clojure.tools.nrepl.server :refer [start-server]])
-  (:gen-class))
-
-(defonce server (start-server :port 7888))
-
-(def msg &quot;Hello, Seesaw.&quot;)
-
-(def lbl-msg
-  (label &quot;&quot;))
-
-(defn set-msg!
-  [msg]
-  (config! lbl-msg :text msg))
-
-(def btn-show-msg
-  (button :text &quot;Show Message&quot;))
-
-(def content (vertical-panel
-              :items [lbl-msg
-                      btn-show-msg]))
-
-(defn -main
-  [&amp; args]
-  (invoke-later
-   (listen btn-show-msg
-           :action
-           (fn [e]
-             (set-msg! msg)
-             (-&gt; e .getSource to-root pack!)))
-   (-&gt; (frame :title &quot;Hello&quot;,
-              :content content,
-              :on-close :exit)
-       pack!
-       show!)))
-</code></pre></noscript></div>
-
-
-<p>6行目でnREPLサーバを起動しています。</p>
-
-<p>アプリケーションを起動</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein run</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下のようなウィンドウが表示されます。</p>
-
-<p><img src="http://matstani.github.io/images/blog/2013-05-20_123249.png" alt="ウィンドウ" /></p>
-
-<p>「Show Message」ボタンを押すとメッセージが表示されます。</p>
-
-<p><img src="http://matstani.github.io/images/blog/2013-05-20_123337.png" alt="ウィンドウ" /></p>
-
-<p>このアプリケーションにnREPLクライアントで接続し、動作を書き換えてみます。<br/>
-nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>を利用する場合、Emacs内で以下のコマンドを実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl
-</span><span class='line'>Host: 127.0.0.1
-</span><span class='line'>Port: 7888</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Portで指定するのは、アプリケーション中のstart-serverで指定したポート番号です。
-以下のようにnREPLプロンプトが表示されます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>; nREPL 0.1.7
-</span><span class='line'>user&gt; </span></code></pre></td></tr></table></div></figure>
-
-
-<p>表示されるメッセージを変化させてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user&gt; (in-ns 'nrepl-test.core) ;namespaceセット
-</span><span class='line'>nrepl-test.core&gt; (def msg "Changed Message.") ;msgを再定義</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ボタンを押すと、メッセージが変化します。</p>
-
-<p><img src="http://matstani.github.io/images/blog/2013-05-20_162336.png" alt="ウィンドウ" /></p>
-
-<p>ログ機能を付けてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>nrepl-test.core&gt; (let [old show-msg-actn]
-</span><span class='line'>    (defn show-msg-actn
-</span><span class='line'>        [e]
-</span><span class='line'>        (println "LOG: show-msg-actn") (old e))) ;show-msg-actnを再定義</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ボタンを押すと、コンソールにログが表示されるようになりました。</p>
 ]]></content>
   </entry>
   

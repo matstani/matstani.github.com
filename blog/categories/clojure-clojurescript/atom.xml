@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Clojure,ClojureScript | /home/matstani/weblog]]></title>
+  <link href="http://matstani.github.io/blog/categories/clojure-clojurescript/atom.xml" rel="self"/>
+  <link href="http://matstani.github.io/"/>
+  <updated>2016-01-08T15:14:30+09:00</updated>
+  <id>http://matstani.github.io/</id>
+  <author>
+    <name><![CDATA[Shunsaku MATSUTANI]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[[ClojureScript] リモートのfigwheelに接続する]]></title>
+    <link href="http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel/"/>
+    <updated>2016-01-08T14:09:00+09:00</updated>
+    <id>http://matstani.github.io/blog/2016/01/08/clojurescript-remote-figwheel</id>
+    <content type="html"><![CDATA[<p>ClojureScriptの開発ツール<a href="https://github.com/bhauman/lein-figwheel">Figwheel</a>を利用すると、ソースコードの変更時に自動的にブラウザにロードされるほか、付属のREPLでは、コンソールに入力したClojureScriptコードをブラウザ上で実行することができます。<br/>
+この時に利用されるWebSocket接続ですが、デフォルトでは接続先がlocalhostになっています。<br/>
+figwheelプロセスをリモートサーバで実行している場合、デフォルトでは以下のようなエラーがブラウザのJavaScriptコンソールに表示されます。</p>
+
+<p><code>
+Figwheel: trying to open cljs reload socket
+ws://localhost:3449/figwheel-ws/flappy-bird-demo のサーバへの接続を確立できませんでした。
+</code>
+接続先のホストは、<code>project.clj</code>でキー<code>{:cljsbuild {:builds [{:figwheel {:websocket-host 接続先}]}}</code>で指定できます。<br/>
+リモートサーバのホスト名やIPアドレスを直接記述することもできますが、<code>:js-client-host</code>を指定すると、<code>location.host</code>の値を設定してくれるので便利です。<br/>
+設定例)<br/>
+<a href="https://gist.github.com/matstani/4db238e1db767ca8de9b">project.clj</a></p>
+
+<script src="https://gist.github.com/matstani/4db238e1db767ca8de9b.js"></script>
+
+
+<p><a href="https://github.com/bhauman/lein-figwheel">README</a>にあるのですが、見逃していました。</p>
+]]></content>
+  </entry>
+  
+</feed>

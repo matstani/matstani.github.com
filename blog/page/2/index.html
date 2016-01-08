@@ -9,10 +9,8 @@
   <meta name="author" content="Shunsaku MATSUTANI">
 
   
-  <meta name="description" content="ClojureでPDFファイルを作成するためのライブラリとしてclj-pdfがありますが、そのままでは日本語フォントに対応していないようなので、直接iTextを使う手順を紹介します。 テスト用プロジェクト作成 1
-2
-$ lein new app try-itext
-$ cd try-itext &hellip;">
+  <meta name="description" content="CompojureベースのClojureウェブアプリケーションで、iTextを利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例はこちら。)
+例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +78,87 @@ $ cd try-itext &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/07/try-itext-compojure/">[Clojure] iTextでPDFファイル作成(ウェブアプリケーション)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-07T20:52:00+09:00" pubdate data-updated="true">Oct 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/weavejester/compojure">Compojure</a>ベースのClojureウェブアプリケーションで、<a href="http://itextpdf.com/">iText</a>を利用したPDFファイル出力を行う手順をメモします。(ファイルに保存する例は<a href="/blog/2013/10/07/clojure-itext-japanese/">こちら</a>。)<br/>
+例として、SQLiteデータベースから従業員データを読み取り、PDFファイルとして出力することを考えてみます。</p>
+
+<h2>テスト用プロジェクト作成</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein new compojure try-itext-compojure
+</span><span class='line'>$ cd try-itext-compojure</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>project.clj</code>の<code>:dependencies</code>に<code>[com.itextpdf/itextpdf "5.4.4"]</code> <code>[com.itextpdf/itext-asian "5.2.0"]</code> <code>[org.xerial/sqlite-jdbc "3.7.2"]</code> <code>[korma "0.3.0-RC5"]</code>を追記します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein deps</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>データベース準備</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir db
+</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "CREATE TABLE employees (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
+</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 一郎');"
+</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 二郎');"
+</span><span class='line'>$ sqlite3 db/try-itext.sqlite3 "INSERT INTO employees (name) VALUES ('名無 三郎');"</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>サンプルコード</h2>
+
+<p><a href="https://gist.github.com/matstani/6866740">handler.clj</a></p>
+
+<div><script src='https://gist.github.com/6866740.js'></script>
+<noscript><pre><code>&lt;html&gt;&lt;body&gt;You are being &lt;a href=&quot;https://github.com/gist/6866740&quot;&gt;redirected&lt;/a&gt;.&lt;/body&gt;&lt;/html&gt;</code></pre></noscript></div>
+
+
+<h2>起動</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein ring server-headless</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ブラウザでlocalhost:3000にアクセスするとPDFファイルが表示されます。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1786,164 +1865,6 @@ Clojureのmap関数では、復数のシーケンスを同時に扱うことが�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/20/embed-nrepl/">Clojureアプリケーションを動的に書き換える</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-20T12:45:00+09:00" pubdate data-updated="true">May 20<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/clojure/tools.nrepl">nREPL</a>サーバをClojureアプリケーションに組み込んでおくと、動作中のClojureアプリケーションに接続して、デバッグを行ったり、動作を書き換えたりすることができます。</p>
-
-<p>試しに、デスクトップGUIアプリケーションを動的に書き換えてみます。<br/>
-Clojureからは、JavaのSwingを直接利用できますが、せっかくなので、よりClojureっぽく書ける<a href="https://github.com/daveray/seesaw">Seesaw</a>を使ってみます。</p>
-
-<p><a href="https://gist.github.com/matstani/5610271#file-project-clj">project.clj</a>は以下のとおり。</p>
-
-<div><script src='https://gist.github.com/5610271.js?file=project.clj'></script>
-<noscript><pre><code>(defproject nrepl-test &quot;0.1.0-SNAPSHOT&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
-  :dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
-                 [seesaw &quot;1.4.2&quot;]
-                 [org.clojure/tools.nrepl &quot;0.2.3&quot;]]
-  :main nrepl-test.core)
-</code></pre></noscript></div>
-
-
-<p><a href="https://gist.github.com/matstani/5610271#file-core-clj">アプリケーションのコード</a>は以下のとおり。</p>
-
-<div><script src='https://gist.github.com/5610271.js?file=core.clj'></script>
-<noscript><pre><code>(ns nrepl-test.core
-  (:require [seesaw.core :refer :all]
-            [clojure.tools.nrepl.server :refer [start-server]])
-  (:gen-class))
-
-(defonce server (start-server :port 7888))
-
-(def msg &quot;Hello, Seesaw.&quot;)
-
-(def lbl-msg
-  (label &quot;&quot;))
-
-(defn set-msg!
-  [msg]
-  (config! lbl-msg :text msg))
-
-(def btn-show-msg
-  (button :text &quot;Show Message&quot;))
-
-(def content (vertical-panel
-              :items [lbl-msg
-                      btn-show-msg]))
-
-(defn -main
-  [&amp; args]
-  (invoke-later
-   (listen btn-show-msg
-           :action
-           (fn [e]
-             (set-msg! msg)
-             (-&gt; e .getSource to-root pack!)))
-   (-&gt; (frame :title &quot;Hello&quot;,
-              :content content,
-              :on-close :exit)
-       pack!
-       show!)))
-</code></pre></noscript></div>
-
-
-<p>6行目でnREPLサーバを起動しています。</p>
-
-<p>アプリケーションを起動</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ lein run</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下のようなウィンドウが表示されます。</p>
-
-<p><img src="/images/blog/2013-05-20_123249.png" alt="ウィンドウ" /></p>
-
-<p>「Show Message」ボタンを押すとメッセージが表示されます。</p>
-
-<p><img src="/images/blog/2013-05-20_123337.png" alt="ウィンドウ" /></p>
-
-<p>このアプリケーションにnREPLクライアントで接続し、動作を書き換えてみます。<br/>
-nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el">nrepl.el</a>を利用する場合、Emacs内で以下のコマンドを実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x nrepl
-</span><span class='line'>Host: 127.0.0.1
-</span><span class='line'>Port: 7888</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Portで指定するのは、アプリケーション中のstart-serverで指定したポート番号です。
-以下のようにnREPLプロンプトが表示されます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>; nREPL 0.1.7
-</span><span class='line'>user&gt; </span></code></pre></td></tr></table></div></figure>
-
-
-<p>表示されるメッセージを変化させてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>user&gt; (in-ns 'nrepl-test.core) ;namespaceセット
-</span><span class='line'>nrepl-test.core&gt; (def msg "Changed Message.") ;msgを再定義</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ボタンを押すと、メッセージが変化します。</p>
-
-<p><img src="/images/blog/2013-05-20_162336.png" alt="ウィンドウ" /></p>
-
-<p>ログ機能を付けてみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>nrepl-test.core&gt; (let [old show-msg-actn]
-</span><span class='line'>    (defn show-msg-actn
-</span><span class='line'>        [e]
-</span><span class='line'>        (println "LOG: show-msg-actn") (old e))) ;show-msg-actnを再定義</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ボタンを押すと、コンソールにログが表示されるようになりました。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1969,6 +1890,10 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/08/clojurescript-remote-figwheel/">[ClojureScript] リモートのfigwheelに接続する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/09/clojure-nested-map-and-for/">[Clojure] forでネストしたマップを扱う</a>
       </li>
     
@@ -1982,10 +1907,6 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
     
       <li class="post">
         <a href="/blog/2014/08/18/clojure-component-example/">[Clojure] componentフレームワークを利用した開発</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/08/05/clojure-tools-dot-namespace/">[Clojure] tools.namespaceを利用したREPL上でのソースコードリロード</a>
       </li>
     
   </ul>
@@ -2002,7 +1923,7 @@ nREPLクライアントとして、<a href="https://github.com/kingtim/nrepl.el"
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Shunsaku MATSUTANI -
+  Copyright &copy; 2016 - Shunsaku MATSUTANI -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
